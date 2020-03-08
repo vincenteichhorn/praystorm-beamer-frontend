@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState, useContext, useEffect } from 'react';
 import { 
   Typography, 
   Grid, 
@@ -11,15 +11,18 @@ import {
   Snackbar, 
   IconButton, 
   Box,
+  CardActionArea,
+  CardMedia,
 } from '@material-ui/core';
 import { RouteComponentProps, withRouter } from 'react-router';
 import mainRoutes from '../../Routes';
 import QRCodeDialog from './QRCodeDialog';
 import { Link } from 'react-router-dom';
+import { ServiceContext } from '../../App';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   root: {
-    maxWidth: 350,
+    width: '90%'
   },
   title: {
     fontSize: 14,
@@ -27,7 +30,7 @@ const useStyles = makeStyles({
   pos: {
     marginBottom: 12,
   },
-});
+}));
 
 interface Props extends RouteComponentProps {
   history: any;
@@ -38,13 +41,28 @@ const Home: FunctionComponent<Props> = (props) => {
   const [snackbarOpen, setSnackbarOpen] = useState('');
   const [modalOpen, setModalOpen] = useState('');
 
+  const services = useContext(ServiceContext);
+  const [host, setHost] = useState();
+
+  useEffect(() => {
+    services.utilityService.getLocalIpAdress().then((data) => {
+      let host = ''
+      if(window.document.location.port) {
+        host = data.localIpAddress + ':' + window.document.location.port
+      } else {
+        host = data.localIpAddress;
+      }
+      setHost(host);
+    });
+  }, [props, services]);
+
   const redirect = (link: string) => {
     props.history.push(link);
   }
 
   const copyLink = (link: string) => {
     const textField = document.createElement('textarea');
-    textField.innerText = window.location.host + link;
+    textField.innerText = host + link;
     document.body.appendChild(textField);
     textField.select();
     document.execCommand('copy');
@@ -53,38 +71,48 @@ const Home: FunctionComponent<Props> = (props) => {
 
   return (
     <Grid
-      style={{ 
-        height: '80vh'
-      }}
       container
-      direction="row"
+      direction="column"
       justify="space-evenly"
       alignItems="center"
     >
       {mainRoutes.map((route) => (
         (route.showInList) ? (
-          <Grid item xs style={{ marginBottom: '40px'}} key={route.title}>
-            <Card className={classes.root}>
-              <CardContent onClick={() => redirect(route.link)}>
-                <Grid 
-                  container
-                  direction="row"
-                  justify="space-between"
+          <Grid item style={{ marginBottom: '40px' }} key={route.title} className={classes.root}>
+            <Card>
+              <CardActionArea>
+                <CardMedia
+                  image={route.img}
+                  style={{
+                    height: 250,
+                  }}
+                />
+                <CardContent 
+                  onClick={() => redirect(route.link)}
+                  style={{
+                    cursor: 'pointer'
+                  }}
                 >
-                  <Grid item>
-                    <Typography variant="overline">
-                      praystorm.
-                    </Typography>
-                    <Typography variant="h5" component="h2">
-                      {route.title}
-                    </Typography>
-                    <Typography variant="body2" component="p">
-                      {route.caption}
-                    </Typography>
+                  <Grid 
+                    container
+                    direction="row"
+                    justify="space-between"
+                  >
+                    <Grid item>
+                      <Typography variant="overline">
+                        praystorm. Beamer
+                      </Typography>
+                      <Typography variant="h5" component="h2">
+                        {route.title}
+                      </Typography>
+                      <Typography variant="body2" component="p">
+                        {route.caption}
+                      </Typography>
+                    </Grid>
+                    <Icon>{route.icon}</Icon>
                   </Grid>
-                  <Icon>{route.icon}</Icon>
-                </Grid>
-              </CardContent>
+                </CardContent>
+              </CardActionArea>
               <CardActions>
                 <Button size="small" color="primary" onClick={() => redirect(route.link)}>Start</Button>
                 <Button size="small" color="primary" onClick={() => {setSnackbarOpen(route.title); copyLink(route.link)}}>Link</Button>
@@ -103,7 +131,7 @@ const Home: FunctionComponent<Props> = (props) => {
                 <Box>
                   <Typography variant="caption" >Link kopiert:</Typography>
                   <Link to={route.link}>
-                    <Typography variant="caption" style={{ color: 'white' }}>{` ${window.document.location.host + route.link}`}</Typography>
+                    <Typography variant="caption" style={{ color: 'white' }}>{` ${host + route.link}`}</Typography>
                   </Link>
                 </Box>
               }

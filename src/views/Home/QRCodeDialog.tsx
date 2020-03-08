@@ -1,5 +1,5 @@
-import React, { FunctionComponent, useContext, useState } from 'react';
-import { Typography, Modal, Dialog, Divider, DialogContent, Icon, DialogActions } from '@material-ui/core';
+import React, { FunctionComponent, useContext, useState, useEffect } from 'react';
+import { Typography, Dialog, Divider, DialogContent, DialogActions } from '@material-ui/core';
 import StyledDialogTitle from '../../components/Styled/StyledDialogTitle';
 import StyledButton from '../../components/StyledButton';
 import QRCode from 'qrcode.react';
@@ -15,10 +15,19 @@ interface Props {
 const QRCodeDialog: FunctionComponent<Props> = (props) => {
 
   const services = useContext(ServiceContext);
-  const urlDirect = window.document.location.host + props.link;
-  const ip = services.utilitiesService.getLocalIpAdress();
-  console.log(ip);
-  const urlIp = require('ip').address() + props.link;
+  const [url, setUrl] = useState();
+
+  useEffect(() => {
+    services.utilityService.getLocalIpAdress().then((data) => {
+      let url = ''
+      if(window.document.location.port) {
+        url = 'http://' + data.localIpAddress + ':' + window.document.location.port + props.link;
+      } else {
+        url = 'http://' + data.localIpAddress + props.link;
+      }
+      setUrl(url);
+    });
+  }, [props, services]);
 
   return (
     <Dialog
@@ -32,10 +41,8 @@ const QRCodeDialog: FunctionComponent<Props> = (props) => {
         </StyledDialogTitle>
         <Divider />
         <DialogContent style={{ textAlign: 'center'}}>
-          <QRCode value={urlDirect} style={{ margin: 'auto', height: 200, width: 200  }} />
-          <Typography variant="h6">{urlDirect}</Typography>
-          <QRCode value={urlIp} style={{ margin: 'auto', height: 200, width: 200  }} />
-          <Typography variant="h6">{urlIp}</Typography>
+          <QRCode value={url} style={{ margin: 'auto', height: 200, width: 200, marginBottom: '15px'  }} />
+          <Typography variant="h6">{url}</Typography>
         </DialogContent>
         <Divider />
         <DialogActions style={{ padding: '10px' }}>

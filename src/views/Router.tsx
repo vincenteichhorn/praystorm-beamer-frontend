@@ -1,4 +1,4 @@
-import React, { FunctionComponent, createElement } from 'react';
+import React, { FunctionComponent } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import mainRoutes from '../Routes';
 import Editor from './Editor/Editor';

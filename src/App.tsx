@@ -14,13 +14,12 @@ import {
   ListItemIcon,
   ListItemText,
   Icon,
-  useTheme,
   Grid,
   Avatar,
 } from '@material-ui/core';
 import Router from './views/Router';
 import mainRoutes from './Routes';
-import UtilitiesService from './services/UtilitiesService';
+import UtilityService from './services/UtilityService';
 
 const drawerWidth = 270;
 
@@ -86,7 +85,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const services = {
-  utilitiesService: new UtilitiesService(),
+  utilityService: new UtilityService(),
 }
 export const ServiceContext = createContext(services);
 
@@ -102,13 +101,13 @@ const App: FunctionComponent = () => {
       } else if(route.appbar !== false) {
         setRenderAppBar(true);
       }
+      return renderAppBar; // not necessary
     });
   });
 
   const redirect = (link: string) => {
     setRenderAppBar(false);
     window.document.location.replace(link);
-
   }
 
   return (
@@ -133,7 +132,14 @@ const App: FunctionComponent = () => {
                   >
                     <Icon>menu</Icon>
                   </IconButton>
-                  <Typography variant="h6" className={classes.title}>
+                  <Typography 
+                    variant="h6" 
+                    className={classes.title}
+                    onClick={() => redirect('/')}
+                    style={{
+                      cursor: 'pointer'
+                    }}
+                  >
                     praystorm. Beamer
                   </Typography>
                 </Toolbar>
@@ -147,14 +153,29 @@ const App: FunctionComponent = () => {
                   paper: classes.drawerPaper,
                 }}
               >
-                <Grid container direction="column" justify="space-between" className={classes.drawerHeader}>
+                <Grid container direction="column" justify="space-between" className={classes.drawerHeader} >
                   <Grid container direction="row" justify="space-between" alignItems="flex-start" style={{ marginBottom: '20px' }}>
-                    <Avatar src="/media/praystorm_logo.png" className={classes.large} />
+                    <Avatar 
+                      src="/media/praystorm-logo.png" 
+                      className={classes.large} 
+                      onClick={() => redirect('/')}
+                      style={{
+                        cursor: 'pointer'
+                      }}
+                    />
                     <IconButton onClick={() => setDrawerOpen(false)}>
                       <Icon>chevron_left</Icon>
                     </IconButton>
                   </Grid>
-                  <Grid container direction="column" justify="space-between">
+                  <Grid 
+                    container 
+                    direction="column" 
+                    justify="space-between"
+                    onClick={() => redirect('/')}
+                    style={{
+                      cursor: 'pointer'
+                    }}
+                  >
                     <Typography variant="h6">
                       praystorm. Beamer
                     </Typography>
@@ -177,6 +198,7 @@ const App: FunctionComponent = () => {
           ) : null
         }
         <main
+          id="content"
           className={clsx(classes.content, {
             [classes.contentShift]: drawerOpen,
           })}

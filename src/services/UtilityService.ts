@@ -1,10 +1,28 @@
 import config from './Config';
+import { decorate, observable, runInAction } from 'mobx';
 
 export default class UtilitiesService {
 
-  getLocalIpAdress() {
-    return fetch(config.apiHost + '/getLocalIpAddress.php')
-      .then((response) => response.json())
+  localIPAddress = '';
+
+  getLocalIPAddress() {
+    this.fetchLocalIPAddress();
+    return this.localIPAddress;
+  }
+
+  private fetchLocalIPAddress() {
+    fetch(config.apiHost + '/getLocalIpAddress')
+    .then((response) => response.json())
+    .then((data) => {
+      runInAction(() => {
+        this.localIPAddress = data.localIpAddress;
+      })
+    });
   }
 
 }
+
+decorate(UtilitiesService, {
+  localIPAddress: observable,
+});
+

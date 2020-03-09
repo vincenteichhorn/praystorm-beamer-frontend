@@ -1,0 +1,33 @@
+{
+  "title": "Vers 1",
+  "shorthand": "V1",
+  "position": 0,
+  "type": "TEXT",
+  "data": {
+    "lyrics": [
+      "I lay my life down at Your feet",
+      "You're the only One I need","I turn to You and You are always there",
+      "In troubled times it's all I need",
+      "I humble all I am all to You"
+    ],
+    "image": "http://localhost/praystorm-beamer-backend/images/test.jpg",
+    "video": "http://localhost/praystorm-beamer-backend/images/video.mp4",
+    "text": "<h1>Das ist ein Text mit echtem HTML</h1>",
+
+    "style": {
+      "backgroundImage": "http://localhost/praystorm-beamer-backend/images/test.jpg",
+      "backgroundColor": "black",
+      "verseFontSize": 48,
+      "verseSpacing": 20,
+      "copyrightFontSize": 12,
+      "copyrightColor": "orange",
+      "verseColor": "white"
+    }
+  },
+  "copyright": {
+    "author": "Hillsong Worship",
+    "album": "Ultimate Worship Vol 1",
+    "copyright": "© Hillsong Music 2006 \n Words & Music by Joel Houston and Jonathon Douglass"
+  }
+  
+}

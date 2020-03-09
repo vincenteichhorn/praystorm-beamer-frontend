@@ -1,4 +1,6 @@
-const mainRoutes = [
+import { Route } from "./models/Route";
+
+const mainRoutes: Route[] = [
   {
     title: 'Home',
     link: '/',

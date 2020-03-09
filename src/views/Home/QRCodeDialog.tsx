@@ -15,19 +15,7 @@ interface Props {
 const QRCodeDialog: FunctionComponent<Props> = (props) => {
 
   const services = useContext(ServiceContext);
-  const [url, setUrl] = useState();
-
-  useEffect(() => {
-    services.utilityService.getLocalIpAdress().then((data) => {
-      let url = ''
-      if(window.document.location.port) {
-        url = 'http://' + data.localIpAddress + ':' + window.document.location.port + props.link;
-      } else {
-        url = 'http://' + data.localIpAddress + props.link;
-      }
-      setUrl(url);
-    });
-  }, [props, services]);
+  const host = services.utilityService.getLocalIPAddress();
 
   return (
     <Dialog
@@ -41,8 +29,26 @@ const QRCodeDialog: FunctionComponent<Props> = (props) => {
         </StyledDialogTitle>
         <Divider />
         <DialogContent style={{ textAlign: 'center'}}>
-          <QRCode value={url} style={{ margin: 'auto', height: 200, width: 200, marginBottom: '15px'  }} />
-          <Typography variant="h6">{url}</Typography>
+          <QRCode 
+            value={
+              (window.document.location.port) ? 
+              'https://' + host + ':' + window.document.location.port + props.link :
+              'https://' + host + props.link
+            } 
+            style={{ 
+              margin: 'auto', 
+              height: 200, 
+              width: 200, 
+              marginBottom: '15px'
+            }}
+          />
+          <Typography variant="h6">
+            {
+              (window.document.location.port) ? 
+              'https://' + host + ':' + window.document.location.port + props.link :
+              'https://' + host + props.link
+            }
+          </Typography>
         </DialogContent>
         <Divider />
         <DialogActions style={{ padding: '10px' }}>

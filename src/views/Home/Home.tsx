@@ -42,19 +42,7 @@ const Home: FunctionComponent<Props> = (props) => {
   const [modalOpen, setModalOpen] = useState('');
 
   const services = useContext(ServiceContext);
-  const [host, setHost] = useState();
-
-  useEffect(() => {
-    services.utilityService.getLocalIpAdress().then((data) => {
-      let host = ''
-      if(window.document.location.port) {
-        host = data.localIpAddress + ':' + window.document.location.port
-      } else {
-        host = data.localIpAddress;
-      }
-      setHost(host);
-    });
-  }, [props, services]);
+  let host = services.utilityService.getLocalIPAddress();
 
   const redirect = (link: string) => {
     props.history.push(link);

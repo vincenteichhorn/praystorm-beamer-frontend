@@ -2,7 +2,7 @@
   "title": "Vers 1",
   "shorthand": "V1",
   "position": 0,
-  "type": "TEXT",
+  "type": "SONGPART",
   "data": {
     "lyrics": [
       "I lay my life down at Your feet",

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useContext, useEffect } from 'react';
+import React, { FunctionComponent, useState, useContext } from 'react';
 import { 
   Typography, 
   Grid, 
@@ -15,7 +15,7 @@ import {
   CardMedia,
 } from '@material-ui/core';
 import { RouteComponentProps, withRouter } from 'react-router';
-import mainRoutes from '../../Routes';
+import mainRoutes from '../Routes';
 import QRCodeDialog from './QRCodeDialog';
 import { Link } from 'react-router-dom';
 import { ServiceContext } from '../../App';
@@ -70,7 +70,7 @@ const Home: FunctionComponent<Props> = (props) => {
             <Card>
               <CardActionArea>
                 <CardMedia
-                  image={route.img}
+                  image={process.env.PUBLIC_URL + route.img}
                   style={{
                     height: 250,
                   }}

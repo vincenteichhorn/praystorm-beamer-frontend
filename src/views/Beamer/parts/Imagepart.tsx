@@ -47,6 +47,7 @@ const Imagepart: FunctionComponent<Props> = (props) => {
       {
         (imageExists) ? (
           <img 
+            alt="displayed data"
             src={slide.data.image} 
             style={{
               height: '90%',

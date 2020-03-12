@@ -20,7 +20,7 @@ const Beamer: FunctionComponent = (props) => {
     (slide.type === SlideTypes.SONGPART) ? <Songpart slide={slide} /> : 
     (slide.type === SlideTypes.IMAGE) ? <Imagepart slide={slide} /> :
     (slide.type === SlideTypes.TEXT) ? <Textpart slide={slide} /> :
-    (slide.type === SlideTypes.VIDEO) ? <Videopart slide={slide} /> : null
+    (slide.type === SlideTypes.VIDEO) ? <Videopart slide={slide} /> : <Songpart slide={slide} />
   );
    
 };

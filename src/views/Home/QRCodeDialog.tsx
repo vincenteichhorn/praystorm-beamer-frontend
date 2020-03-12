@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext, useState, useEffect } from 'react';
+import React, { FunctionComponent, useContext } from 'react';
 import { Typography, Dialog, Divider, DialogContent, DialogActions } from '@material-ui/core';
 import StyledDialogTitle from '../../components/Styled/StyledDialogTitle';
 import StyledButton from '../../components/StyledButton';

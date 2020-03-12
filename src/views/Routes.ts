@@ -1,4 +1,4 @@
-import { Route } from "./models/Route";
+import { Route } from "../models/Route";
 
 const mainRoutes: Route[] = [
   {

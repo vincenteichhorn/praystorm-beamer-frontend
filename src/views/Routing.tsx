@@ -17,7 +17,7 @@ import {
   Grid,
   Avatar,
 } from '@material-ui/core';
-import { BrowserRouter, Route, RouteComponentProps, withRouter } from 'react-router-dom';
+import { Route, RouteComponentProps, withRouter } from 'react-router-dom';
 
 import mainRoutes from './Routes';
 import Editor from './Editor/Editor';

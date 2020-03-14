@@ -75,6 +75,7 @@ const useStyles = makeStyles(theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
+    height: '100%',
   },
   contentShift: {
     transition: theme.transitions.create('margin', {
@@ -110,6 +111,7 @@ const Routing: FunctionComponent<Props> = (props) => {
   });
 
   const redirect = (link: string) => {
+    setDrawerOpen(false);
     props.history.push(link);
   }
 

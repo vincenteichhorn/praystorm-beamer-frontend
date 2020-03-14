@@ -11,7 +11,6 @@ const Imagepart: FunctionComponent<Props> = (props) => {
   const { slide } = props;
 
   const [imageExists, setImageExists] = useState(false);
-  const [backgroundImageExists, setBackgroundImageExists] = useState(false);
 
   useEffect(() => {
     let img = new Image();
@@ -19,51 +18,32 @@ const Imagepart: FunctionComponent<Props> = (props) => {
       setImageExists(true);
     }
     img.src = slide.data.image;
-    img = new Image();
-    img.onload = () => {
-      setBackgroundImageExists(true);
-    };
-    img.src = slide.data.style.backgroundImage;
   })
 
   return (
-    <Box
-      style={{
-        backgroundImage: (backgroundImageExists) ? 'url(' + slide.data.style.backgroundImage + ')' : 'none',
-        backgroundColor: (backgroundImageExists) ? 'none' : slide.data.style.backgroundColor,
-        backgroundRepeat: (backgroundImageExists) ? 'no-repeat' : '',
-        backgroundAttachment: (backgroundImageExists) ? 'fixed' : '',
-        backgroundPosition: (backgroundImageExists) ? 'left top' : '',
-        backgroundSize: (backgroundImageExists) ? 'cover' : '',
+    <Box>
+      <Box
+        style={{
+          backgroundImage: (imageExists) ? 'url(' + slide.data.image + ')' : 'none',
+          backgroundRepeat: (imageExists) ? 'no-repeat' : '',
+          backgroundPosition: (imageExists) ? 'top left' : '',
+          backgroundSize: (imageExists) ? 'cover' : '',
 
-        textAlign: 'center',
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-      }}
-    >
+          textAlign: 'center',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+        }}
+      >
+      </Box>
       {
-        (imageExists) ? (
-          <img 
-            alt="displayed data"
-            src={slide.data.image} 
-            style={{
-              height: '90%',
-              display: 'block',
-              margin: 'auto',
-              marginTop: '2%',
-              borderRadius: '10px',
-              boxShadow: '10px 10px 200px 70px rgba(0,0,0,0.75)',
-            }}
-          />
-        ) : (
-          <Typography variant="h2">Leider kann das Bild nicht angezeigt werden.</Typography>
-        )
+        (!imageExists) ? <Typography variant="h2">Das Bild kann leider nicht angezeigt werden.</Typography> : null
       }
     </Box>
-  )
+
+  );
 };
 
 export default Imagepart;

@@ -8,6 +8,7 @@ import Videopart from './parts/Videopart';
 const Beamer: FunctionComponent = (props) => {
 
   const slide = JSON.parse(JSON.stringify(require('../../services/mock/slide.json')));
+  console.log(slide.data.lyrics);
   const contentBox = document.getElementById('content');
 
   useEffect(() => {

@@ -47,8 +47,9 @@ const Songpart: FunctionComponent<Props> = (props) => {
         }}
       >
         {
-          slide.data.lyrics.map((verse: string) => (
+          slide.data.lyrics.map((verse: string, index: number) => (
             <Box 
+              key={index}
               fontSize={slide.data.style.verseFontSize}
               style={{
                 marginBottom: slide.data.style.verseSpacing,

@@ -1,13 +1,10 @@
-export interface Part {
+import { PartTypes } from "./PartTypes";
+
+export default interface Part {
   title: string;
   position: number;
-  type: typeEnum;
+  type: PartTypes;
   author: string;
   album: string;
   copyright: string;
-}
-
-enum typeEnum {
-  'SONG',
-  'INSERT'
 }

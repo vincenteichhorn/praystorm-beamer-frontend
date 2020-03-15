@@ -1,5 +1,5 @@
 import React, { FunctionComponent, ChangeEvent } from 'react';
-import { Paper, Grid, FormControl, Select, MenuItem, List, ListItem, ListItemText, makeStyles, Box, ListItemIcon, Icon } from '@material-ui/core';
+import { Paper, Grid, FormControl, Select, MenuItem, List, ListItem, ListItemText, makeStyles, Box, ListItemIcon, Icon, Typography } from '@material-ui/core';
 import Part from '../../models/Part';
 import Event from '../../models/Event';
 import { PartTypes } from '../../models/PartTypes';
@@ -8,7 +8,7 @@ const useStyles = makeStyles(theme => ({
   box: {
     marginBottom: theme.spacing(1),
   },
-  list: {
+  paper: {
     minHeight: '75vh',
   }
 }));
@@ -16,8 +16,10 @@ const useStyles = makeStyles(theme => ({
 interface Props {
   events: Event[] | undefined;
   currentEvent: Event | undefined;
-  onChange: (changeEvent: ChangeEvent<{ name?: string; value: unknown; }>) => void;
-  parts: Part[] | undefined;  
+  onChangeEvent: (changeEvent: ChangeEvent<{ name?: string; value: unknown; }>) => void;
+  parts: Part[] | undefined; 
+  currentPart: Part | undefined 
+  onChangePart: (newPart: Part) => void;
 }
 
 const Sidebar: FunctionComponent<Props> = (props) => {
@@ -32,7 +34,7 @@ const Sidebar: FunctionComponent<Props> = (props) => {
         >
           <Select
             value={(props.currentEvent) ? props.currentEvent.name : ''}
-            onChange={props.onChange}
+            onChange={props.onChangeEvent}
           >
             {
               (props.events) ? props.events.map((event: Event, index: number) => (
@@ -45,11 +47,16 @@ const Sidebar: FunctionComponent<Props> = (props) => {
         </FormControl> 
       </Box>
       
-      <Paper className={classes.list}>
+      <Paper className={classes.paper}>
         <List>
           {
             (props.parts) ? props.parts.map((part: Part, index: number) => (
-              <ListItem key={index} button>
+              <ListItem 
+                key={index} 
+                button
+                selected={(part.title === props.currentPart?.title)}
+                onClick={() => props.onChangePart(part)}
+              >
                 <ListItemIcon>
                   { (part.type === PartTypes.SONG) ? <Icon>music_note</Icon> : <Icon>class</Icon>}
                 </ListItemIcon>

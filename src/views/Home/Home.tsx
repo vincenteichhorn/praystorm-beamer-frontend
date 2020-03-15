@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useContext } from 'react';
+import React, { FunctionComponent, useState, useContext, useEffect } from 'react';
 import { 
   Typography, 
   Grid, 
@@ -42,7 +42,13 @@ const Home: FunctionComponent<Props> = (props) => {
   const [modalOpen, setModalOpen] = useState('');
 
   const services = useContext(ServiceContext);
-  let host = services.utilityService.getLocalIPAddress();
+  const [host, setHost] = useState();
+  
+  useEffect(() => {
+    services.utilityService.getLocalIPAddress().then((data) => {
+      setHost(data.localIpAddress);
+    })
+  })
 
   const redirect = (link: string) => {
     props.history.push(link);
@@ -50,7 +56,13 @@ const Home: FunctionComponent<Props> = (props) => {
 
   const copyLink = (link: string) => {
     const textField = document.createElement('textarea');
-    textField.innerText = host + link;
+    let url = 'http://' + host;
+    if(window.document.location.port) {
+      url += ':' + window.document.location.port + link;
+    } else {
+      url += link;
+    }
+    textField.innerText = url;
     document.body.appendChild(textField);
     textField.select();
     document.execCommand('copy');
@@ -119,7 +131,13 @@ const Home: FunctionComponent<Props> = (props) => {
                 <Box>
                   <Typography variant="caption" >Link kopiert:</Typography>
                   <Link to={route.link}>
-                    <Typography variant="caption" style={{ color: 'white' }}>{` ${host + route.link}`}</Typography>
+                    <Typography variant="caption" style={{ color: 'white' }}>
+                      {
+                        (window.document.location.port) ? 
+                        ' http://' + host + ':' + window.document.location.port + route.link :
+                        ' http://' + host + route.link
+                      } 
+                    </Typography>
                   </Link>
                 </Box>
               }

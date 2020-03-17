@@ -1,8 +1,6 @@
 import React, { FunctionComponent, ChangeEvent } from 'react';
-import { Paper, Grid, FormControl, Select, MenuItem, List, ListItem, ListItemText, makeStyles, Box, ListItemIcon, Icon, Typography } from '@material-ui/core';
-import Part from '../../models/Part';
-import Event from '../../models/Event';
-import { PartTypes } from '../../models/PartTypes';
+import { Paper, Grid, FormControl, Select, MenuItem, List, ListItem, ListItemText, makeStyles, Box, ListItemIcon, Icon } from '@material-ui/core';
+import { Event, Part, PartTypes } from '../../models/DataModels';
 
 const useStyles = makeStyles(theme => ({
   box: {
@@ -14,16 +12,21 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface Props {
-  events: Event[] | undefined;
+  events: Event[];
   currentEvent: Event | undefined;
-  onChangeEvent: (changeEvent: ChangeEvent<{ name?: string; value: unknown; }>) => void;
-  parts: Part[] | undefined; 
+  onChangeEvent: (newEvent: Event) => void;
+  parts: Part[]; 
   currentPart: Part | undefined 
   onChangePart: (newPart: Part) => void;
 }
 
 const Sidebar: FunctionComponent<Props> = (props) => {
   const classes = useStyles();
+
+  const findAndChangeEvent = (changeEvent: ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
+    const newEvent = props.events.find((event) => event.name === changeEvent.target.value);
+    if(newEvent) props.onChangeEvent(newEvent);
+  }
 
   return (
     <Grid container direction="column">
@@ -34,7 +37,7 @@ const Sidebar: FunctionComponent<Props> = (props) => {
         >
           <Select
             value={(props.currentEvent) ? props.currentEvent.name : ''}
-            onChange={props.onChangeEvent}
+            onChange={findAndChangeEvent}
           >
             {
               (props.events) ? props.events.map((event: Event, index: number) => (

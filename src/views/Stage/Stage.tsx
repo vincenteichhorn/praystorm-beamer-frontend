@@ -1,12 +1,10 @@
 import React, { FunctionComponent } from 'react';
-import { Typography } from '@material-ui/core';
+import LiveView from '../../components/LiveView';
 
 const Stage: FunctionComponent = (props) => {
 
   return (
-    <Typography>
-      Stage
-    </Typography>
+    <LiveView />
   );
 };
 

@@ -1,64 +1,31 @@
-import React, { FunctionComponent, useContext, useEffect, useState, ChangeEvent} from 'react';
+import React, { FunctionComponent, useContext, useEffect} from 'react';
 import { Grid, } from '@material-ui/core';
-import { RouteComponentProps } from 'react-router';
+import { Event, Part, Slide } from '../../models/DataModels';
 import Sidebar from './Sidebar';
 import MainWindow from './MainWindow';
-import { ServiceContext } from '../../App';
-import Event from '../../models/Event';
-import Part from '../../models/Part';
-import { Slide } from '../../models/Slide';
+import { StoreContext } from '../../App';
+import { observer } from 'mobx-react';
 
-interface Props extends RouteComponentProps {
-  
-}
 
-const Presenter: FunctionComponent<Props> = (props) => {
+const Presenter: FunctionComponent = (props) => {
 
-  const services = useContext(ServiceContext);
-  const [events, setEvents] = useState<Event[]>();
-  const [currentEvent, setCurrentEvent] = useState<Event>();
-  const [parts, setParts] = useState<Part[]>();
-  const [currentPart, setCurrentPart] = useState<Part>();
-  const [slides, setSlides] = useState<Slide[]>();
-  const [currentSlide, setCurrentSlide] = useState<Slide>();
-
+  const { presenterStore } = useContext(StoreContext);
   useEffect(() => {
-    if(!events) {
-      services.eventService.getEvents().then((data) => {
-        setEvents([...data]);
-        setCurrentEvent(data[0]);
-      });
-    }
-    if(currentEvent) {
-      services.partService.getParts(currentEvent.name, currentEvent.date).then((data) => {
-        setParts([...data]);
-        if(data.length < 1) {
-          setCurrentPart(undefined);
-        }
-      });
-    }
-    if(!currentPart && parts) {
-      setCurrentPart(parts[0]);
-    }
-    if(currentPart) {
-      services.slideService.getSlides(currentPart.title).then((data) => {
-        setSlides([...data]);
-      })
-    }
-    if(!currentSlide && slides) {
-      setCurrentSlide(slides[0]);
-    }
-  }, [services, events, currentEvent, parts, currentPart]);
+    presenterStore.initState();
+  });
 
-  const onChangeEvent = (changeEvent: ChangeEvent<any>) => {
-    if(events && changeEvent.target.value) {
-      const newCurrent = events.find((event) => (event.name === changeEvent.target.value));
-      setCurrentEvent(newCurrent);
-    }
+  const changeCurrentEvent = (newEvent: Event) => {
+    presenterStore.currentEvent = newEvent;
+    presenterStore.updateParts();
   }
 
-  const onChangePart = (newPart: Part) => {
-    setCurrentPart(newPart);
+  const changeCurrentPart = (newPart: Part) => {
+    presenterStore.currentPart = newPart;
+    presenterStore.updateSlides();
+  }
+
+  const changeCurrenSlide = (newSlide: Slide) => {
+    presenterStore.currentSlide = newSlide;
   }
 
   return (
@@ -69,25 +36,26 @@ const Presenter: FunctionComponent<Props> = (props) => {
     >
       <Grid item xs={3}>
         <Sidebar 
-          events={events}
-          currentEvent={currentEvent}
-          onChangeEvent={onChangeEvent}
-          parts={parts}
-          currentPart={currentPart}
-          onChangePart={onChangePart}
+          events={presenterStore.events}
+          currentEvent={presenterStore.currentEvent}
+          onChangeEvent={changeCurrentEvent}
+          parts={presenterStore.parts}
+          currentPart={presenterStore.currentPart}
+          onChangePart={changeCurrentPart}
         />
       </Grid>
       <Grid item xs>
         <MainWindow 
-          currentEvent={currentEvent}
-          currentPart={currentPart}
-          parts={parts}
-          slides={slides}
-          currentSlide={currentSlide}
+          currentEvent={presenterStore.currentEvent}
+          currentPart={presenterStore.currentPart}
+          parts={presenterStore.parts}
+          slides={presenterStore.slides}
+          currentSlide={presenterStore.currentSlide}
+          onChangeSlide={changeCurrenSlide}
         />
       </Grid>
     </Grid>
   );
 };
 
-export default Presenter;
+export default observer(Presenter);

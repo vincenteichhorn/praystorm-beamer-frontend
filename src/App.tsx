@@ -1,26 +1,23 @@
 import React, { FunctionComponent, createContext } from 'react';
 import Routing from './views/Routing';
-import UtilityService from './services/UtilityService';
 import { BrowserRouter } from 'react-router-dom';
-import EventService from './services/EventService';
-import PartService from './services/PartService';
-import SlideService from './services/SlideService';
+import HomeStore from './stores/HomeStore';
+import PresenterStore from './stores/PresenterStore';
 
-const services = {
-  utilityService: new UtilityService(),
-  eventService: new EventService(),
-  partService: new PartService(),
-  slideService: new SlideService(),
-}
-export const ServiceContext = createContext(services);
+const stores = {
+  homeStore: new HomeStore(),
+  presenterStore: new PresenterStore(),
+};
+
+export const StoreContext = createContext(stores);
 
 const App: FunctionComponent = () => {
   return (
-    <ServiceContext.Provider value={services}>
+    <StoreContext.Provider value={stores}>
       <BrowserRouter>
         <Routing />
       </BrowserRouter>
-    </ServiceContext.Provider>
+    </StoreContext.Provider>
   );
 }
 

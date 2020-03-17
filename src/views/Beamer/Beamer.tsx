@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect } from 'react';
-import { SlideTypes } from '../../models/SlideTypes';
+import { SlideTypes } from '../../models/DataModels';
 import Songpart from './parts/Songpart';
 import Imagepart from './parts/Imagepart';
 import Textpart from './parts/Textpart';
@@ -7,7 +7,7 @@ import Videopart from './parts/Videopart';
 
 const Beamer: FunctionComponent = (props) => {
 
-  const slide = JSON.parse(JSON.stringify(require('../../services/mock/slide.json')));
+  const slide = JSON.parse(JSON.stringify(require('../../stores/mock/slide.json')));
   console.log(slide.data.lyrics);
   const contentBox = document.getElementById('content');
 

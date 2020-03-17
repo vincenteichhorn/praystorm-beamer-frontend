@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
-import { Slide } from '../../../models/Slide';
+import { Slide } from '../../../models/DataModels';
 import { Box, Typography } from '@material-ui/core';
 
 interface Props {
@@ -21,9 +21,10 @@ const Songpart: FunctionComponent<Props> = (props) => {
 
   return (
     <Box
+      id="beamer"
       style={{
         backgroundImage: (backgroundImageExists) ? 'url(' + slide.data.style.backgroundImage + ')' : 'none',
-        backgroundColor: (backgroundImageExists) ? 'none' : slide.data.style.backgroundColor,
+        backgroundColor: (backgroundImageExists) ? '' : slide.data.style.backgroundColor,
         backgroundRepeat: (backgroundImageExists) ? 'no-repeat' : '',
         backgroundAttachment: (backgroundImageExists) ? 'fixed' : '',
         backgroundPosition: (backgroundImageExists) ? 'left top' : '',
@@ -31,19 +32,12 @@ const Songpart: FunctionComponent<Props> = (props) => {
 
         textAlign: 'center',
         position: 'absolute',
-        top: 0,
-        left: 0,
         width: '100%',
         height: '100%',
       }}
     >
       <Box
         style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          height: '20%',
-          margin: '-15% 0 0 -25%',
         }}
       >
         {

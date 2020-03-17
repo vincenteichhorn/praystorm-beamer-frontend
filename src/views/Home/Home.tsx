@@ -15,10 +15,11 @@ import {
   CardMedia,
 } from '@material-ui/core';
 import { RouteComponentProps, withRouter } from 'react-router';
+import { observer } from 'mobx-react';
 import mainRoutes from '../Routes';
 import QRCodeDialog from './QRCodeDialog';
 import { Link } from 'react-router-dom';
-import { ServiceContext } from '../../App';
+import { StoreContext } from '../../App';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,17 +39,15 @@ interface Props extends RouteComponentProps {
 
 const Home: FunctionComponent<Props> = (props) => {
   const classes = useStyles();
+  const { homeStore } = useContext(StoreContext);
   const [snackbarOpen, setSnackbarOpen] = useState('');
   const [modalOpen, setModalOpen] = useState('');
+  const host = homeStore.IPAddress;
 
-  const services = useContext(ServiceContext);
-  const [host, setHost] = useState();
-  
+
   useEffect(() => {
-    services.utilityService.getLocalIPAddress().then((data) => {
-      setHost(data.localIpAddress);
-    })
-  })
+    homeStore.getIPAddress();
+  });
 
   const redirect = (link: string) => {
     props.history.push(link);
@@ -150,7 +149,9 @@ const Home: FunctionComponent<Props> = (props) => {
               }
             />
             <QRCodeDialog 
-              link={route.link}
+              url={(window.document.location.port) ? 
+                ' http://' + host + ':' + window.document.location.port + route.link :
+                ' http://' + host + route.link}
               title={route.title}
               open={(modalOpen === route.title)}
               onClose={() => setModalOpen('')}
@@ -162,4 +163,4 @@ const Home: FunctionComponent<Props> = (props) => {
   );
 };
 
-export default withRouter(Home);
+export default withRouter(observer(Home));

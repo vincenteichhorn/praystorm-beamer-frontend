@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
 import { Box, Typography } from '@material-ui/core';
-import { Slide } from '../../../models/Slide';
+import { Slide } from '../../../models/DataModels';
 
 interface Props {
   slide: Slide;
@@ -31,6 +31,7 @@ const Videopart: FunctionComponent<Props> = (props) => {
 
   return (
     <Box
+      id="beamer"
       style={{
         backgroundImage: (backgroundImageExists) ? 'url(' + slide.data.style.backgroundImage + ')' : 'none',
         backgroundColor: (backgroundImageExists) ? 'none' : slide.data.style.backgroundColor,
@@ -41,8 +42,6 @@ const Videopart: FunctionComponent<Props> = (props) => {
 
         textAlign: 'center',
         position: 'fixed',
-        top: 0,
-        left: 0,
         width: '100%',
         height: '100%',
       }}

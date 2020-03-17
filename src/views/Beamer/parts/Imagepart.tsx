@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
 import { Box, Typography } from '@material-ui/core';
-import { Slide } from '../../../models/Slide';
+import { Slide } from '../../../models/DataModels';
 
 interface Props {
   slide: Slide;
@@ -23,6 +23,7 @@ const Imagepart: FunctionComponent<Props> = (props) => {
   return (
     <Box>
       <Box
+        id="beamer"
         style={{
           backgroundImage: (imageExists) ? 'url(' + slide.data.image + ')' : 'none',
           backgroundRepeat: (imageExists) ? 'no-repeat' : '',
@@ -31,8 +32,6 @@ const Imagepart: FunctionComponent<Props> = (props) => {
 
           textAlign: 'center',
           position: 'absolute',
-          top: 0,
-          left: 0,
           width: '100%',
           height: '100%',
         }}

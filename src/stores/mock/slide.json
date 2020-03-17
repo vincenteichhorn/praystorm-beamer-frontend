@@ -2,7 +2,7 @@
   "title": "Vers 1",
   "shorthand": "V1",
   "position": 0,
-  "type": "SONGPART",
+  "type": "",
   "data": {
     "lyrics": [
       "I lay my life down at Your feet",
@@ -15,7 +15,7 @@
     "text": "<h1>Das ist ein Text mit echtem HTML</h1>",
 
     "style": {
-      "backgroundImage": "http://localhost/praystorm-beamer-backend/images/test.jpg",
+      "backgroundImage": "/media/home/presenter-card.jpg", 
       "backgroundColor": "black",
       "verseFontSize": 48,
       "verseSpacing": 20,

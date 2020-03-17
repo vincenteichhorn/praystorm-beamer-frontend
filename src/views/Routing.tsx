@@ -66,6 +66,8 @@ const useStyles = makeStyles(theme => ({
     ...theme.mixins.toolbar,
   },
   drawerPaper: {
+    backgroundColor: 'rgba(0, 0, 0, 0.08)',
+    color: 'rgba(0, 0, 0, 0.87)',
     width: drawerWidth,
   },
   content: {
@@ -122,7 +124,7 @@ const Routing: FunctionComponent<Props> = (props) => {
           <Box> 
             <AppBar 
               position="static"
-              color="transparent"
+              color="primary"
               className={clsx(classes.appBar, {
                 [classes.appBarShift]: drawerOpen,
               })}

@@ -1,28 +1,17 @@
-import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 import { Typography, Dialog, Divider, DialogContent, DialogActions } from '@material-ui/core';
 import StyledDialogTitle from '../../components/Styled/StyledDialogTitle';
 import StyledButton from '../../components/StyledButton';
 import QRCode from 'qrcode.react';
-import { ServiceContext } from '../../App';
 
 interface Props {
-  link: string;
+  url: string;
   title: string;
   open: boolean;
   onClose: () => void;
 }
 
 const QRCodeDialog: FunctionComponent<Props> = (props) => {
-
-  const services = useContext(ServiceContext);
-  const [host, setHost] = useState();
-  
-  useEffect(() => {
-    services.utilityService.getLocalIPAddress().then((data) => {
-      setHost(data.localIpAddress);
-    })
-  })
-
 
   return (
     <Dialog
@@ -37,11 +26,7 @@ const QRCodeDialog: FunctionComponent<Props> = (props) => {
         <Divider />
         <DialogContent style={{ textAlign: 'center'}}>
           <QRCode 
-            value={
-              (window.document.location.port) ? 
-              'http://' + host + ':' + window.document.location.port + props.link :
-              'http://' + host + props.link
-            } 
+            value={props.url}
             style={{ 
               margin: 'auto', 
               height: 200, 
@@ -50,11 +35,7 @@ const QRCodeDialog: FunctionComponent<Props> = (props) => {
             }}
           />
           <Typography variant="h6">
-            {
-              (window.document.location.port) ? 
-              'http://' + host + ':' + window.document.location.port + props.link :
-              'http://' + host + props.link
-            }
+            {props.url}
           </Typography>
         </DialogContent>
         <Divider />

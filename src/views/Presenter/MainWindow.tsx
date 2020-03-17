@@ -1,16 +1,16 @@
 import React, { FunctionComponent, useState } from 'react';
-import Part from '../../models/Part';
-import Event from '../../models/Event';
-import { Paper, Toolbar, Box, Typography, makeStyles, Divider, Breadcrumbs, Button, Grid, IconButton, Icon, TableContainer, TableHead, Table, TableRow, TableCell, TableBody } from '@material-ui/core';
-import { ViewTypes } from '../../models/ViewTypes';
-import { Slide } from '../../models/Slide';
-import { SlideTypes } from '../../models/SlideTypes';
+import { Paper, Toolbar, Typography, makeStyles, Divider, Breadcrumbs, Grid, IconButton, Icon, TableContainer, TableHead, Table, TableRow, TableCell, TableBody } from '@material-ui/core';
+import ViewTypes from '../../models/ViewTypes';
+import { Part, Event, Slide, SlideTypes } from '../../models/DataModels';
+import ActionBar from './ActionBar';
 
 const useStyles = makeStyles(theme => ({
   paper: {
     minHeight: '83.7vh',
   },
   toolbar: {
+    backgroundColor: 'rgba(0, 0, 0, 0.08)',
+    color: 'rgba(0, 0, 0, 0.87)',
     paddingBottom: theme.spacing(0.4),
     paddingTop: theme.spacing(0.4),
   },
@@ -26,6 +26,7 @@ interface Props {
   parts: Part[] | undefined;
   slides: Slide[] | undefined;
   currentSlide: Slide | undefined;
+  onChangeSlide: (newSlide: Slide) => void;
 }
 
 const MainWindow: FunctionComponent<Props> = (props) => {
@@ -42,6 +43,9 @@ const MainWindow: FunctionComponent<Props> = (props) => {
             </Typography>
             <Typography color="textPrimary">
               { props.currentPart?.title }
+            </Typography>
+            <Typography color="textPrimary">
+              { props.currentSlide?.title }
             </Typography>
           </Breadcrumbs>
           <Grid item>
@@ -68,10 +72,7 @@ const MainWindow: FunctionComponent<Props> = (props) => {
       <Grid container direction="row" justify="space-between" style={{ width: '100%'}}>
         <Grid item xs>
           <Grid container direction="column" alignItems="center">
-            <Icon>start</Icon>
-            <Icon>start</Icon>
-            <Icon>start</Icon>
-            <Icon>start</Icon>
+            <ActionBar />
           </Grid>
         </Grid>
         <Grid item xs={11}>
@@ -92,15 +93,19 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                   <TableBody>
                     {
                       props.slides?.map((slide: Slide) => (
-                        <TableRow key={slide.position}>
+                        <TableRow 
+                          key={slide.position} 
+                          onClick={() => props.onChangeSlide(slide)}
+                          style={{ backgroundColor: (props.currentSlide?.title === slide.title) ? 'rgba(0, 0, 0, 0.08)' : '' }}
+                        >
                           <TableCell>{slide.shorthand}</TableCell>
                           <TableCell>{slide.title}</TableCell>
                           <TableCell>{slide.type}</TableCell>
                           <TableCell>
                             {
                               (slide.type === SlideTypes.SONGPART) ? (
-                                slide.data.lyrics.map(verse => (
-                                  <Typography>{verse}</Typography>
+                                slide.data.lyrics.map((verse, index) => (
+                                  <Typography key={index} >{verse}</Typography>
                                 ))
                               ) : (slide.type === SlideTypes.IMAGE) ? (
                                 slide.data.image

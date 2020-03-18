@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext, useEffect} from 'react';
+import React, { FunctionComponent, useContext} from 'react';
 import { Grid, } from '@material-ui/core';
 import { Event, Part, Slide } from '../../models/DataModels';
 import Sidebar from './Sidebar';
@@ -6,26 +6,25 @@ import MainWindow from './MainWindow';
 import { StoreContext } from '../../App';
 import { observer } from 'mobx-react';
 
-
 const Presenter: FunctionComponent = (props) => {
 
   const { presenterStore } = useContext(StoreContext);
-  useEffect(() => {
-    presenterStore.initState();
-  });
 
   const changeCurrentEvent = (newEvent: Event) => {
     presenterStore.currentEvent = newEvent;
     presenterStore.updateParts();
+    presenterStore.sendEvent();
   }
 
   const changeCurrentPart = (newPart: Part) => {
     presenterStore.currentPart = newPart;
     presenterStore.updateSlides();
+    presenterStore.sendPart();
   }
 
   const changeCurrenSlide = (newSlide: Slide) => {
     presenterStore.currentSlide = newSlide;
+    presenterStore.sendSlide();
   }
 
   return (

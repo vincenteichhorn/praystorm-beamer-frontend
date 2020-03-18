@@ -1,29 +1,93 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent, useEffect, useContext } from 'react';
 import { SlideTypes } from '../../models/DataModels';
 import Songpart from './parts/Songpart';
 import Imagepart from './parts/Imagepart';
 import Textpart from './parts/Textpart';
 import Videopart from './parts/Videopart';
+import { StoreContext } from '../../App';
+import { observer } from 'mobx-react';
 
 const Beamer: FunctionComponent = (props) => {
 
-  const slide = JSON.parse(JSON.stringify(require('../../stores/mock/slide.json')));
-  console.log(slide.data.lyrics);
-  const contentBox = document.getElementById('content');
-
+  const { beamerStore } = useContext(StoreContext);
   useEffect(() => {
-    if(contentBox) {
-      contentBox.className = '';
-    }
+    //reset styles from content div in Routing.tsx
+    const contentBox = document.getElementById('content');
+    if(contentBox) contentBox.className = '';
   })
 
   return (
-    (slide.type === SlideTypes.SONGPART) ? <Songpart slide={slide} /> : 
-    (slide.type === SlideTypes.IMAGE) ? <Imagepart slide={slide} /> :
-    (slide.type === SlideTypes.TEXT) ? <Textpart slide={slide} /> :
-    (slide.type === SlideTypes.VIDEO) ? <Videopart slide={slide} /> : <Songpart slide={slide} />
+    (beamerStore.hide) ? (
+      (beamerStore.slide) ? (
+        (beamerStore.slide.type === SlideTypes.SONGPART) ? <Songpart slide={beamerStore.slide} /> : 
+        (beamerStore.slide.type === SlideTypes.IMAGE) ? <Imagepart slide={beamerStore.slide} /> :
+        (beamerStore.slide.type === SlideTypes.TEXT) ? <Textpart slide={beamerStore.slide} /> :
+        (beamerStore.slide.type === SlideTypes.VIDEO) ? <Videopart slide={beamerStore.slide} /> : <Songpart slide={beamerStore.slide} />
+      ) : (
+        <Songpart slide={{
+          title: "Init",
+          shorthand: "I",
+          position: 0,
+          type: SlideTypes.SONGPART,
+          data: {
+            lyrics: [
+              "Das ist die Beameransicht.",
+              "Leider konnte noch keine Verbindung zu einem Presenter hergestellt werden."
+            ], 
+            image: "",
+            video: "",
+            text: "",
+      
+            style: {
+              backgroundImage: "", 
+              backgroundColor: "black",
+              verseFontSize: 48,
+              verseSpacing: 20,
+              copyrightFontSize: 12,
+              copyrightColor: "orange",
+              verseColor: "white",
+            }
+          },
+          copyright: {
+            author: "Julius Dachsel & Vincent Eichhorn",
+            album: "",
+            copyright: "© 2020",
+          } 
+        }} />
+      )
+    ) : (
+      <Textpart slide={{
+        title: "blackscreen",
+        shorthand: "black",
+        position: 0,
+        type: SlideTypes.TEXT,
+        data: {
+          lyrics: [], 
+          image: "",
+          video: "",
+          text: "",
+    
+          style: {
+            backgroundImage: "", 
+            backgroundColor: "black",
+            verseFontSize: 48,
+            verseSpacing: 20,
+            copyrightFontSize: 12,
+            copyrightColor: "orange",
+            verseColor: "white",
+          }
+        },
+        copyright: {
+          author: "Julius Dachsel & Vincent Eichhorn",
+          album: "",
+          copyright: "© 2020",
+        } 
+      }} />
+    )
+    
+
   );
    
 };
 
-export default Beamer;
+export default observer(Beamer);

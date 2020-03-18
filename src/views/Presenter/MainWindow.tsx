@@ -92,9 +92,9 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                   </TableHead>
                   <TableBody>
                     {
-                      props.slides?.map((slide: Slide) => (
+                      props.slides?.map((slide: Slide, index: number) => (
                         <TableRow 
-                          key={slide.position} 
+                          key={index} 
                           onClick={() => props.onChangeSlide(slide)}
                           style={{ backgroundColor: (props.currentSlide?.title === slide.title) ? 'rgba(0, 0, 0, 0.08)' : '' }}
                         >

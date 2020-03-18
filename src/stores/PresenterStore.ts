@@ -1,6 +1,7 @@
 import { Event, Part, Slide } from '../models/DataModels';
 import config from './Config';
 import { decorate, observable, runInAction, action } from 'mobx';
+import socket from './SocketClient';
 
 export default class PresenterStore {
 
@@ -12,11 +13,37 @@ export default class PresenterStore {
   currentSlide: Slide | undefined = undefined;
 
   hide: boolean = false;
+  rotateX: number = 0;
+  rotateY: number = 0;
+  scale: number = 1;
 
-  initState() {
+  constructor() {
+    // fetch all data from backend
     if(this.events.length < 1) this.fetchEvents();
     if(this.parts.length < 1) this.fetchParts();
     if(this.slides.length < 1) this.fetchSlides();
+
+    // set event listeners for the socket
+    socket.on('setEvent', (event: Event) => {
+      this.currentEvent = event;
+      this.updateParts();
+      this.updateSlides();
+    });
+    socket.on('setPart', (part: Part) => {
+      this.currentPart = part;
+      this.updateSlides();
+    })
+    socket.on('setSlide', (slide: Slide) => {
+      this.currentSlide = slide;
+    });
+    socket.on('blackout', (hide: boolean) => {
+      this.hide = hide;
+    });
+    socket.on('setAdjustment', (adjustment: {rotateX: number, rotateY: number, scale: number}) => {
+      this.rotateX = adjustment.rotateX;
+      this.rotateY = adjustment.rotateY;
+      this.scale = adjustment.scale;
+    });
   }
 
   updateEvents() { 
@@ -76,20 +103,44 @@ export default class PresenterStore {
       })
       .then((response) => response.json())
       .then((data) => {
-        runInAction(() =>{
+        runInAction(() => {
           this.slides = [...data];
+          this.slides = this.slides.map((slide: Slide) => {
+            const copyright = {
+              author: (this.currentPart) ? this.currentPart.author : "",
+              album: (this.currentPart) ? this.currentPart.album : "",
+              copyright: (this.currentPart) ? this.currentPart.copyright : "",
+            }
+            slide.copyright = copyright;
+            return slide;
+          })
           if(!this.currentSlide) this.currentSlide = [...data][0];
         });
       });
-    } else {
-      console.log("test");
     }
   }
 
   blackout() {
     this.hide = !this.hide;
+    socket.emit('blackout', this.hide);
+  }
+  sendEvent() {
+    socket.emit('setEvent', this.currentEvent);
+  }
+  sendPart() {
+    socket.emit('setPart', this.currentPart);
+  }
+  sendSlide() {
+    socket.emit('setSlide', this.currentSlide);
   }
 
+  sendAdjustment() {
+    socket.emit('setAdjustment', {
+      rotateX: this.rotateX,
+      rotateY: this.rotateY,
+      scale: this.scale,
+    });
+  }
 }
 
 decorate(PresenterStore, {
@@ -100,6 +151,9 @@ decorate(PresenterStore, {
   slides: observable,
   currentSlide: observable,
   hide: observable,
+  rotateX: observable,
+  rotateY: observable,
+  scale: observable,
 
   updateEvents: action,
   updateParts: action,

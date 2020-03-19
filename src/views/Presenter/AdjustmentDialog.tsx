@@ -1,8 +1,9 @@
-import React, { FunctionComponent, useState, useContext, useEffect } from 'react';
-import { Dialog, Divider, DialogContent, Typography, DialogActions, Slider, IconButton, Grid, Icon } from '@material-ui/core';
+import React, { FunctionComponent, useContext } from 'react';
+import { Dialog, Divider, DialogContent, Typography, Slider, IconButton, Grid, Icon, DialogActions } from '@material-ui/core';
 import StyledDialogTitle from '../../components/Styled/StyledDialogTitle';
 import { StoreContext } from '../../App';
 import { observer } from 'mobx-react';
+import StyledButton from '../../components/StyledButton';
 
 interface Props {
   open: boolean;
@@ -127,6 +128,28 @@ const AdjustmentDialog: FunctionComponent<Props> = (props) => {
             </Grid>
           </Grid>
         </DialogContent> 
+        <Divider />
+        <DialogActions style={{ padding: '10px' }}>
+          <StyledButton
+            variant="outlined"
+            size="large"
+            onClick={() => {
+              presenterStore.rotateX = 0;
+              presenterStore.rotateY = 0;
+              presenterStore.scale = 1;
+              presenterStore.sendAdjustment();
+            }}
+          >
+            Reset
+          </StyledButton>
+          <StyledButton
+            variant="outlined"
+            size="large"
+            onClick={() => props.onClose()}
+          >
+            Zurück
+          </StyledButton>
+        </DialogActions> 
     </Dialog>
   )
 }

@@ -62,3 +62,9 @@ export interface Route {
   showInList: boolean,
   exact: boolean,
 }
+
+export interface Adjustment {
+  rotateX: number;
+  rotateY: number;
+  scale: number;
+}

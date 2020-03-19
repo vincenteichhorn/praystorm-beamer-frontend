@@ -1,6 +1,8 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
+import React, { FunctionComponent, useState, useEffect, useContext } from 'react';
 import { Slide } from '../../../models/DataModels';
 import { Box, Typography } from '@material-ui/core';
+import { StoreContext } from '../../../App';
+import { observer } from 'mobx-react';
 
 interface Props {
   slide: Slide;
@@ -9,6 +11,7 @@ interface Props {
 const Songpart: FunctionComponent<Props> = (props) => {
 
   const { slide } = props;
+  const { beamerStore } = useContext(StoreContext);
   const [backgroundImageExists, setBackgroundImageExists] = useState(false);
 
   useEffect(() => {
@@ -23,6 +26,7 @@ const Songpart: FunctionComponent<Props> = (props) => {
     <Box
       id="beamer"
       style={{
+        transform: `rotateX(${beamerStore.adjustment.rotateX}deg) rotateY(${beamerStore.adjustment.rotateY}deg) scale(${beamerStore.adjustment.scale}, ${beamerStore.adjustment.scale})`,
         backgroundImage: (backgroundImageExists) ? 'url(' + slide.data.style.backgroundImage + ')' : 'none',
         backgroundColor: (backgroundImageExists) ? '' : slide.data.style.backgroundColor,
         backgroundRepeat: (backgroundImageExists) ? 'no-repeat' : '',
@@ -73,4 +77,4 @@ const Songpart: FunctionComponent<Props> = (props) => {
   );
 }
 
-export default Songpart;
+export default observer(Songpart);

@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useContext, useState } from 'react';
-import { Paper, Icon, Grid, IconButton, Box } from '@material-ui/core';
+import { Paper, Icon, Grid, IconButton } from '@material-ui/core';
 import { StoreContext } from '../../App';
 import { observer } from 'mobx-react';
 import AdjustmentDialog from './AdjustmentDialog';
@@ -26,9 +26,9 @@ const ActionBar: FunctionComponent = (props) => {
           onClick={() => presenterStore.blackout()}
         >
           {(presenterStore.hide) ? (
-            <Icon>visibility</Icon>
-          ) : (
             <Icon>visibility_off</Icon>
+          ) : (
+            <Icon>visibility</Icon>
           )}
         </IconButton>
         <IconButton

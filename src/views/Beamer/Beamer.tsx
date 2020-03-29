@@ -43,11 +43,12 @@ const Beamer: FunctionComponent = (props) => {
             style: {
               backgroundImage: "", 
               backgroundColor: "black",
-              verseFontSize: 48,
+              verseFontSize: 10,
               verseSpacing: 20,
               copyrightFontSize: 12,
               copyrightColor: "orange",
               verseColor: "white",
+              lineHeight: 10,
             }
           },
           copyright: {
@@ -72,11 +73,12 @@ const Beamer: FunctionComponent = (props) => {
           style: {
             backgroundImage: "", 
             backgroundColor: "black",
-            verseFontSize: 48,
+            verseFontSize: 10,
             verseSpacing: 20,
             copyrightFontSize: 12,
             copyrightColor: "orange",
             verseColor: "white",
+            lineHeight: 10,
           }
         },
         copyright: {

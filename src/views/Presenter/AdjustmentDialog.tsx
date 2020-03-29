@@ -42,8 +42,8 @@ const AdjustmentDialog: FunctionComponent<Props> = (props) => {
                 value={presenterStore.rotateX}
                 onChange={(event, val) => presenterStore.rotateX = val as number}
                 onChangeCommitted={() => presenterStore.sendAdjustment()}
-                min={0}
-                max={360}
+                min={-180}
+                max={180}
               />
             </Grid>
             <Grid item>
@@ -76,8 +76,8 @@ const AdjustmentDialog: FunctionComponent<Props> = (props) => {
                 value={presenterStore.rotateY}
                 onChange={(event, val) => presenterStore.rotateY = val as number}
                 onChangeCommitted={() => presenterStore.sendAdjustment()}
-                min={0}
-                max={360}
+                min={-180}
+                max={180}
               />
             </Grid>
             <Grid item>

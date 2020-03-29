@@ -43,6 +43,7 @@ export interface Slide {
       copyrightFontSize: number;
       verseColor: string;
       copyrightColor: string;
+      lineHeight: number;
     };
   };
   copyright: {

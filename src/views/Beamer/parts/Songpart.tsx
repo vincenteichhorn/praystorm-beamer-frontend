@@ -65,6 +65,8 @@ const Songpart: FunctionComponent<Props> = (props) => {
                   marginBottom: slide.data.style.verseSpacing,
                   color: slide.data.style.verseColor,
                   textShadow: '1px 1px 2px black',
+                  fontSize: slide.data.style.verseFontSize+'vh',
+                  lineHeight: slide.data.style.verseFontSize+'vh',
                 }}
               >
                 {verse}

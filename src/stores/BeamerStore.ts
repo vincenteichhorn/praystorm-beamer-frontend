@@ -9,7 +9,7 @@ export default class BeamerStore {
   adjustment: Adjustment = {
     rotateX: 0,
     rotateY: 0,
-    scale: 0,
+    scale: 1,
   };
 
   constructor() {

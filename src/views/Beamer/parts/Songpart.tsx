@@ -27,6 +27,7 @@ const Songpart: FunctionComponent<Props> = (props) => {
       style={{
         perspective: '1000px',
         height: '100vh',
+        overflow: 'hidden',
       }}
     >
       <Box

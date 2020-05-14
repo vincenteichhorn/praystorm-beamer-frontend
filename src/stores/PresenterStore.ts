@@ -27,7 +27,6 @@ export default class PresenterStore {
     socket.on('setEvent', (event: Event) => {
       this.currentEvent = event;
       this.updateParts();
-      this.updateSlides();
     });
     socket.on('setPart', (part: Part) => {
       this.currentPart = part;
@@ -91,7 +90,7 @@ export default class PresenterStore {
 
   updateSlides() { 
     this.currentSlide = undefined;
-    this.fetchSlides(); 
+    this.fetchSlides();
   }
   private fetchSlides() {
     if(this.currentPart) { 

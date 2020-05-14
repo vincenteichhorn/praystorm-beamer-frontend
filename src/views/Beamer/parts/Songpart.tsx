@@ -34,6 +34,8 @@ const Songpart: FunctionComponent<Props> = (props) => {
         id="beamer"
         style={{
           transform: `rotateX(${beamerStore.adjustment.rotateX}deg) rotateY(${beamerStore.adjustment.rotateY}deg) scale(${beamerStore.adjustment.scale}, ${beamerStore.adjustment.scale})`,
+          transformStyle: 'preserve-3d',
+          
           backgroundImage: (backgroundImageExists) ? 'url(' + slide.data.style.backgroundImage + ')' : 'none',
           backgroundColor: (backgroundImageExists) ? '' : slide.data.style.backgroundColor,
           backgroundRepeat: (backgroundImageExists) ? 'no-repeat' : '',
@@ -45,7 +47,6 @@ const Songpart: FunctionComponent<Props> = (props) => {
           position: 'absolute',
           width: '100%',
           height: '100%',
-          transformStyle: 'preserve-3d',
         }}
       >
         <Box

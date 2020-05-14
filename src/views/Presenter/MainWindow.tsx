@@ -6,7 +6,7 @@ import ActionBar from './ActionBar';
 
 const useStyles = makeStyles(theme => ({
   paper: {
-    minHeight: '83.7vh',
+    height: '83.69vh'
   },
   toolbar: {
     backgroundColor: 'rgba(0, 0, 0, 0.08)',
@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
   },
   tableContainer: {
     textAlign: 'center',
-    maxHeight: '76vh',
+    maxHeight: '76.3vh'
   }
 }));
 
@@ -81,7 +81,7 @@ const MainWindow: FunctionComponent<Props> = (props) => {
               <Typography>Grid</Typography>
             ) : (
               <TableContainer className={classes.tableContainer}>
-                <Table >
+                <Table stickyHeader >
                   <TableHead>
                     <TableRow>
                       <TableCell>Short</TableCell>

@@ -39,6 +39,8 @@ const Textpart: FunctionComponent<Props> = (props) => {
         position: 'fixed',
         width: '100%',
         height: '100%',
+        fontSize: slide.data.style.verseFontSize+'vh',
+        lineHeight: slide.data.style.verseFontSize+'vh',
       }}
     >
       <div 

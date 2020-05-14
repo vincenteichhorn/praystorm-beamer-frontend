@@ -3,12 +3,12 @@ import { Paper, Grid, FormControl, Select, MenuItem, List, ListItem, ListItemTex
 import { Event, Part, PartTypes } from '../../models/DataModels';
 
 const useStyles = makeStyles(theme => ({
-  box: {
+  select: {
     marginBottom: theme.spacing(1),
   },
   paper: {
-    minHeight: '75vh',
-  }
+    height: '75vh'
+  },
 }));
 
 interface Props {
@@ -29,47 +29,50 @@ const Sidebar: FunctionComponent<Props> = (props) => {
   }
 
   return (
-    <Grid container direction="column">
-      <Box className={classes.box}>
-        <FormControl
-          variant="outlined"
-          fullWidth
-        >
-          <Select
-            value={(props.currentEvent) ? props.currentEvent.name : ''}
-            onChange={findAndChangeEvent}
+    <Box>
+      <Grid container direction="column">
+        <Box className={classes.select}>
+          <FormControl
+            variant="outlined"
+            fullWidth
           >
+            <Select
+              value={(props.currentEvent) ? props.currentEvent.name : ''}
+              onChange={findAndChangeEvent}
+            >
+              {
+                (props.events) ? props.events.map((event: Event, index: number) => (
+                  <MenuItem key={index} value={event.name}>
+                    {event.name}
+                  </MenuItem>
+                )) : null
+              }
+            </Select>
+          </FormControl> 
+        </Box>
+        
+        <Paper  className={classes.paper}>
+          <List>
             {
-              (props.events) ? props.events.map((event: Event, index: number) => (
-                <MenuItem key={index} value={event.name}>
-                  {event.name}
-                </MenuItem>
+              (props.parts) ? props.parts.map((part: Part, index: number) => (
+                <ListItem 
+                  key={index} 
+                  button
+                  selected={(part.title === props.currentPart?.title)}
+                  onClick={() => props.onChangePart(part)}
+                >
+                  <ListItemIcon>
+                    { (part.type === PartTypes.SONG) ? <Icon>music_note</Icon> : <Icon>class</Icon>}
+                  </ListItemIcon>
+                  <ListItemText>{part.title}</ListItemText>
+                </ListItem>
               )) : null
             }
-          </Select>
-        </FormControl> 
-      </Box>
-      
-      <Paper className={classes.paper}>
-        <List>
-          {
-            (props.parts) ? props.parts.map((part: Part, index: number) => (
-              <ListItem 
-                key={index} 
-                button
-                selected={(part.title === props.currentPart?.title)}
-                onClick={() => props.onChangePart(part)}
-              >
-                <ListItemIcon>
-                  { (part.type === PartTypes.SONG) ? <Icon>music_note</Icon> : <Icon>class</Icon>}
-                </ListItemIcon>
-                <ListItemText>{part.title}</ListItemText>
-              </ListItem>
-            )) : null
-          }
-        </List>
-      </Paper>  
-    </Grid>
+          </List>
+        </Paper>  
+      </Grid>
+    </Box>
+    
   );
 }
 

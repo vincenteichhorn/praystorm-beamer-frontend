@@ -48,7 +48,7 @@ export default class PresenterStore {
   updateEvents() { 
     this.fetchEvents();
   }
-  private fetchEvents() {
+  fetchEvents() {
     fetch(config.apiHost + '/getEvents')
     .then((response) => response.json())
     .then((data) => {
@@ -66,7 +66,7 @@ export default class PresenterStore {
     this.currentPart = undefined;
     this.fetchParts();
   }
-  private fetchParts() {
+  fetchParts() {
     if(this.currentEvent) {
       const postParams = new FormData();
       postParams.append('name', this.currentEvent.name);
@@ -92,7 +92,7 @@ export default class PresenterStore {
     this.currentSlide = undefined;
     this.fetchSlides();
   }
-  private fetchSlides() {
+  fetchSlides() {
     if(this.currentPart) { 
       const postParams = new FormData();
       postParams.append('partname', this.currentPart.title);

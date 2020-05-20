@@ -22,7 +22,7 @@ const Presenter: FunctionComponent = (props) => {
     presenterStore.sendPart();
   }
 
-  const changeCurrenSlide = (newSlide: Slide) => {
+  const changeCurrentSlide = (newSlide: Slide) => {
     presenterStore.currentSlide = newSlide;
     presenterStore.sendSlide();
   }
@@ -30,10 +30,9 @@ const Presenter: FunctionComponent = (props) => {
   return (
     <Grid
       container
-      direction="row"
       spacing={2}
     >
-      <Grid item xs={3}>
+      <Grid item xs={12} md={3}>
         <Sidebar 
           events={presenterStore.events}
           currentEvent={presenterStore.currentEvent}
@@ -43,14 +42,14 @@ const Presenter: FunctionComponent = (props) => {
           onChangePart={changeCurrentPart}
         />
       </Grid>
-      <Grid item xs>
+      <Grid item xs={12} md={9}>
         <MainWindow 
           currentEvent={presenterStore.currentEvent}
           currentPart={presenterStore.currentPart}
           parts={presenterStore.parts}
           slides={presenterStore.slides}
           currentSlide={presenterStore.currentSlide}
-          onChangeSlide={changeCurrenSlide}
+          onChangeSlide={changeCurrentSlide}
         />
       </Grid>
     </Grid>

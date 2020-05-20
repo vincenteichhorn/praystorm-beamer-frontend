@@ -7,7 +7,9 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(1),
   },
   paper: {
-    height: '75vh'
+    [theme.breakpoints.up('md')]: {
+      height: '75vh'
+    },
   },
 }));
 

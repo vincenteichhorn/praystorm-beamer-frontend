@@ -69,7 +69,7 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                 <IconButton
                   onClick={() => setAdjustmentDialogOpen(true)}
                 >
-                  <Icon>settings_overscan</Icon>
+                  <Icon>transform</Icon>
                 </IconButton>
                 <Divider orientation="vertical" flexItem />
                 <IconButton 

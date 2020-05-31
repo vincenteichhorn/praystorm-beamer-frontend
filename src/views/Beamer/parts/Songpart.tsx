@@ -33,9 +33,6 @@ const Songpart: FunctionComponent<Props> = (props) => {
       <Box
         id="beamer"
         style={{
-          transform: `rotateX(${beamerStore.adjustment.rotateX}deg) rotateY(${beamerStore.adjustment.rotateY}deg) scale(${beamerStore.adjustment.scale}, ${beamerStore.adjustment.scale})`,
-          transformStyle: 'preserve-3d',
-          
           backgroundImage: (backgroundImageExists) ? 'url(' + slide.data.style.backgroundImage + ')' : 'none',
           backgroundColor: (backgroundImageExists) ? '' : slide.data.style.backgroundColor,
           backgroundRepeat: (backgroundImageExists) ? 'no-repeat' : '',
@@ -62,9 +59,8 @@ const Songpart: FunctionComponent<Props> = (props) => {
             slide.data.lyrics.map((verse: string, index: number) => (
               <Box 
                 key={index}
-                fontSize={slide.data.style.verseFontSize}
                 style={{
-                  marginBottom: slide.data.style.verseSpacing,
+                  marginBottom: slide.data.style.verseSpacing+'vh',
                   color: slide.data.style.verseColor,
                   textShadow: '1px 1px 2px black',
                   fontSize: slide.data.style.verseFontSize+'vh',
@@ -80,15 +76,16 @@ const Songpart: FunctionComponent<Props> = (props) => {
           style={{
             textAlign: 'left',
             color: slide.data.style.copyrightColor,
-            fontSize: slide.data.style.copyrightFontSize,
             position: 'absolute',
-            bottom: 15,
-            left: 15,
+            bottom: 2+'vh',
+            left: 1+'vw',
           }}
         >
-          <Typography>{slide.copyright.author}</Typography>
-          <Typography>{slide.copyright.album}</Typography>
-          <Typography>{slide.copyright.copyright}</Typography>
+          <Typography style={{ fontSize: slide.data.style.copyrightFontSize+'vh' }}>
+            {slide.copyright.author}<br/>
+            {slide.copyright.album}<br/>
+            {slide.copyright.copyright}
+          </Typography>
         </Box>
       </Box>
     </Box>

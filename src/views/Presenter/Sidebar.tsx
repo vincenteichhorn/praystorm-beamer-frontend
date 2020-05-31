@@ -54,23 +54,38 @@ const Sidebar: FunctionComponent<Props> = (props) => {
         </Box>
         
         <Paper  className={classes.paper}>
-          <List>
-            {
-              (props.parts) ? props.parts.map((part: Part, index: number) => (
-                <ListItem 
-                  key={index} 
-                  button
-                  selected={(part.title === props.currentPart?.title)}
-                  onClick={() => props.onChangePart(part)}
-                >
-                  <ListItemIcon>
-                    { (part.type === PartTypes.SONG) ? <Icon>music_note</Icon> : <Icon>class</Icon>}
-                  </ListItemIcon>
-                  <ListItemText>{part.title}</ListItemText>
-                </ListItem>
-              )) : null
-            }
-          </List>
+          <Grid style={{height: '100%'}} container direction="column" justify="space-between">
+            <Grid item>
+              <List>
+                {
+                  (props.parts) ? props.parts.map((part: Part, index: number) => (
+                    <ListItem 
+                      key={index} 
+                      button
+                      selected={(part.title === props.currentPart?.title)}
+                      onClick={() => props.onChangePart(part)}
+                    >
+                      <ListItemIcon>
+                        { (part.type === PartTypes.SONG) ? <Icon>music_note</Icon> : <Icon>class</Icon>}
+                      </ListItemIcon>
+                      <ListItemText>{part.title}</ListItemText>
+                    </ListItem>
+                  )) : null
+                }
+              </List>
+            </Grid>
+            <Grid item>
+              <iframe 
+                src={`${document.location.origin}/beamer`} 
+                style={{
+                  border: 'none',
+                  width: '100%',
+                  height: '100%'
+                }}
+                title='LivePreview'
+              />
+            </Grid>
+          </Grid>
         </Paper>  
       </Grid>
     </Box>

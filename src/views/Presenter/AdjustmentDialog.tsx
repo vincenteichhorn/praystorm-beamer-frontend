@@ -32,7 +32,7 @@ const AdjustmentDialog: FunctionComponent<Props> = (props) => {
             <Grid item>
               <IconButton 
                 onClick={() => {
-                  presenterStore.rotateX -= 1;
+                  presenterStore.rotateX -= 0.1;
                   presenterStore.sendAdjustment();
                 }}
               ><Icon>remove</Icon></IconButton>
@@ -42,6 +42,7 @@ const AdjustmentDialog: FunctionComponent<Props> = (props) => {
                 value={presenterStore.rotateX}
                 onChange={(event, val) => presenterStore.rotateX = val as number}
                 onChangeCommitted={() => presenterStore.sendAdjustment()}
+                step={0.1}
                 min={-180}
                 max={180}
               />
@@ -49,13 +50,13 @@ const AdjustmentDialog: FunctionComponent<Props> = (props) => {
             <Grid item>
               <IconButton 
                 onClick={() => {
-                  presenterStore.rotateX += 1;
+                  presenterStore.rotateX += 0.1;
                   presenterStore.sendAdjustment();
                 }}
               ><Icon>add</Icon></IconButton>
             </Grid>
             <Grid item>
-              <Typography style={{ width: '35px'}}>{presenterStore.rotateX}°</Typography>
+              <Typography style={{ width: '35px'}}>{Math.round((presenterStore.rotateX) * Math.pow(10, 2)) / Math.pow(10, 2)}°</Typography>
             </Grid>
           </Grid>
 
@@ -66,7 +67,7 @@ const AdjustmentDialog: FunctionComponent<Props> = (props) => {
             <Grid item>
               <IconButton 
                 onClick={() => {
-                  presenterStore.rotateY -= 1;
+                  presenterStore.rotateY -= 0.1;
                   presenterStore.sendAdjustment();
                 }}
               ><Icon>remove</Icon></IconButton>
@@ -76,6 +77,7 @@ const AdjustmentDialog: FunctionComponent<Props> = (props) => {
                 value={presenterStore.rotateY}
                 onChange={(event, val) => presenterStore.rotateY = val as number}
                 onChangeCommitted={() => presenterStore.sendAdjustment()}
+                step={0.1}
                 min={-180}
                 max={180}
               />
@@ -83,13 +85,13 @@ const AdjustmentDialog: FunctionComponent<Props> = (props) => {
             <Grid item>
               <IconButton 
                 onClick={() => {
-                  presenterStore.rotateY += 1;
+                  presenterStore.rotateY += 0.1;
                   presenterStore.sendAdjustment();
                 }}
               ><Icon>add</Icon></IconButton>
             </Grid>
             <Grid item>
-              <Typography style={{ width: '35px'}}>{presenterStore.rotateY}°</Typography>
+              <Typography style={{ width: '35px'}}>{Math.round((presenterStore.rotateY) * Math.pow(10, 2)) / Math.pow(10, 2)}°</Typography>
             </Grid>
           </Grid>
 

@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useContext } from 'react';
-import { Paper, Toolbar, Typography, makeStyles, Divider, Breadcrumbs, Grid, IconButton, Icon, TableContainer, TableHead, Table, TableRow, TableCell, TableBody, Box, Card, CardHeader } from '@material-ui/core';
+import { Paper, Toolbar, Typography, makeStyles, Divider, Breadcrumbs, Grid, IconButton, Icon, TableContainer, TableHead, Table, TableRow, TableCell, TableBody, Box, Card } from '@material-ui/core';
 import ViewTypes from '../../models/ViewTypes';
 import { Part, Event, Slide, SlideTypes } from '../../models/DataModels';
 import { StoreContext } from '../../App';
@@ -113,7 +113,7 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                             backgroundColor: 'black',
                           }}
                         >
-                          <Typography component="h3" style={{fontSize: '12pt', backgroundColor: 'white',}} > {slide.shorthand}</Typography>
+                          <Typography component="h3" style={{fontSize: '12pt', backgroundColor: 'white',}} > {slide.title}</Typography>
                           <Box
                             style={{
                               display: 'flex',

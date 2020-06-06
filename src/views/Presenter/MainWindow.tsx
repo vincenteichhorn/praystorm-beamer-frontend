@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useContext } from 'react';
-import { Paper, Toolbar, Typography, makeStyles, Divider, Breadcrumbs, Grid, IconButton, Icon, TableContainer, TableHead, Table, TableRow, TableCell, TableBody, Box, Card } from '@material-ui/core';
+import { Paper, Toolbar, Typography, makeStyles, Divider, Breadcrumbs, Grid, IconButton, Icon, TableContainer, TableHead, Table, TableRow, TableCell, TableBody, Box, Card, Slider } from '@material-ui/core';
 import ViewTypes from '../../models/ViewTypes';
 import { Part, Event, Slide, SlideTypes } from '../../models/DataModels';
 import { StoreContext } from '../../App';
@@ -86,6 +86,30 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                 >
                   <Icon>view_module</Icon>
                 </IconButton>
+                {(view === ViewTypes.CARDS)?(
+                  <div style={{width: 120,}}>
+                    <Grid container spacing={1}>
+                      <Grid item>
+                        <Icon>zoom_in</Icon>
+                      </Grid>
+                      <Grid item 
+                        style={{
+                          width: 60,
+                        }} 
+                      >
+                        <Slider 
+                          value={2}
+                          step={1}
+                          min={1}
+                          max={3}
+                        />
+                      </Grid>
+                      <Grid item xs>
+                        <Icon>zoom_out</Icon>
+                      </Grid>
+                    </Grid>
+                  </div>
+                ):('')}
               </Grid>
             </Grid>
           </Grid>

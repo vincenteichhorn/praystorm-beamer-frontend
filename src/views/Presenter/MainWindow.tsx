@@ -20,8 +20,15 @@ const useStyles = makeStyles(theme => ({
   },
   tableContainer: {
     textAlign: 'center',
-    maxHeight: '76.3vh'
+    [theme.breakpoints.up('md')]: {
+      height: '76.2vh'
+    },
   },
+  gridContainer: {
+    [theme.breakpoints.up('md')]: {
+      height: '76.2vh'
+    },
+  }
 }));
 
 interface Props {
@@ -117,7 +124,7 @@ const MainWindow: FunctionComponent<Props> = (props) => {
         <Divider />
             {
               (view === ViewTypes.CARDS) ? (
-                <Grid container spacing={1} >
+                <Grid container spacing={1} className={classes.gridContainer} >
                   {
                     props.slides?.map((slide: Slide, index: number) => (
                       <Grid item xs={7} sm={6}
@@ -146,41 +153,41 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                               height: '100%',
                             }}
                           >
-                          <Box
-                            style={{
-                              display: 'flex',
-                              flexDirection: 'column',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}
-                          >
-                          {
-                            (slide.type === SlideTypes.SONGPART) ? (
-                              slide.data.lyrics.map((verse, index) => (                                
-                                <Box 
-                                  key={index}
-                                  fontSize={slide.data.style.verseFontSize}
-                                  style={{
-                                    marginBottom: slide.data.style.verseSpacing,
-                                    color: slide.data.style.verseColor,
-                                    textShadow: '1px 1px 2px black',
-                                    fontSize: slide.data.style.verseFontSize*0.56*0.3+'vw',
-                                    lineHeight: slide.data.style.verseFontSize*0.56*0.1+'vw',
-                                    height: 1.56+'vw',
-                                  }}
-                                >
-                                  {verse}
-                                </Box>
-                              ))
-                            ) : (slide.type === SlideTypes.IMAGE) ? (
-                              slide.data.image
-                            ) : (slide.type === SlideTypes.VIDEO) ? (
-                              slide.data.video
-                            ) : (slide.type === SlideTypes.TEXT) ? (
-                              slide.data.text
-                            ) : null 
-                          }
-                          </Box>
+                            <Box
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}
+                            >
+                              {
+                                (slide.type === SlideTypes.SONGPART) ? (
+                                  slide.data.lyrics.map((verse, index) => (                                
+                                    <Box 
+                                      key={index}
+                                      fontSize={slide.data.style.verseFontSize}
+                                      style={{
+                                        marginBottom: slide.data.style.verseSpacing,
+                                        color: slide.data.style.verseColor,
+                                        textShadow: '1px 1px 2px black',
+                                        fontSize: slide.data.style.verseFontSize*0.56*0.3+'vw',
+                                        lineHeight: slide.data.style.verseFontSize*0.56*0.1+'vw',
+                                        height: 1.56+'vw',
+                                      }}
+                                    >
+                                      {verse}
+                                    </Box>
+                                  ))
+                                ) : (slide.type === SlideTypes.IMAGE) ? (
+                                  slide.data.image
+                                ) : (slide.type === SlideTypes.VIDEO) ? (
+                                  slide.data.video
+                                ) : (slide.type === SlideTypes.TEXT) ? (
+                                  slide.data.text
+                                ) : null 
+                              }
+                            </Box>
                           </Box>
                         </Card>
                       </Grid>

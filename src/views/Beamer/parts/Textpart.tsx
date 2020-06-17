@@ -4,6 +4,7 @@ import { Slide } from '../../../models/DataModels';
 
 interface Props {
   slide: Slide;
+  preview?: boolean;
 }
 
 const Textpart: FunctionComponent<Props> = (props) => {
@@ -31,7 +32,6 @@ const Textpart: FunctionComponent<Props> = (props) => {
         backgroundImage: (backgroundImageExists) ? 'url(' + slide.data.style.backgroundImage + ')' : 'none',
         backgroundColor: (backgroundImageExists) ? 'none' : slide.data.style.backgroundColor,
         backgroundRepeat: (backgroundImageExists) ? 'no-repeat' : '',
-        backgroundAttachment: (backgroundImageExists) ? 'fixed' : '',
         backgroundPosition: (backgroundImageExists) ? 'left top' : '',
         backgroundSize: (backgroundImageExists) ? 'cover' : '',
 

@@ -8,6 +8,7 @@ import { StoreContext } from '../../App';
 import { observer } from 'mobx-react';
 import { Box } from '@material-ui/core';
 
+
 const Beamer: FunctionComponent = (props) => {
 
   const { beamerStore } = useContext(StoreContext);
@@ -28,10 +29,10 @@ const Beamer: FunctionComponent = (props) => {
     >
       {(!beamerStore.hide) ? (
         (beamerStore.slide) ? (
-          (beamerStore.slide.type === SlideTypes.SONGPART) ? <Songpart slide={beamerStore.slide} /> : 
-          (beamerStore.slide.type === SlideTypes.IMAGE) ? <Imagepart slide={beamerStore.slide} /> :
-          (beamerStore.slide.type === SlideTypes.TEXT) ? <Textpart slide={beamerStore.slide} /> :
-          (beamerStore.slide.type === SlideTypes.VIDEO) ? <Videopart slide={beamerStore.slide} /> : <Songpart slide={beamerStore.slide} />
+          (beamerStore.slide.type === SlideTypes.SONGPART) ? <Songpart slide={beamerStore.slide}/> : 
+          (beamerStore.slide.type === SlideTypes.IMAGE) ? <Imagepart slide={beamerStore.slide}/> :
+          (beamerStore.slide.type === SlideTypes.TEXT) ? <Textpart slide={beamerStore.slide}/> :
+          (beamerStore.slide.type === SlideTypes.VIDEO) ? <Videopart slide={beamerStore.slide}/> : <Songpart slide={beamerStore.slide}/>
         ) : (
           <Songpart slide={{
             title: "Init",
@@ -82,7 +83,7 @@ const Beamer: FunctionComponent = (props) => {
               backgroundColor: "black",
               verseFontSize: 10,
               verseSpacing: 20,
-              copyrightFontSize: 12,
+              copyrightFontSize: 2,
               copyrightColor: "orange",
               verseColor: "white",
               lineHeight: 10,

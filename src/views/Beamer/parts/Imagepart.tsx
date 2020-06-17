@@ -4,6 +4,7 @@ import { Slide } from '../../../models/DataModels';
 
 interface Props {
   slide: Slide;
+  preview?: boolean;
 }
 
 const Imagepart: FunctionComponent<Props> = (props) => {

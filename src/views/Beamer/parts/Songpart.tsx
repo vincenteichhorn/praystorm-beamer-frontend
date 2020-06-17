@@ -6,12 +6,12 @@ import { observer } from 'mobx-react';
 
 interface Props {
   slide: Slide;
+  preview?: boolean;
 }
 
 const Songpart: FunctionComponent<Props> = (props) => {
 
-  const { slide } = props;
-  const { beamerStore } = useContext(StoreContext);
+  const { slide, preview } = props;
   const [backgroundImageExists, setBackgroundImageExists] = useState(false);
 
   useEffect(() => {
@@ -20,13 +20,14 @@ const Songpart: FunctionComponent<Props> = (props) => {
       setBackgroundImageExists(true);
     };
     img.src = slide.data.style.backgroundImage;
+    console.log(slide.data.style.copyrightFontSize);
   })
 
   return (
     <Box
       style={{
         perspective: '1000px',
-        height: '100vh',
+        height: (preview) ? 'inherit' : '100vh',
         overflow: 'hidden',
       }}
     >
@@ -36,12 +37,10 @@ const Songpart: FunctionComponent<Props> = (props) => {
           backgroundImage: (backgroundImageExists) ? 'url(' + slide.data.style.backgroundImage + ')' : 'none',
           backgroundColor: (backgroundImageExists) ? '' : slide.data.style.backgroundColor,
           backgroundRepeat: (backgroundImageExists) ? 'no-repeat' : '',
-          backgroundAttachment: (backgroundImageExists) ? 'fixed' : '',
           backgroundPosition: (backgroundImageExists) ? 'left top' : '',
           backgroundSize: (backgroundImageExists) ? 'cover' : '',
 
           textAlign: 'center',
-          position: 'absolute',
           width: '100%',
           height: '100%',
         }}
@@ -53,6 +52,7 @@ const Songpart: FunctionComponent<Props> = (props) => {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
+            padding: (preview) ? '20%' : 'none'
           }}
         >
           {
@@ -60,11 +60,11 @@ const Songpart: FunctionComponent<Props> = (props) => {
               <Box 
                 key={index}
                 style={{
-                  marginBottom: slide.data.style.verseSpacing+'vh',
+                  marginBottom: (preview) ? slide.data.style.verseSpacing+'%' : slide.data.style.verseSpacing+'vh',
                   color: slide.data.style.verseColor,
                   textShadow: '1px 1px 2px black',
-                  fontSize: slide.data.style.verseFontSize+'vh',
-                  lineHeight: slide.data.style.verseFontSize+'vh',
+                  fontSize: (preview) ? slide.data.style.verseFontSize*20+'%' : slide.data.style.verseFontSize+'vh',
+                  lineHeight: (preview) ? slide.data.style.verseFontSize*20+'%' : slide.data.style.verseFontSize+'vh',
                 }}
               >
                 {verse}
@@ -81,7 +81,7 @@ const Songpart: FunctionComponent<Props> = (props) => {
             left: 1+'vw',
           }}
         >
-          <Typography style={{ fontSize: slide.data.style.copyrightFontSize+'vh' }}>
+          <Typography style={{  fontSize: (preview) ? slide.data.style.copyrightFontSize*30+'%' : slide.data.style.copyrightFontSize+'vh'}}>
             {slide.copyright.author}<br/>
             {slide.copyright.album}<br/>
             {slide.copyright.copyright}

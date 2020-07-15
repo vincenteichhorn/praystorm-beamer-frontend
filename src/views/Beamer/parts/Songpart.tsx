@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect, useContext } from 'react';
+import React, { FunctionComponent, useState, useEffect, useContext, useRef } from 'react';
 import { Slide } from '../../../models/DataModels';
 import { Box, Typography } from '@material-ui/core';
 import { StoreContext } from '../../../App';
@@ -10,7 +10,6 @@ interface Props {
 }
 
 const Songpart: FunctionComponent<Props> = (props) => {
-
   const { slide, preview } = props;
   const [backgroundImageExists, setBackgroundImageExists] = useState(false);
 
@@ -20,14 +19,13 @@ const Songpart: FunctionComponent<Props> = (props) => {
       setBackgroundImageExists(true);
     };
     img.src = slide.data.style.backgroundImage;
-    console.log(slide.data.style.copyrightFontSize);
   })
 
   return (
     <Box
       style={{
         perspective: '1000px',
-        height: (preview) ? 'inherit' : '100vh',
+        height: (preview) ? '' : '100vh',
         overflow: 'hidden',
       }}
     >
@@ -42,7 +40,7 @@ const Songpart: FunctionComponent<Props> = (props) => {
 
           textAlign: 'center',
           width: '100%',
-          height: '100%',
+          height: (preview) ? '' : '100%',
         }}
       >
         <Box
@@ -63,8 +61,8 @@ const Songpart: FunctionComponent<Props> = (props) => {
                   marginBottom: (preview) ? slide.data.style.verseSpacing+'%' : slide.data.style.verseSpacing+'vh',
                   color: slide.data.style.verseColor,
                   textShadow: '1px 1px 2px black',
-                  fontSize: (preview) ? slide.data.style.verseFontSize*20+'%' : slide.data.style.verseFontSize+'vh',
-                  lineHeight: (preview) ? slide.data.style.verseFontSize*20+'%' : slide.data.style.verseFontSize+'vh',
+                  fontSize: (preview) ? slide.data.style.verseFontSize*9+'%' : slide.data.style.verseFontSize+'vh',
+                  lineHeight: (preview) ? slide.data.style.verseFontSize*9+'%' : slide.data.style.verseFontSize+'vh',
                 }}
               >
                 {verse}
@@ -81,7 +79,7 @@ const Songpart: FunctionComponent<Props> = (props) => {
             left: 1+'vw',
           }}
         >
-          <Typography style={{  fontSize: (preview) ? slide.data.style.copyrightFontSize*30+'%' : slide.data.style.copyrightFontSize+'vh'}}>
+          <Typography style={{  fontSize: (preview) ? slide.data.style.copyrightFontSize*9+'%' : slide.data.style.copyrightFontSize+'vh'}}>
             {slide.copyright.author}<br/>
             {slide.copyright.album}<br/>
             {slide.copyright.copyright}

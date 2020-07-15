@@ -20,7 +20,6 @@ export default class BeamerStore {
       this.hide = hide;
     });
     socket.on('setAdjustment', (adjustment: Adjustment) => {
-      console.log('rec');
       this.adjustment = adjustment;
     })
   }

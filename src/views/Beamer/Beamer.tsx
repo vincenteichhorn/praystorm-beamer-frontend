@@ -51,9 +51,9 @@ const Beamer: FunctionComponent = (props) => {
               style: {
                 backgroundImage: "", 
                 backgroundColor: "black",
-                verseFontSize: 10,
-                verseSpacing: 20,
-                copyrightFontSize: 12,
+                verseFontSize: 8,
+                verseSpacing: 6,
+                copyrightFontSize: 2,
                 copyrightColor: "orange",
                 verseColor: "white",
                 lineHeight: 10,
@@ -81,8 +81,8 @@ const Beamer: FunctionComponent = (props) => {
             style: {
               backgroundImage: "", 
               backgroundColor: "black",
-              verseFontSize: 10,
-              verseSpacing: 20,
+              verseFontSize: 8,
+              verseSpacing: 6,
               copyrightFontSize: 2,
               copyrightColor: "orange",
               verseColor: "white",

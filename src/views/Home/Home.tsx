@@ -47,6 +47,8 @@ const Home: FunctionComponent<Props> = (props) => {
 
   useEffect(() => {
     homeStore.getIPAddress();
+    const body = document.getElementsByTagName('body')[0];
+    body.style.backgroundColor = 'white';
   });
 
   const redirect = (link: string) => {

@@ -148,7 +148,7 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                         <div
                           style={{
                             width: '100%',
-                            paddingTop: '55%',
+                            paddingTop: '56.25%',
                             position: 'relative', 
                             overflow: 'hidden'
                           }}

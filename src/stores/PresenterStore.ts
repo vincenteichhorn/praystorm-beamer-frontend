@@ -13,6 +13,7 @@ export default class PresenterStore {
   currentSlide: Slide | undefined = undefined;
 
   hide: boolean = false;
+  hideForeground: boolean = false;
   rotateX: number = 0;
   rotateY: number = 0;
   scale: number = 1;
@@ -38,6 +39,9 @@ export default class PresenterStore {
     socket.on('blackout', (hide: boolean) => {
       this.hide = hide;
     });
+    socket.on('blackoutForeground', (hideForeground: boolean) => {
+      this.hideForeground = hideForeground;
+    })
     socket.on('setAdjustment', (adjustment: {rotateX: number, rotateY: number, scale: number}) => {
       this.rotateX = adjustment.rotateX;
       this.rotateY = adjustment.rotateY;
@@ -123,6 +127,12 @@ export default class PresenterStore {
     this.hide = !this.hide;
     socket.emit('blackout', this.hide);
   }
+
+  blackoutForeground() {
+    this.hideForeground = !this.hideForeground;
+    socket.emit('blackoutForeground', this.hideForeground);
+  }
+
   sendEvent() {
     socket.emit('setEvent', this.currentEvent);
   }
@@ -150,6 +160,7 @@ decorate(PresenterStore, {
   slides: observable,
   currentSlide: observable,
   hide: observable,
+  hideForeground: observable,
   rotateX: observable,
   rotateY: observable,
   scale: observable,
@@ -158,4 +169,5 @@ decorate(PresenterStore, {
   updateParts: action,
   updateSlides: action,
   blackout: action,
+  blackoutForeground: action,
 });

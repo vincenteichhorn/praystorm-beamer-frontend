@@ -77,6 +77,15 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                   )}
                 </IconButton>
                 <IconButton
+                  onClick={() => presenterStore.blackoutForeground()}
+                >
+                  {(presenterStore.hideForeground) ? (
+                    <Icon>flip_to_back</Icon>
+                  ) : (
+                    <Icon>flip_to_front</Icon>
+                  )}
+                </IconButton>
+                <IconButton
                   onClick={() => setAdjustmentDialogOpen(true)}
                 >
                   <Icon>transform</Icon>
@@ -113,7 +122,7 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                     onChange={(event, val) => {setGridSize(val as number)}}
                     step={1}
                     min={2}
-                    max={4}
+                    max={4} 
                   />
                 ):('')}
                 {(view === ViewTypes.CARDS) ? (

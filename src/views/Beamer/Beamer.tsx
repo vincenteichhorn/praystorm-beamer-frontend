@@ -17,7 +17,6 @@ const Beamer: FunctionComponent = (props) => {
     const contentBox = document.getElementById('content');
     const body = document.getElementsByTagName('body')[0];
     if(contentBox) contentBox.className = '';
-    if(body) body.style.backgroundColor = 'black';
   });
 
   return (
@@ -27,7 +26,7 @@ const Beamer: FunctionComponent = (props) => {
         transformStyle: 'preserve-3d',
       }}
     >
-      {(!beamerStore.hide) ? (
+      {(!beamerStore.hide && !beamerStore.hideForeground) ? (
         (beamerStore.slide) ? (
           (beamerStore.slide.type === SlideTypes.SONGPART) ? <Songpart slide={beamerStore.slide}/> : 
           (beamerStore.slide.type === SlideTypes.IMAGE) ? <Imagepart slide={beamerStore.slide}/> :
@@ -67,35 +66,66 @@ const Beamer: FunctionComponent = (props) => {
           }} />
         )
       ) : (
-        <Textpart slide={{
-          title: "blackscreen",
-          shorthand: "black",
-          position: 0,
-          type: SlideTypes.TEXT,
-          data: {
-            lyrics: [], 
-            image: "",
-            video: "",
-            text: "",
-      
-            style: {
-              backgroundImage: "", 
-              backgroundColor: "black",
-              verseFontSize: 8,
-              verseSpacing: 6,
-              copyrightFontSize: 2,
-              copyrightColor: "orange",
-              verseColor: "white",
-              lineHeight: 10,
-            }
-          },
-          copyright: {
-            author: "Julius Dachsel & Vincent Eichhorn",
-            album: "",
-            copyright: "© 2020",
-          } 
-        }} />
-      )}
+        (beamerStore.hide) ? (
+          <Textpart slide={{
+            title: "blackscreen",
+            shorthand: "black",
+            position: 0,
+            type: SlideTypes.SONGPART,
+            data: {
+              lyrics: [], 
+              image: "",
+              video: "",
+              text: "",
+        
+              style: {
+                backgroundImage: "", 
+                backgroundColor: "red",
+                verseFontSize: 8,
+                verseSpacing: 6,
+                copyrightFontSize: 2,
+                copyrightColor: "orange",
+                verseColor: "white",
+                lineHeight: 10,
+              }
+            },
+            copyright: {
+              author: "Julius Dachsel & Vincent Eichhorn",
+              album: "",
+              copyright: "© 2020",
+            } 
+          }} />
+        ) : (
+          <Songpart slide={{
+            title: "blackscreen",
+            shorthand: "black",
+            position: 0,
+            type: SlideTypes.SONGPART,
+            data: {
+              lyrics: [], 
+              image: "",
+              video: "",
+              text: "",
+        
+              style: {
+                backgroundImage: beamerStore.slide?.data.style.backgroundImage as string, 
+                backgroundColor: "red",
+                verseFontSize: 8,
+                verseSpacing: 6,
+                copyrightFontSize: 2,
+                copyrightColor: "orange",
+                verseColor: "white",
+                lineHeight: 10,
+              }
+            },
+            copyright: {
+              author: "",
+              album: "",
+              copyright: "",
+            } 
+          }} />
+        ))
+      }
     </Box>
   );
    

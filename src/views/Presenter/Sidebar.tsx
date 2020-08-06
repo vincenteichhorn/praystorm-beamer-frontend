@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ChangeEvent } from 'react';
+import React, { FunctionComponent, ChangeEvent, useEffect } from 'react';
 import { Paper, Grid, FormControl, Select, MenuItem, List, ListItem, ListItemText, makeStyles, Box, ListItemIcon, Icon } from '@material-ui/core';
 import { Event, Part, PartTypes } from '../../models/DataModels';
 
@@ -29,6 +29,33 @@ const Sidebar: FunctionComponent<Props> = (props) => {
     const newEvent = props.events.find((event) => event.name === changeEvent.target.value);
     if(newEvent) props.onChangeEvent(newEvent);
   }
+
+  useEffect(() => {
+    const keyUpEventListener = (event: KeyboardEvent) => {
+      if(event.keyCode === 38) { // ^
+        let id = props.parts?.findIndex((element) => element.title === props.currentPart?.title);
+        if(id < 1 || id > props.parts?.length - 1) {
+          id = 0;
+        } else {
+          id = id - 1;
+        }
+        props.onChangePart(props.parts[id]);
+      }
+      if(event.keyCode === 40) { // V
+        let id = props.parts?.findIndex((element) => element.title === props.currentPart?.title);
+        if(id < 0 || id > props.parts?.length - 2) {
+          id = 0;
+        } else {
+          id = id + 1;
+        }
+        props.onChangePart(props.parts[id]);
+      }
+    }
+    document.addEventListener('keyup', keyUpEventListener);
+    return () => {
+      document.removeEventListener('keyup', keyUpEventListener);
+    };
+  })
 
   return (
     <Box>

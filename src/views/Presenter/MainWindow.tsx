@@ -94,30 +94,31 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                 >
                   <Icon>view_module</Icon>
                 </IconButton>
-                {(view === ViewTypes.CARDS)?(
-                  <div style={{width: 120,}}>
-                    <Grid container spacing={1}>
-                      <Grid item>
-                        <Icon>zoom_in</Icon>
-                      </Grid>
-                      <Grid item 
-                        style={{
-                          width: 60,
-                        }} 
-                      >
-                        <Slider 
-                          value={2}
-                          step={1}
-                          min={1}
-                          max={3}
-                        />
-                      </Grid>
-                      <Grid item xs>
-                        <Icon>zoom_out</Icon>
-                      </Grid>
-                    </Grid>
-                  </div>
+                {(view === ViewTypes.CARDS) ? (
+                  <IconButton 
+                    disableRipple
+                  >
+                    <Icon>zoom_in</Icon>
+                  </IconButton>
+                ) : null}
+                {(view === ViewTypes.CARDS) ? (
+                  <Slider 
+                    style={{
+                      width: '100px',
+                    }}
+                    value={2}
+                    step={1}
+                    min={1}
+                    max={3}
+                  />
                 ):('')}
+                {(view === ViewTypes.CARDS) ? (
+                  <IconButton 
+                    disableRipple
+                  >
+                    <Icon>zoom_out</Icon>
+                  </IconButton>
+                ) : null}
               </Grid>
             </Grid>
           </Grid>

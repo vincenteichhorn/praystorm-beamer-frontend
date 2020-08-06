@@ -79,11 +79,15 @@ const Songpart: FunctionComponent<Props> = (props) => {
             left: 1+'vw',
           }}
         >
-          <Typography style={{  fontSize: (preview) ? slide.data.style.copyrightFontSize*9+'%' : slide.data.style.copyrightFontSize+'vh'}}>
-            {slide.copyright.author}<br/>
-            {slide.copyright.album}<br/>
-            {slide.copyright.copyright}
-          </Typography>
+          {
+            (!preview) ? (
+              <Typography style={{  fontSize: (preview) ? slide.data.style.copyrightFontSize*9+'%' : slide.data.style.copyrightFontSize+'vh'}}>
+              {slide.copyright.author}<br/>
+              {slide.copyright.album}<br/>
+              {slide.copyright.copyright}
+            </Typography>
+            ) : null
+          }
         </Box>
       </Box>
     </Box>

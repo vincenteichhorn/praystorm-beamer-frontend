@@ -20,8 +20,8 @@ const Songpart: FunctionComponent<Props> = (props) => {
       setBackgroundImageExists(true);
     };
     img.src = slide.data.style.backgroundImage;
-    const body = document.getElementsByTagName('body')[0];
-    body.style.backgroundColor = slide.data.style.backgroundColor
+    //const body = document.getElementsByTagName('body')[0];
+    //body.style.backgroundColor = slide.data.style.backgroundColor
   })
 
   return (

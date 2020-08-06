@@ -46,6 +46,7 @@ const MainWindow: FunctionComponent<Props> = (props) => {
   const [view, setView] = useState(ViewTypes.LIST);
   const { presenterStore } = useContext(StoreContext);
   const [adjustmentDialogOpen, setAdjustmentDialogOpen] = useState(false);
+  const [gridSize, setGridSize] = useState(2);
 
   return (
     <Box>
@@ -106,7 +107,8 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                     style={{
                       width: '100px',
                     }}
-                    value={2}
+                    value={gridSize}
+                    onChange={(event, val) => {setGridSize(val as number)}}
                     step={1}
                     min={1}
                     max={3}

@@ -46,7 +46,7 @@ const MainWindow: FunctionComponent<Props> = (props) => {
   const [view, setView] = useState(ViewTypes.LIST);
   const { presenterStore } = useContext(StoreContext);
   const [adjustmentDialogOpen, setAdjustmentDialogOpen] = useState(false);
-  const [gridSize, setGridSize] = useState(2);
+  const [gridSize, setGridSize] = useState(3);
 
   return (
     <Box>
@@ -98,6 +98,7 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                 {(view === ViewTypes.CARDS) ? (
                   <IconButton 
                     disableRipple
+                    onClick={(event) => {(gridSize > 2) ? setGridSize(gridSize - 1) : null}}
                   >
                     <Icon>zoom_in</Icon>
                   </IconButton>
@@ -110,13 +111,14 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                     value={gridSize}
                     onChange={(event, val) => {setGridSize(val as number)}}
                     step={1}
-                    min={1}
-                    max={3}
+                    min={2}
+                    max={4}
                   />
                 ):('')}
                 {(view === ViewTypes.CARDS) ? (
                   <IconButton 
                     disableRipple
+                    onClick={(event) => {(gridSize < 4) ? setGridSize(gridSize + 1) : null}}
                   >
                     <Icon>zoom_out</Icon>
                   </IconButton>

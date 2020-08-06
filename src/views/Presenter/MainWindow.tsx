@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useContext } from 'react';
-import { Paper, Toolbar, Typography, makeStyles, Divider, Breadcrumbs, Grid, IconButton, Icon, TableContainer, TableHead, Table, TableRow, TableCell, TableBody, Box, Card, Slider } from '@material-ui/core';
+import { Paper, Toolbar, Typography, makeStyles, Divider, Breadcrumbs, Grid, IconButton, Icon, TableContainer, TableHead, Table, TableRow, TableCell, TableBody, Box, Card, Slider, Hidden } from '@material-ui/core';
 import ViewTypes from '../../models/ViewTypes';
 import { Part, Event, Slide, SlideTypes } from '../../models/DataModels';
 import { StoreContext } from '../../App';
@@ -131,20 +131,27 @@ const MainWindow: FunctionComponent<Props> = (props) => {
         <Divider />
             {
               (view === ViewTypes.CARDS) ? (
-                <Grid container className={classes.gridContainer} >
+                <Grid container className={classes.gridContainer} spacing={1}>
                   {
                     props.slides?.map((slide: Slide, index: number) => (
                       <Grid 
+                        id='test'
                         item
-                        xs={12/gridSize}
-                        style={{ 
-                          border: (props.currentSlide?.title === slide.title) ? '2px red solid' : '', 
-                        }}
+                        xs={12/gridSize as 3 | 4 | 6}
                       >
-                        <Songpart 
-                          preview={true} 
-                          slide={slide}
-                        />
+                        <div
+                          style={{
+                            display: 'block',
+                            width: '100%',
+                            aspectRatio: '16/9',
+                            border: (props.currentSlide?.title === slide.title) ? '2px red solid' : '',
+                          }}
+                        >
+                          <Songpart 
+                            preview={true} 
+                            slide={slide}
+                          />
+                        </div>
                       </Grid>
                     ))
                   }

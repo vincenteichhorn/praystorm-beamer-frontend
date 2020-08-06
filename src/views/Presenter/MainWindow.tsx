@@ -132,14 +132,18 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                 <Grid container className={classes.gridContainer} >
                   {
                     props.slides?.map((slide: Slide, index: number) => (
-                      <div
-                        style={{ border: (props.currentSlide?.title === slide.title) ? '2px red solid' : '' }}
+                      <Grid 
+                        item
+                        xs={12/gridSize}
+                        style={{ 
+                          border: (props.currentSlide?.title === slide.title) ? '2px red solid' : '', 
+                        }}
                       >
                         <Songpart 
                           preview={true} 
                           slide={slide}
                         />
-                      </div>
+                      </Grid>
                     ))
                   }
                 </Grid>

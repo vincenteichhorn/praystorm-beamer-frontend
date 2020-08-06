@@ -99,7 +99,7 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                 {(view === ViewTypes.CARDS) ? (
                   <IconButton 
                     disableRipple
-                    onClick={(event) => {(gridSize > 2) ? setGridSize(gridSize - 1) : null}}
+                    onClick={(event) => {(gridSize > 2) ? setGridSize(gridSize - 1) : setGridSize(gridSize)}}
                   >
                     <Icon>zoom_in</Icon>
                   </IconButton>
@@ -119,7 +119,7 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                 {(view === ViewTypes.CARDS) ? (
                   <IconButton 
                     disableRipple
-                    onClick={(event) => {(gridSize < 4) ? setGridSize(gridSize + 1) : null}}
+                    onClick={(event) => {(gridSize < 4) ? setGridSize(gridSize + 1) : setGridSize(gridSize)}}
                   >
                     <Icon>zoom_out</Icon>
                   </IconButton>

@@ -6,6 +6,7 @@ import { StoreContext } from '../../App';
 import AdjustmentDialog from './AdjustmentDialog';
 import { observer } from 'mobx-react';
 import Songpart from '../Beamer/parts/Songpart';
+import './style.css';
 
 const useStyles = makeStyles(theme => ({
   actionBar: {
@@ -129,7 +130,14 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                 <Grid container className={classes.gridContainer} >
                   {
                     props.slides?.map((slide: Slide, index: number) => (
-                      <Songpart preview={true} slide={slide}/>
+                      <div
+                        style={{ border: (props.currentSlide?.title === slide.title) ? '2px red solid' : '' }}
+                      >
+                        <Songpart 
+                          preview={true} 
+                          slide={slide}
+                        />
+                      </div>
                     ))
                   }
                 </Grid>

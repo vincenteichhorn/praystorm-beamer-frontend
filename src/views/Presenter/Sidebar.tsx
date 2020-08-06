@@ -54,7 +54,7 @@ const Sidebar: FunctionComponent<Props> = (props) => {
         </Box>
         
         <Paper  className={classes.paper}>
-          <Grid style={{height: '100%'}} container direction="column" justify="space-between">
+          <Grid style={{maxHeight: '100%'}} container direction="column" justify="space-between">
             <Grid item>
               <List>
                 {
@@ -75,15 +75,29 @@ const Sidebar: FunctionComponent<Props> = (props) => {
               </List>
             </Grid>
             <Grid item>
-              <iframe 
-                src={`${document.location.origin}/beamer`} 
+              <div
                 style={{
-                  border: 'none',
+                  position: 'relative', 
                   width: '100%',
-                  height: '100%',
+                  height: '56.25%',
+                  paddingTop: '56.25%',
+                  overflow: 'hidden'
                 }}
-                title='LivePreview'
-              />
+              >
+                <iframe 
+                  src={`${document.location.origin}/beamer`} 
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    display: 'block',
+                    border: 'none',
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  title='LivePreview'
+                />
+              </div>
             </Grid>
           </Grid>
         </Paper>  

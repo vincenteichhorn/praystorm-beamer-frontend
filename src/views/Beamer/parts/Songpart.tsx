@@ -7,10 +7,11 @@ import { observer } from 'mobx-react';
 interface Props {
   slide: Slide;
   preview?: boolean;
+  gridSize?: number;
 }
 
 const Songpart: FunctionComponent<Props> = (props) => {
-  const { slide, preview } = props;
+  const { slide, preview, gridSize } = props;
   const [backgroundImageExists, setBackgroundImageExists] = useState(false);
 
   useEffect(() => {
@@ -25,7 +26,7 @@ const Songpart: FunctionComponent<Props> = (props) => {
     <Box
       style={{
         perspective: '1000px',
-        height: (preview) ? '' : '100vh',
+        height: (preview) ? '100%' : '100vh',
         overflow: 'hidden',
       }}
     >
@@ -40,17 +41,17 @@ const Songpart: FunctionComponent<Props> = (props) => {
 
           textAlign: 'center',
           width: '100%',
-          height: (preview) ? '' : '100%',
+          height: (preview) ? '100%' : '100%',
         }}
       >
         <Box
           style={{
             display: 'flex',
-            height: '95%',
+            height: '100%',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            padding: (preview) ? '20%' : 'none'
+            padding: (preview) ? '' : 'none',
           }}
         >
           {
@@ -61,8 +62,11 @@ const Songpart: FunctionComponent<Props> = (props) => {
                   marginBottom: (preview) ? slide.data.style.verseSpacing+'%' : slide.data.style.verseSpacing+'vh',
                   color: slide.data.style.verseColor,
                   textShadow: '1px 1px 2px black',
-                  fontSize: (preview) ? slide.data.style.verseFontSize*9+'%' : slide.data.style.verseFontSize+'vh',
-                  lineHeight: (preview) ? slide.data.style.verseFontSize*9+'%' : slide.data.style.verseFontSize+'vh',
+                  fontSize: (preview) ? (gridSize==4) ? (slide.data.style.verseFontSize*2*4+'%') : 
+                                        ((gridSize==2) ? (slide.data.style.verseFontSize*4*4+'%') :
+                                                        (slide.data.style.verseFontSize*3*4+'%')) :
+                                        slide.data.style.verseFontSize+'vh',
+                  lineHeight: (preview) ? slide.data.style.verseFontSize*1+'%' : slide.data.style.verseFontSize+'vh',
                 }}
               >
                 {verse}
@@ -79,15 +83,11 @@ const Songpart: FunctionComponent<Props> = (props) => {
             left: 1+'vw',
           }}
         >
-          {
-            (!preview) ? (
-              <Typography style={{  fontSize: (preview) ? slide.data.style.copyrightFontSize*9+'%' : slide.data.style.copyrightFontSize+'vh'}}>
-              {slide.copyright.author}<br/>
-              {slide.copyright.album}<br/>
-              {slide.copyright.copyright}
-            </Typography>
-            ) : null
-          }
+          <Typography style={{  fontSize: (preview) ? slide.data.style.copyrightFontSize*9+'%' : slide.data.style.copyrightFontSize+'vh'}}>
+            {slide.copyright.author}<br/>
+            {slide.copyright.album}<br/>
+            {slide.copyright.copyright}
+          </Typography>
         </Box>
       </Box>
     </Box>

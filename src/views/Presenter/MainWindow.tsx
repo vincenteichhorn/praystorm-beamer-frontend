@@ -44,7 +44,7 @@ interface Props {
 
 const MainWindow: FunctionComponent<Props> = (props) => {
   const classes = useStyles();
-  const [view, setView] = useState(ViewTypes.LIST);
+  const [view, setView] = useState(ViewTypes.CARDS);
   const { presenterStore } = useContext(StoreContext);
   const [adjustmentDialogOpen, setAdjustmentDialogOpen] = useState(false);
   const [gridSize, setGridSize] = useState(3);
@@ -131,26 +131,46 @@ const MainWindow: FunctionComponent<Props> = (props) => {
         <Divider />
             {
               (view === ViewTypes.CARDS) ? (
-                <Grid container className={classes.gridContainer} spacing={1}>
+                <Grid container className={classes.gridContainer} spacing={1} alignContent='flex-start'
+                  style={{
+                    marginTop: '4px',
+                  }}
+                >
                   {
                     props.slides?.map((slide: Slide, index: number) => (
                       <Grid 
                         id='test'
                         item
                         xs={12/gridSize as 3 | 4 | 6}
+                        key={index} 
+                        onClick={() => props.onChangeSlide(slide)}
                       >
                         <div
                           style={{
-                            display: 'block',
                             width: '100%',
-                            aspectRatio: '16/9',
-                            border: (props.currentSlide?.title === slide.title) ? '2px red solid' : '',
+                            paddingTop: '55%',
+                            position: 'relative', 
+                            overflow: 'hidden'
                           }}
                         >
-                          <Songpart 
-                            preview={true} 
-                            slide={slide}
-                          />
+                          <div
+                            style={{
+                              position: 'absolute',
+                              left: 0,
+                              top: 0,
+                              display: 'block',
+                              width: '100%',
+                              aspectRatio: '16/9',
+                              border: (props.currentSlide?.title === slide.title) ? '2px red solid' : '2px black solid',
+                              height: '100%',
+                            }}
+                          >
+                            <Songpart 
+                              preview={true} 
+                              slide={slide}
+                              gridSize={gridSize}
+                            />
+                          </div>
                         </div>
                       </Grid>
                     ))

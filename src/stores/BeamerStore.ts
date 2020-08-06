@@ -6,6 +6,7 @@ export default class BeamerStore {
 
   slide: Slide | undefined;
   hide: boolean = false;
+  hideForeground: boolean = false;
   adjustment: Adjustment = {
     rotateX: 0,
     rotateY: 0,
@@ -19,6 +20,9 @@ export default class BeamerStore {
     socket.on('blackout', (hide: boolean) => {
       this.hide = hide;
     });
+    socket.on('blackoutForeground', (hideForeground: boolean) => {
+      this.hideForeground = hideForeground;
+    })
     socket.on('setAdjustment', (adjustment: Adjustment) => {
       this.adjustment = adjustment;
     })
@@ -28,5 +32,6 @@ export default class BeamerStore {
 decorate(BeamerStore, {
   slide: observable,
   hide: observable,
+  hideForeground: observable,
   adjustment: observable,
 })

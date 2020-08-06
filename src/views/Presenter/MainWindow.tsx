@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useContext } from 'react';
+import React, { FunctionComponent, useState, useContext, useEffect } from 'react';
 import { Paper, Toolbar, Typography, makeStyles, Divider, Breadcrumbs, Grid, IconButton, Icon, TableContainer, TableHead, Table, TableRow, TableCell, TableBody, Box, Card, Slider, Hidden } from '@material-ui/core';
 import ViewTypes from '../../models/ViewTypes';
 import { Part, Event, Slide, SlideTypes } from '../../models/DataModels';
@@ -48,6 +48,45 @@ const MainWindow: FunctionComponent<Props> = (props) => {
   const { presenterStore } = useContext(StoreContext);
   const [adjustmentDialogOpen, setAdjustmentDialogOpen] = useState(false);
   const [gridSize, setGridSize] = useState(3);
+
+  useEffect(() => {
+    const keyUpEventListener = (event: KeyboardEvent) => {
+      if(event.keyCode === 66) {
+        presenterStore.blackout();
+      }
+      if(event.keyCode === 72) {
+        presenterStore.blackoutForeground();
+      }
+      if(event.keyCode === 39 && props.currentSlide && props.slides) { //->
+        let id = props.slides?.findIndex((element) => element.title === props.currentSlide?.title);
+        if(id < 0 || id > props.slides?.length - 2) {
+          id = 0;
+        } else {
+          id = id + 1;
+        }
+        props.onChangeSlide(props.slides[id]);
+      }
+      if(event.keyCode === 37 && props.currentSlide && props.slides) { //<-
+        let id = props.slides?.findIndex((element) => element.title === props.currentSlide?.title);
+        if(id < 1 || id > props.slides?.length - 1) {
+          id = 0;
+        } else {
+          id = id - 1;
+        }
+        props.onChangeSlide(props.slides[id]);
+      }
+      if(event.keyCode === 38) { // ^
+        presenterStore.blackoutForeground();
+      }
+      if(event.keyCode === 40) { // V
+        presenterStore.blackoutForeground();
+      }
+    }
+    document.addEventListener('keyup', keyUpEventListener);
+    return () => {
+      document.removeEventListener('keyup', keyUpEventListener);
+    };
+  })
 
   return (
     <Box>

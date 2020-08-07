@@ -55,26 +55,33 @@ const Songpart: FunctionComponent<Props> = (props) => {
             alignItems: 'center',
             padding: (preview) ? '' : 'none',
           }}
-        >
-          {
-            slide.data.lyrics.map((verse: string, index: number) => (
-              <Box 
-                key={index}
-                style={{
-                  marginBottom: (preview) ? slide.data.style.verseSpacing+'%' : slide.data.style.verseSpacing+'vh',
-                  color: slide.data.style.verseColor,
-                  textShadow: '1px 1px 2px black',
-                  fontSize: (preview) ? (gridSize==4) ? (slide.data.style.verseFontSize*2*4+'%') : 
-                                        ((gridSize==2) ? (slide.data.style.verseFontSize*4*4+'%') :
-                                                        (slide.data.style.verseFontSize*3*4+'%')) :
-                                        slide.data.style.verseFontSize+'vh',
-                  lineHeight: (preview) ? slide.data.style.verseFontSize*1+'%' : slide.data.style.verseFontSize+'vh',
-                }}
-              >
-                {verse}
-              </Box>
-            ))
-          }
+        >{
+          // <svg viewbox="0 0 1600 900" style={{backgroundColor: 'black',}} width="800px"  preserveAspectRatio="xMidYMid meet">
+          //   <text x="800" y="450" dy="1em" style={{fill: 'white', fontSize: '14pt',}} textAnchor="middle" alignmentBaseline="central">
+                slide.data.lyrics.map((verse: string, index: number) => (
+                  <Box 
+                    key={index}
+                    style={{
+                      marginBottom: (preview) ? slide.data.style.verseSpacing+'%' : slide.data.style.verseSpacing+'vh',
+                      color: slide.data.style.verseColor,
+                      textShadow: '1px 1px 2px black',
+                      fontSize: (preview) ? (gridSize==4) ? (slide.data.style.verseFontSize*2*4+'%') : 
+                                            ((gridSize==2) ? (slide.data.style.verseFontSize*4*4+'%') :
+                                                            (slide.data.style.verseFontSize*3*4+'%')) :
+                                            slide.data.style.verseFontSize+'vh',
+                      lineHeight: (preview) ? slide.data.style.verseFontSize*1+'%' : slide.data.style.verseFontSize+'vh',
+                    }}
+                  >
+                    {verse}
+                  </Box>
+                  
+                  //<tspan x="800" dy="1em">
+                  //  {verse}
+                  //</tspan>
+                ))
+           //   </text> 
+           // </svg>
+        }
         </Box>
         <Box
           style={{

@@ -182,7 +182,7 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                 <Grid container className={classes.gridContainer} spacing={1} alignContent='flex-start'
                   style={{
                     marginTop: '4px',
-                    overflow: 'scroll',
+                    overflow: 'auto',
                   }}
                 >
                   {

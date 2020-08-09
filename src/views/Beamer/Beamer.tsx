@@ -7,6 +7,9 @@ import Videopart from './parts/Videopart';
 import { StoreContext } from '../../App';
 import { observer } from 'mobx-react';
 import { Box } from '@material-ui/core';
+import Blackout from './parts/StaticPages/Blackout';
+import BlackoutForeground from './parts/StaticPages/BlackoutForeground';
+import Loading from './parts/StaticPages/Loading';
 
 
 const Beamer: FunctionComponent = (props) => {
@@ -29,106 +32,21 @@ const Beamer: FunctionComponent = (props) => {
           transformStyle: 'preserve-3d',
         }}
       >
-        {(!beamerStore.hide && !beamerStore.hideForeground) ? (
-          (beamerStore.slide) ? (
+        {(beamerStore.slide) ? (
+          (!beamerStore.hide && !beamerStore.hideForeground) ? (
             (beamerStore.slide.type === SlideTypes.SONGPART) ? <Songpart slide={beamerStore.slide}/> : 
             (beamerStore.slide.type === SlideTypes.IMAGE) ? <Imagepart slide={beamerStore.slide}/> :
             (beamerStore.slide.type === SlideTypes.TEXT) ? <Textpart slide={beamerStore.slide}/> :
             (beamerStore.slide.type === SlideTypes.VIDEO) ? <Videopart slide={beamerStore.slide}/> : <Songpart slide={beamerStore.slide}/>
           ) : (
-            <Songpart slide={{
-              title: "Init",
-              shorthand: "I",
-              position: 0,
-              type: SlideTypes.SONGPART,
-              data: {
-                lyrics: [
-                  "Das ist die Beameransicht.",
-                  "Leider konnte noch keine Verbindung zu einem Presenter hergestellt werden."
-                ], 
-                image: "",
-                video: "",
-                text: "",
-          
-                style: {
-                  backgroundImage: "", 
-                  backgroundColor: "black",
-                  verseFontSize: 8,
-                  verseSpacing: 6,
-                  copyrightFontSize: 2,
-                  copyrightColor: "orange",
-                  verseColor: "white",
-                  lineHeight: 10,
-                }
-              },
-              copyright: {
-                author: "Julius Dachsel & Vincent Eichhorn",
-                album: "",
-                copyright: "© 2020",
-              } 
-            }} />
-          )
+            (beamerStore.hide) ? (
+              <Blackout />
+            ) : (
+              <BlackoutForeground slide={beamerStore.slide} />
+            ))
         ) : (
-          (beamerStore.hide) ? (
-            <Textpart slide={{
-              title: "blackscreen",
-              shorthand: "black",
-              position: 0,
-              type: SlideTypes.SONGPART,
-              data: {
-                lyrics: [], 
-                image: "",
-                video: "",
-                text: "",
-          
-                style: {
-                  backgroundImage: "", 
-                  backgroundColor: "red",
-                  verseFontSize: 8,
-                  verseSpacing: 6,
-                  copyrightFontSize: 2,
-                  copyrightColor: "orange",
-                  verseColor: "white",
-                  lineHeight: 10,
-                }
-              },
-              copyright: {
-                author: "Julius Dachsel & Vincent Eichhorn",
-                album: "",
-                copyright: "© 2020",
-              } 
-            }} />
-          ) : (
-            <Songpart slide={{
-              title: "blackscreen",
-              shorthand: "black",
-              position: 0,
-              type: SlideTypes.SONGPART,
-              data: {
-                lyrics: [], 
-                image: "",
-                video: "",
-                text: "",
-          
-                style: {
-                  backgroundImage: beamerStore.slide?.data.style.backgroundImage as string, 
-                  backgroundColor: "red",
-                  verseFontSize: 8,
-                  verseSpacing: 6,
-                  copyrightFontSize: 2,
-                  copyrightColor: "orange",
-                  verseColor: "white",
-                  lineHeight: 10,
-                }
-              },
-              copyright: {
-                author: "",
-                album: "",
-                copyright: "",
-              } 
-            }} />
-          ))
-        }
+          <Loading />
+        )}
       </Box>
     </div>
   );

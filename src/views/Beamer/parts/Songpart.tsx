@@ -1,7 +1,6 @@
-import React, { FunctionComponent, useState, useEffect, useContext, useRef } from 'react';
+import React, { FunctionComponent, useState, useEffect } from 'react';
 import { Slide } from '../../../models/DataModels';
 import { Box, Typography } from '@material-ui/core';
-import { StoreContext } from '../../../App';
 import { observer } from 'mobx-react';
 
 interface Props {
@@ -65,8 +64,8 @@ const Songpart: FunctionComponent<Props> = (props) => {
                       marginBottom: (preview) ? slide.data.style.verseSpacing+'%' : slide.data.style.verseSpacing+'vh',
                       color: slide.data.style.verseColor,
                       textShadow: '1px 1px 2px black',
-                      fontSize: (preview) ? (gridSize==4) ? (slide.data.style.verseFontSize*2*4+'%') : 
-                                            ((gridSize==2) ? (slide.data.style.verseFontSize*4*4+'%') :
+                      fontSize: (preview) ? (gridSize === 4) ? (slide.data.style.verseFontSize*2*4+'%') : 
+                                            ((gridSize === 2) ? (slide.data.style.verseFontSize*4*4+'%') :
                                                             (slide.data.style.verseFontSize*3*4+'%')) :
                                             slide.data.style.verseFontSize+'vh',
                       lineHeight: (preview) ? slide.data.style.verseFontSize*1+'%' : slide.data.style.verseFontSize+'vh',

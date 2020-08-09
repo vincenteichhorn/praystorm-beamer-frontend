@@ -18,7 +18,6 @@ const Beamer: FunctionComponent = (props) => {
   useEffect(() => {
     //reset styles from content div in Routing.tsx
     const contentBox = document.getElementById('content');
-    const body = document.getElementsByTagName('body')[0];
     if(contentBox) contentBox.className = '';
   });
 

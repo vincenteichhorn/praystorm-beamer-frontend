@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useContext, useEffect } from 'react';
-import { Paper, Toolbar, Typography, makeStyles, Divider, Breadcrumbs, Grid, IconButton, Icon, TableContainer, TableHead, Table, TableRow, TableCell, TableBody, Box, Card, Slider, Hidden } from '@material-ui/core';
+import { Paper, Toolbar, Typography, makeStyles, Divider, Breadcrumbs, Grid, IconButton, Icon, TableContainer, TableHead, Table, TableRow, TableCell, TableBody, Box, Slider } from '@material-ui/core';
 import ViewTypes from '../../models/ViewTypes';
 import { Part, Event, Slide, SlideTypes } from '../../models/DataModels';
 import { StoreContext } from '../../App';

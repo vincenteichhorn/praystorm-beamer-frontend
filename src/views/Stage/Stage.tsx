@@ -1,6 +1,5 @@
 import React, { FunctionComponent, useContext } from 'react';
-import { Typography, Box, Paper, Grid } from '@material-ui/core';
-import Beamer from '../Beamer/Beamer';
+import { Grid } from '@material-ui/core';
 import Songpart from '../Beamer/parts/Songpart';
 import { StoreContext } from '../../App';
 import { observer } from 'mobx-react';

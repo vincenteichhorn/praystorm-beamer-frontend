@@ -46,7 +46,7 @@ const Songpart: FunctionComponent<Props> = (props) => {
   }, [setComputedVerseOffsetTop, prevClientWidth, slide, props])
 
   return(
-    <Box style={{height: '100%', overflow: 'hidden'}}>
+    <Box style={{height: '100%', overflow: 'hidden',}}>
       <svg
         style={{
           width: (!props.preview) ? document.documentElement.clientWidth + 'px' : '100%',

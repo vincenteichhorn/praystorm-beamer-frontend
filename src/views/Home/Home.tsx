@@ -55,7 +55,7 @@ const Home: FunctionComponent<Props> = (props) => {
     if(link !== '/beamer') {
       props.history.push(link);
     } else {
-      window.open((window.document.location.port) ? ' http://' + host + ':' + window.document.location.port + link : ' http://' + host + link, '_blank', 'scrollbars=no,status=yes,fullscreen=yes');
+      window.open((window.document.location.port) ? ' http://' + host + ':' + window.document.location.port + link : ' http://' + host + link, '_blank', 'width=800,height=450,scrollbars=no,status=yes,fullscreen=yes');
     }
   }
 

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
+import React, { FunctionComponent, useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import {
   Box, 
@@ -16,6 +16,7 @@ import {
   Icon,
   Grid,
   Avatar,
+  Button,
 } from '@material-ui/core';
 import { Route, RouteComponentProps, withRouter } from 'react-router-dom';
 
@@ -25,6 +26,8 @@ import Presenter from './Presenter/Presenter';
 import Beamer from './Beamer/Beamer';
 import Stage from './Stage/Stage';
 import Home from './Home/Home';
+import { StoreContext } from '../App';
+import { link } from 'fs';
 
 const drawerWidth = 270;
 
@@ -98,10 +101,12 @@ interface Props extends RouteComponentProps {
 
 const Routing: FunctionComponent<Props> = (props) => {
   const classes = useStyles();
+  const { homeStore } = useContext(StoreContext);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [renderAppBar, setRenderAppBar] = useState(true);
 
   useEffect(() => {
+    homeStore.getIPAddress();
     mainRoutes.filter((route) => {
       if(route.link === `/${window.document.location.pathname.split('/')[1]}` && route.appbar === false) {
         setRenderAppBar(false);
@@ -148,6 +153,18 @@ const Routing: FunctionComponent<Props> = (props) => {
                 >
                   praystorm. Beamer
                 </Typography>
+                {(props.location.pathname === '/presenter') ? (
+                  <Button
+                    style={{
+                      color: 'white',
+                    }}
+                    onClick={() => {
+                      let host = homeStore.IPAddress;
+                      let link = '/beamer'
+                      window.open((window.document.location.port) ? ' http://' + host + ':' + window.document.location.port + link : ' http://' + host + link, '_blank', 'width=800,height=450,scrollbars=no,status=yes,fullscreen=yes');
+                    }}
+                  >Beamer</Button>
+                ) : null}
               </Toolbar>
             </AppBar>
             <Drawer

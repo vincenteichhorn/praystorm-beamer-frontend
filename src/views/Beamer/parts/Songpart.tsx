@@ -16,23 +16,20 @@ const Songpart: FunctionComponent<Props> = (props) => {
   const { presenterStore } = useContext(StoreContext);
   const [computedVerseOffsetTop, setComputedVerseOffsetTop] = useState(0);
   const [computedCopyrightOffsetTop, setComputedCopyrightOffsetTop] = useState(0);
-  const [prevClientWidth, setPrevClientWidht] = useState(100);
+  const prevClientWidth = 900;
   const [backgroundImageExists, setBackgroundImageExists] = useState(false);
 
   useEffect(() => {
-    let verseFontSize = (props.preview) ?  prevClientWidth * slide.data.style.verseFontSize / document.documentElement.clientWidth : slide.data.style.verseFontSize;
-    let copyrightFontSize =  (props.preview) ?  prevClientWidth * slide.data.style.copyrightFontSize / document.documentElement.clientWidth : slide.data.style.copyrightFontSize;
-    let verseContainerHeight = slide.data.lyrics.length * slide.data.style.verseSpacing * verseFontSize;
-    let copyrightContainerHeight = 3 * copyrightFontSize - copyrightFontSize/2;
+    let verseContainerHeight = slide.data.lyrics.length * slide.data.style.verseSpacing * slide.data.style.verseFontSize;
+    let copyrightContainerHeight = 3 * slide.data.style.copyrightFontSize - slide.data.style.copyrightFontSize/2;
     if(slide.data.style.verseSpacing > 1) {
-      verseContainerHeight -= (slide.data.style.verseSpacing - 1) * verseFontSize;
+      verseContainerHeight -= (slide.data.style.verseSpacing - 1) * slide.data.style.verseFontSize;
     }
     if(props.preview) {
       let el = document.getElementById((props.gridSize) ? 'beamerSvgPrevGrid' : 'beamerSvg');
       if(el) {
-        setComputedVerseOffsetTop((el.clientHeight - verseContainerHeight) / 2);
-        setPrevClientWidht(el.clientWidth);
-        setComputedCopyrightOffsetTop(el.clientHeight - copyrightContainerHeight);
+        setComputedVerseOffsetTop((900 - verseContainerHeight) / 2);
+        setComputedCopyrightOffsetTop(900 - copyrightContainerHeight);
       }
     } else {  
       setComputedVerseOffsetTop((document.documentElement.clientHeight - verseContainerHeight) / 2);
@@ -48,6 +45,7 @@ const Songpart: FunctionComponent<Props> = (props) => {
   return(
     <Box style={{height: '100%', overflow: 'hidden'}}>
       <svg
+        viewBox={(!props.preview) ? `0 0 ${document.documentElement.clientWidth} ${document.documentElement.clientHeight}` : "0 0 1600 900"}
         style={{
           width: (!props.preview) ? document.documentElement.clientWidth + 'px' : '100%',
           height: (!props.preview) ? document.documentElement.clientHeight + 'px': '100%',
@@ -60,8 +58,11 @@ const Songpart: FunctionComponent<Props> = (props) => {
         id={(props.gridSize) ? 'beamerSvgPrevGrid' : 'beamerSvg'}
       >
         {(presenterStore.currentSlide?.title === slide.title && props.gridSize) ? (
-          <g transform="translate(10, 10)">
-            <path d="M1 18v3h3c0-1.66-1.34-3-3-3zm0-4v2c2.76 0 5 2.24 5 5h2c0-3.87-3.13-7-7-7zm18-7H5v1.63c3.96 1.28 7.09 4.41 8.37 8.37H19V7zM1 10v2c4.97 0 9 4.03 9 9h2c0-6.08-4.93-11-11-11zm20-7H3c-1.1 0-2 .9-2 2v3h2V5h18v14h-7v2h7c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" />
+          <g style={{transform: 'scale(3)',}}>
+            <circle r="60" style={{fill: 'white'}}/>
+            <g transform="translate(10, 10)">
+              <path d="M1 18v3h3c0-1.66-1.34-3-3-3zm0-4v2c2.76 0 5 2.24 5 5h2c0-3.87-3.13-7-7-7zm18-7H5v1.63c3.96 1.28 7.09 4.41 8.37 8.37H19V7zM1 10v2c4.97 0 9 4.03 9 9h2c0-6.08-4.93-11-11-11zm20-7H3c-1.1 0-2 .9-2 2v3h2V5h18v14h-7v2h7c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" />
+            </g>
           </g>
         ) : null}
         <text 
@@ -71,7 +72,7 @@ const Songpart: FunctionComponent<Props> = (props) => {
             fill: slide.data.style.verseColor,
             textAnchor: 'middle',
             alignmentBaseline: 'text-before-edge',
-            fontSize: (props.preview) ?  prevClientWidth * slide.data.style.verseFontSize / document.documentElement.clientWidth : slide.data.style.verseFontSize,
+            fontSize: slide.data.style.verseFontSize,
           }}  
         >
           {
@@ -87,7 +88,7 @@ const Songpart: FunctionComponent<Props> = (props) => {
             fill: slide.data.style.copyrightColor,
             textAnchor: 'start',
             alignmentBaseline: 'text-before-edge',
-            fontSize: (props.preview) ?  prevClientWidth * slide.data.style.copyrightFontSize / document.documentElement.clientWidth : slide.data.style.copyrightFontSize,
+            fontSize: slide.data.style.copyrightFontSize,
           }} 
         >
           <tspan x=".5%" >{slide.copyright.album}</tspan>

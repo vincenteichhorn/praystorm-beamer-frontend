@@ -25,12 +25,12 @@ const useStyles = makeStyles(theme => ({
   tableContainer: {
     textAlign: 'center',
     [theme.breakpoints.up('md')]: {
-      height: '76.2vh'
+      height: '76.3vh'
     },
   },
   gridContainer: {
     [theme.breakpoints.up('md')]: {
-      height: '76.2vh'
+      height: '76.3vh'
     },
   }
 }));

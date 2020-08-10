@@ -127,7 +127,6 @@ const Sidebar: FunctionComponent<Props> = (props) => {
         </Paper>  
       </Grid>
     </Box>
-    
   );
 }
 

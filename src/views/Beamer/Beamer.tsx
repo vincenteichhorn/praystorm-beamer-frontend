@@ -1,8 +1,7 @@
-import React, { FunctionComponent, useEffect, useContext } from 'react';
+import React, { FunctionComponent, useEffect, useContext, useState } from 'react';
 import { SlideTypes } from '../../models/DataModels';
 import Songpart from './parts/Songpart';
 import Imagepart from './parts/Imagepart';
-import Textpart from './parts/Textpart';
 import Videopart from './parts/Videopart';
 import { StoreContext } from '../../App';
 import { observer } from 'mobx-react';
@@ -11,40 +10,50 @@ import Blackout from './parts/StaticPages/Blackout';
 import BlackoutForeground from './parts/StaticPages/BlackoutForeground';
 import Loading from './parts/StaticPages/Loading';
 
+interface Props {
+  preview: boolean
+}
 
-const Beamer: FunctionComponent = (props) => {
+const Beamer: FunctionComponent<Props> = (props) => {
 
   const { beamerStore } = useContext(StoreContext);
+  const [sizing, setSizing] = useState(1);
   useEffect(() => {
-    //reset styles from content div in Routing.tsx
-    const contentBox = document.getElementById('content');
-    if(contentBox) contentBox.className = '';
+    if(!props.preview) {
+      //reset styles from content div in Routing.tsx
+      const contentBox = document.getElementById('content');
+      if(contentBox) contentBox.className = '';
+    }
+    function handleResize() {
+      setSizing(document.documentElement.clientWidth);
+    }
+    window.addEventListener('resize', handleResize)
   });
 
   return (
     <div
-      style={{perspective: '1000px'}}
+      style={{perspective: '1000px', height: '100%'}}
     >
       <Box
         style={{
           transform: `rotateX(${beamerStore.adjustment.rotateX}deg) rotateY(${beamerStore.adjustment.rotateY}deg) scale(${beamerStore.adjustment.scale}, ${beamerStore.adjustment.scale})`,
           transformStyle: 'preserve-3d',
+          height: '100%',
         }}
       >
         {(beamerStore.slide) ? (
           (!beamerStore.hide && !beamerStore.hideForeground) ? (
-            (beamerStore.slide.type === SlideTypes.SONGPART) ? <Songpart slide={beamerStore.slide}/> : 
-            (beamerStore.slide.type === SlideTypes.IMAGE) ? <Imagepart slide={beamerStore.slide}/> :
-            (beamerStore.slide.type === SlideTypes.TEXT) ? <Textpart slide={beamerStore.slide}/> :
-            (beamerStore.slide.type === SlideTypes.VIDEO) ? <Videopart slide={beamerStore.slide}/> : <Songpart slide={beamerStore.slide}/>
+            (beamerStore.slide.type === SlideTypes.SONGPART) ? <Songpart slide={beamerStore.slide} preview={props.preview} sizing={sizing}/> : 
+            (beamerStore.slide.type === SlideTypes.IMAGE) ? <Imagepart slide={beamerStore.slide} preview={props.preview} sizing={sizing}/> :
+            (beamerStore.slide.type === SlideTypes.VIDEO) ? <Videopart slide={beamerStore.slide} preview={props.preview} sizing={sizing}/> : <Songpart slide={beamerStore.slide} preview={props.preview} sizing={sizing}/>
           ) : (
             (beamerStore.hide) ? (
-              <Blackout />
+              <Blackout preview={props.preview} />
             ) : (
-              <BlackoutForeground slide={beamerStore.slide} />
+              <BlackoutForeground slide={beamerStore.slide} preview={props.preview}/>
             ))
         ) : (
-          <Loading />
+          <Loading preview={props.preview} />
         )}
       </Box>
     </div>

@@ -4,6 +4,7 @@ import { Box } from '@material-ui/core';
 
 interface Props {
   slide: Slide;
+  preview: boolean;
 }
 
 const BlackoutForeground: FunctionComponent<Props> = (props) => {
@@ -21,25 +22,23 @@ const BlackoutForeground: FunctionComponent<Props> = (props) => {
   return(
     <Box
       style={{
-        perspective: '100px',
-        height: '100vh',
         overflow: 'hidden',
+        height: '100%',
       }}
     >
-      <Box
-          id="beamer"
-          style={{
-            backgroundImage: (backgroundImageExists) ? 'url(' + props.slide.data.style.backgroundImage + ')' : 'none',
-            backgroundColor: (backgroundImageExists) ? '' : props.slide.data.style.backgroundColor,
-            backgroundRepeat: (backgroundImageExists) ? 'no-repeat' : '',
-            backgroundPosition: (backgroundImageExists) ? 'left top' : '',
-            backgroundSize: (backgroundImageExists) ? 'cover' : '',
+      <svg
+        style={{
+          width: (!props.preview) ? document.documentElement.clientWidth + 'px' : '100%',
+          height: (!props.preview) ? document.documentElement.clientHeight + 'px': '100%',
+          backgroundColor: (backgroundImageExists) ? `url(${props.slide.data.style.backgroundColor})` : '',
+          backgroundImage: (backgroundImageExists) ? `url(${props.slide.data.style.backgroundImage})` : '',
+          backgroundRepeat: (backgroundImageExists) ? 'no-repeat' : '',
+          backgroundPosition: (backgroundImageExists) ? 'left top' : '',
+          backgroundSize: (backgroundImageExists) ? 'cover' : '',
+        }}
+      >
 
-            textAlign: 'center',
-            width: '100%',
-            height: '100%',
-          }}
-      ></Box>
+      </svg>
     </Box>
   );
 }

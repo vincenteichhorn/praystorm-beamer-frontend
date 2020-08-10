@@ -1,14 +1,27 @@
 import React, { FunctionComponent, useEffect} from 'react';
+import { Box } from '@material-ui/core';
 
-const Blackout: FunctionComponent = (props) => {
+interface Props {
+  preview: boolean;
+}
 
-  useEffect(() => {
-    const blackout = document.getElementById('blackout');
-    if(blackout) blackout.style.backgroundColor = 'black'
-  })
+const Blackout: FunctionComponent<Props> = (props) => {
 
   return(
-    <div id='blackout' style={{height: '100vh'}}></div>
+    <Box
+      style={{
+        overflow: 'hidden',
+        height: '100%',
+      }}
+    >
+      <svg
+        style={{
+          width: (!props.preview) ? document.documentElement.clientWidth + 'px' : '100%',
+          height: (!props.preview) ? document.documentElement.clientHeight + 'px': '100%',
+          backgroundColor: 'black',
+        }}
+      ></svg>
+    </Box>
   );
 }
 

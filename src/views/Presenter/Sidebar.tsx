@@ -1,6 +1,7 @@
 import React, { FunctionComponent, ChangeEvent, useEffect } from 'react';
 import { Paper, Grid, FormControl, Select, MenuItem, List, ListItem, ListItemText, makeStyles, Box, ListItemIcon, Icon } from '@material-ui/core';
 import { Event, Part, PartTypes } from '../../models/DataModels';
+import Beamer from '../Beamer/Beamer';
 
 const useStyles = makeStyles(theme => ({
   select: {
@@ -8,7 +9,7 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     [theme.breakpoints.up('md')]: {
-      height: '75vh'
+      height: '75.6vh'
     },
   },
 }));
@@ -81,8 +82,8 @@ const Sidebar: FunctionComponent<Props> = (props) => {
         </Box>
         
         <Paper  className={classes.paper}>
-          <Grid style={{maxHeight: '100%'}} container direction="column" justify="space-between">
-            <Grid item>
+          <Grid style={{maxHeight: '100%'}} container direction="column">
+            <Grid item style={{overflow: 'auto'}}>
               <List>
                 {
                   (props.parts) ? props.parts.map((part: Part, index: number) => (
@@ -104,26 +105,22 @@ const Sidebar: FunctionComponent<Props> = (props) => {
             <Grid item>
               <div
                 style={{
-                  position: 'relative', 
                   width: '100%',
-                  height: '56.25%',
                   paddingTop: '56.25%',
-                  overflow: 'hidden'
+                  position: 'relative', 
                 }}
               >
-                <iframe 
-                  src={`${document.location.origin}/beamer`} 
+                <div
                   style={{
                     position: 'absolute',
-                    left: 0,
-                    top: 0,
-                    display: 'block',
-                    border: 'none',
-                    width: '100%',
                     height: '100%',
+                    width: '100%',
+                    left: 0,
+                    top: 0
                   }}
-                  title='LivePreview'
-                />
+                >
+                  <Beamer preview={true}/>
+                </div>
               </div>
             </Grid>
           </Grid>

@@ -7,6 +7,8 @@ import AdjustmentDialog from './AdjustmentDialog';
 import { observer } from 'mobx-react';
 import Songpart from '../Beamer/parts/Songpart';
 import './style.css';
+import Imagepart from '../Beamer/parts/Imagepart';
+import Videopart from '../Beamer/parts/Videopart';
 
 const useStyles = makeStyles(theme => ({
   actionBar: {
@@ -181,8 +183,8 @@ const MainWindow: FunctionComponent<Props> = (props) => {
               (view === ViewTypes.CARDS) ? (
                 <Grid container className={classes.gridContainer} spacing={1} alignContent='flex-start'
                   style={{
-                    marginTop: '4px',
                     overflow: 'auto',
+                    padding: '4px',
                   }}
                 >
                   {
@@ -199,7 +201,7 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                             width: '100%',
                             paddingTop: '56.25%',
                             position: 'relative', 
-                            overflow: 'hidden'
+                            overflow: 'hidden',
                           }}
                         >
                           <div
@@ -207,18 +209,15 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                               position: 'absolute',
                               left: 0,
                               top: 0,
-                              display: 'block',
                               width: '100%',
-                              aspectRatio: '16/9',
-                              border: (props.currentSlide?.title === slide.title) ? '2px red solid' : '2px black solid',
                               height: '100%',
                             }}
                           >
-                            <Songpart 
-                              preview={true} 
-                              slide={slide}
-                              gridSize={gridSize}
-                            />
+                            {
+                              (slide.type === SlideTypes.SONGPART) ? <Songpart slide={slide} preview={true} gridSize={gridSize}/> : 
+                              (slide.type === SlideTypes.IMAGE) ? <Imagepart slide={slide} preview={true} gridSize={gridSize}/> :
+                              (slide.type === SlideTypes.VIDEO) ? <Videopart slide={slide} preview={true} gridSize={gridSize}/> : <Songpart gridSize={gridSize} slide={slide} preview={true}/>
+                            }
                           </div>
                         </div>
                       </Grid>
@@ -253,8 +252,6 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                                   slide.data.image
                                 ) : (slide.type === SlideTypes.VIDEO) ? (
                                   slide.data.video
-                                ) : (slide.type === SlideTypes.TEXT) ? (
-                                  slide.data.text
                                 ) : null
                               }
                             </TableCell>

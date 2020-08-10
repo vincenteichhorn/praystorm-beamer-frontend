@@ -5,6 +5,8 @@ import { Slide } from '../../../models/DataModels';
 interface Props {
   slide: Slide;
   preview?: boolean;
+  gridSize?: number;
+  sizing?: number;
 }
 
 const Videopart: FunctionComponent<Props> = (props) => {

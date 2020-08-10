@@ -42,13 +42,13 @@ const Songpart: FunctionComponent<Props> = (props) => {
   }, [setComputedVerseOffsetTop, prevClientWidth, slide, props])
 
   return(
-    <Box style={{height: '100%', overflow: 'hidden'}}>
+    <Box style={{height: '100%', overflow: 'hidden',}}>
       <svg
         viewBox={(!props.preview) ? `0 0 ${document.documentElement.clientWidth} ${document.documentElement.clientHeight}` : "0 0 1600 900"}
         style={{
           width: (!props.preview) ? document.documentElement.clientWidth + 'px' : '100%',
           height: (!props.preview) ? document.documentElement.clientHeight + 'px': '100%',
-          backgroundColor: (backgroundImageExists) ? `url(${slide.data.style.backgroundColor})` : '',
+          backgroundColor: (backgroundImageExists) ? `url(${slide.data.style.backgroundColor})` : 'black',
           backgroundImage: (backgroundImageExists) ? `url(${slide.data.style.backgroundImage})` : '',
           backgroundRepeat: (backgroundImageExists) ? 'no-repeat' : '',
           backgroundPosition: (backgroundImageExists) ? 'left top' : '',

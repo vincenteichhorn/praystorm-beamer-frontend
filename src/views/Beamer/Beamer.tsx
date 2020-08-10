@@ -27,7 +27,7 @@ const Beamer: FunctionComponent<Props> = (props) => {
 
   return (
     <div
-      style={{perspective: '1000px', height: '100%'}}
+      style={{perspective: '1000px', height: '100%', cursor: 'none', backgroundColor: 'black', overflow: 'hidden',}}
     >
       <Box
         style={{

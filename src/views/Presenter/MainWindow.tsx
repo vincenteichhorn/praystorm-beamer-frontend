@@ -202,6 +202,7 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                             paddingTop: '56.25%',
                             position: 'relative', 
                             overflow: 'hidden',
+                            cursor: 'pointer',
                           }}
                         >
                           <div

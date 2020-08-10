@@ -72,6 +72,7 @@ const Songpart: FunctionComponent<Props> = (props) => {
             textAnchor: 'middle',
             alignmentBaseline: 'text-before-edge',
             fontSize: slide.data.style.verseFontSize,
+            userSelect: 'none',
           }}  
         >
           {
@@ -88,6 +89,7 @@ const Songpart: FunctionComponent<Props> = (props) => {
             textAnchor: 'start',
             alignmentBaseline: 'text-before-edge',
             fontSize: slide.data.style.copyrightFontSize,
+            userSelect: 'none',
           }} 
         >
           <tspan x=".5%" >{slide.copyright.album}</tspan>

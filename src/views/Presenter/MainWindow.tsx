@@ -71,7 +71,7 @@ const MainWindow: FunctionComponent<Props> = (props) => {
       if(event.keyCode === 37 && props.currentSlide && props.slides) { //<-
         let id = props.slides?.findIndex((element) => element.title === props.currentSlide?.title);
         if(id < 1 || id > props.slides?.length - 1) {
-          id = 0;
+          id = props.slides?.length - 1;
         } else {
           id = id - 1;
         }
@@ -82,6 +82,9 @@ const MainWindow: FunctionComponent<Props> = (props) => {
       }
       if(event.keyCode === 40) { // V
         presenterStore.blackoutForeground();
+      }
+      if(event.keyCode === 13) {
+        props.onChangeSlide(presenterStore.slides[0]);
       }
     }
     document.addEventListener('keyup', keyUpEventListener);

@@ -36,7 +36,7 @@ const Sidebar: FunctionComponent<Props> = (props) => {
       if(event.keyCode === 38) { // ^
         let id = props.parts?.findIndex((element) => element.title === props.currentPart?.title);
         if(id < 1 || id > props.parts?.length - 1) {
-          id = 0;
+          id = props.parts?.length - 1;
         } else {
           id = id - 1;
         }

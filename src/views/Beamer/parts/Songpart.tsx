@@ -51,7 +51,7 @@ const Songpart: FunctionComponent<Props> = (props) => {
         style={{
           width: (!props.preview) ? document.documentElement.clientWidth + 'px' : '100%',
           height: (!props.preview) ? document.documentElement.clientHeight + 'px': '100%',
-          backgroundColor: (backgroundImageExists) ? `url(${slide.data.style.backgroundColor})` : '',
+          backgroundColor: (backgroundImageExists) ? `url(${slide.data.style.backgroundColor})` : 'black',
           backgroundImage: (backgroundImageExists) ? `url(${slide.data.style.backgroundImage})` : '',
           backgroundRepeat: (backgroundImageExists) ? 'no-repeat' : '',
           backgroundPosition: (backgroundImageExists) ? 'left top' : '',

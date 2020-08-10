@@ -7,8 +7,7 @@ import { StoreContext } from '../../../App';
 interface Props {
   preview: boolean;
   slide: Slide;
-  gridSize?: number;
-  sizing?: number;
+  gridSize?: number
 }
 
 const Songpart: FunctionComponent<Props> = (props) => {

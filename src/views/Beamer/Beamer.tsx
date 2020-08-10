@@ -17,17 +17,12 @@ interface Props {
 const Beamer: FunctionComponent<Props> = (props) => {
 
   const { beamerStore } = useContext(StoreContext);
-  const [sizing, setSizing] = useState(1);
   useEffect(() => {
     if(!props.preview) {
       //reset styles from content div in Routing.tsx
       const contentBox = document.getElementById('content');
       if(contentBox) contentBox.className = '';
     }
-    function handleResize() {
-      setSizing(document.documentElement.clientWidth);
-    }
-    window.addEventListener('resize', handleResize)
   });
 
   return (
@@ -43,9 +38,9 @@ const Beamer: FunctionComponent<Props> = (props) => {
       >
         {(beamerStore.slide) ? (
           (!beamerStore.hide && !beamerStore.hideForeground) ? (
-            (beamerStore.slide.type === SlideTypes.SONGPART) ? <Songpart slide={beamerStore.slide} preview={props.preview} sizing={sizing}/> : 
-            (beamerStore.slide.type === SlideTypes.IMAGE) ? <Imagepart slide={beamerStore.slide} preview={props.preview} sizing={sizing}/> :
-            (beamerStore.slide.type === SlideTypes.VIDEO) ? <Videopart slide={beamerStore.slide} preview={props.preview} sizing={sizing}/> : <Songpart slide={beamerStore.slide} preview={props.preview} sizing={sizing}/>
+            (beamerStore.slide.type === SlideTypes.SONGPART) ? <Songpart slide={beamerStore.slide} preview={props.preview} /> : 
+            (beamerStore.slide.type === SlideTypes.IMAGE) ? <Imagepart slide={beamerStore.slide} preview={props.preview} /> :
+            (beamerStore.slide.type === SlideTypes.VIDEO) ? <Videopart slide={beamerStore.slide} preview={props.preview} /> : <Songpart slide={beamerStore.slide} preview={props.preview} />
           ) : (
             (beamerStore.hide) ? (
               <Blackout preview={props.preview} />

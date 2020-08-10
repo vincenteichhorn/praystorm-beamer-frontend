@@ -48,7 +48,7 @@ const Songpart: FunctionComponent<Props> = (props) => {
         style={{
           width: (!props.preview) ? document.documentElement.clientWidth + 'px' : '100%',
           height: (!props.preview) ? document.documentElement.clientHeight + 'px': '100%',
-          backgroundColor: (backgroundImageExists) ? 'black' : `url(${slide.data.style.backgroundColor})`,
+          backgroundColor: (backgroundImageExists) ? 'black' : slide.data.style.backgroundColor,
           backgroundImage: (backgroundImageExists) ? `url(${slide.data.style.backgroundImage})` : '',
           backgroundRepeat: (backgroundImageExists) ? 'no-repeat' : '',
           backgroundPosition: (backgroundImageExists) ? 'left top' : '',
@@ -72,6 +72,7 @@ const Songpart: FunctionComponent<Props> = (props) => {
             textAnchor: 'middle',
             alignmentBaseline: 'text-before-edge',
             fontSize: slide.data.style.verseFontSize,
+            userSelect: 'none',
           }}  
         >
           {
@@ -88,6 +89,7 @@ const Songpart: FunctionComponent<Props> = (props) => {
             textAnchor: 'start',
             alignmentBaseline: 'text-before-edge',
             fontSize: slide.data.style.copyrightFontSize,
+            userSelect: 'none',
           }} 
         >
           <tspan x=".5%" >{slide.copyright.album}</tspan>

@@ -16,8 +16,9 @@ const useStyles = makeStyles(theme => ({
   inner: {
     padding: theme.spacing(2),
     [theme.breakpoints.up('md')]: {
-      height: '76.2vh'
+      height: '75.2vh'
     },
+    overflow: 'auto',
   }
 }));
 
@@ -40,9 +41,13 @@ const MainWindow: FunctionComponent = (props) => {
             <Tab label="Body" value={1}/>
             <Tab label="Style" value={2}/>
           </Tabs>
-          <IconButton>
-            <Icon>add</Icon>
-          </IconButton>
+          {
+            (tab === 1) ? (
+              <IconButton>
+                <Icon>add</Icon>
+              </IconButton>
+            ) : null
+          }
         </Grid>
       </Toolbar> 
      

@@ -39,7 +39,7 @@ const Sidebar: FunctionComponent = (props) => {
   }
 
   useEffect(() => {
-    editorStore.currentPart = editorStore.parts[0];
+    editorStore.currentPart = editorStore.parts.find((part) => part.title === editorStore.currentPart?.title);
     editorStore.updateSlides();
   })
 

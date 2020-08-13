@@ -61,13 +61,13 @@ const General: FunctionComponent = (props) => {
           label="Copyright Album"
           fullWidth
           variant="outlined"
-          value={(editorStore.currentPart) ? (editorStore.currentPart.album) : ''}
+          value={(editorStore.currentPart) ? (editorStore.currentPart.album) ? editorStore.currentPart.album : '' : ''}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             if (editorStore.currentPart && event.target.value.length < 251) {
               editorStore.currentPart.album = event.target.value;
             }
           }}
-          error={(editorStore.slides.length > 0) ? ((editorStore.slides[0]?.copyright.album) ? editorStore.slides[0]?.copyright.album.length > 250 : false) : true}
+          error={(editorStore.currentPart) ? (editorStore.currentPart.album) ? editorStore.currentPart.album.length > 250 : false : true}
           InputLabelProps={{
             shrink: true,
           }}
@@ -81,13 +81,13 @@ const General: FunctionComponent = (props) => {
           label="Copyright Author"
           fullWidth
           variant="outlined"
-          value={(editorStore.currentPart) ? (editorStore.currentPart.author) : ''}
+          value={(editorStore.currentPart) ? (editorStore.currentPart.author) ? editorStore.currentPart.author : '' : ''}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             if (editorStore.currentPart && event.target.value.length <= 250) {
               editorStore.currentPart.author = event.target.value;
             }
           }}
-          error={(editorStore.slides.length > 0) ? ((editorStore.slides[0]?.copyright.author) ? editorStore.slides[0]?.copyright.author.length > 250 : false) : true}
+          error={(editorStore.currentPart) ? (editorStore.currentPart.author) ? editorStore.currentPart.author.length > 250 : false : true}
           InputLabelProps={{
             shrink: true,
           }}
@@ -101,13 +101,13 @@ const General: FunctionComponent = (props) => {
           label="Copyright"
           fullWidth
           variant="outlined"
-          value={(editorStore.currentPart) ? (editorStore.currentPart.copyright) : ''}
+          value={(editorStore.currentPart) ? (editorStore.currentPart.copyright) ? editorStore.currentPart.copyright : '' : ''}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             if (editorStore.currentPart && event.target.value.length <= 250) {
               editorStore.currentPart.copyright = event.target.value;
             }
           }}
-          error={(editorStore.slides.length > 0) ? ((editorStore.slides[0]?.copyright.copyright) ? editorStore.slides[0]?.copyright.copyright.length > 250 : false) : true}
+          error={(editorStore.currentPart) ? (editorStore.currentPart.copyright) ? editorStore.currentPart.copyright.length > 250 : false : true}
           InputLabelProps={{
             shrink: true,
           }}

@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useEffect, ChangeEvent, SetStateAction, useContext, Dispatch } from 'react';
-import { TextField, Box, Divider, ClickAwayListener, Select, MenuItem, FormControl, InputLabel } from '@material-ui/core';
+import { TextField, Box, Divider, ClickAwayListener, Select, MenuItem, FormControl, InputLabel, Button, Typography, Grid } from '@material-ui/core';
 import { Slide, Part, PartTypes } from '../../../models/DataModels';
 import { StoreContext } from '../../../App';
 import { observer } from 'mobx-react';
@@ -30,7 +30,7 @@ const General: FunctionComponent = (props) => {
     //TODO fetch
   }
 
-  return (
+  return (editorStore.currentPart) ? (
     <Box>
       <ClickAwayListener
         onClickAway={updatePartObj}
@@ -113,7 +113,6 @@ const General: FunctionComponent = (props) => {
           }}
         />
       </ClickAwayListener>
-      TODO: Position: Slide || +- Buttons
       <ClickAwayListener
         onClickAway={updatePartObj}
       >
@@ -147,7 +146,11 @@ const General: FunctionComponent = (props) => {
         </Box>
       </ClickAwayListener>
     </Box>
-  );
+  ) : (
+    <Box>
+      <Typography>Klicke links auf "Part hinzufügen" um deinen Ablauf zu erstellen</Typography>
+    </Box>
+  )
 }
 
 export default observer(General);

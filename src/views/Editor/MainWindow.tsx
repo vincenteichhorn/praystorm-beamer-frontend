@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
   inner: {
     padding: theme.spacing(2),
     [theme.breakpoints.up('md')]: {
-      height: '75.2vh'
+      height: '72.8vh'
     },
     overflow: 'auto',
   }

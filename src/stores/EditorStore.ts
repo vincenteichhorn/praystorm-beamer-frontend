@@ -1,7 +1,6 @@
 import { decorate, observable, runInAction, action } from 'mobx';
 import { Part, Event, Slide } from '../models/DataModels';
 import config from './Config';
-import Editor from '../views/Editor/Editor';
 
 export default class EditorStore {
 

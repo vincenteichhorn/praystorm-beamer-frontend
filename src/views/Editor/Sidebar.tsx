@@ -1,8 +1,9 @@
-import React, { FunctionComponent, ChangeEvent, useContext, useEffect } from 'react';
+import React, { FunctionComponent, ChangeEvent, useContext, useEffect, useState } from 'react';
 import { Box, Grid, FormControl, Select, MenuItem, Paper, List, ListItem, ListItemIcon, Icon, ListItemText, makeStyles, Divider } from '@material-ui/core';
 import { Part, PartTypes, Event } from '../../models/DataModels';
 import { observer } from 'mobx-react';
 import { StoreContext } from '../../App';
+import AddNewEventDialog from './Dialogs/AddNewEventDialog';
 
 const useStyles = makeStyles(theme => ({
   select: {
@@ -19,9 +20,11 @@ const Sidebar: FunctionComponent = (props) => {
   const classes = useStyles();
   const { editorStore } = useContext(StoreContext);
 
+  const [addNewEventDialog, setAddNewEventDialogOpen] = useState(false);
+
   const findAndChangeEvent = (changeEvent: ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
     if(changeEvent.target.value === 'newEventKey') {
-      //TODO open Dialog
+      setAddNewEventDialogOpen(true);
       return;
     }
     const newEvent = editorStore.events.find((event) => event.name === changeEvent.target.value);
@@ -56,7 +59,7 @@ const Sidebar: FunctionComponent = (props) => {
               value={(editorStore.currentEvent) ? editorStore.currentEvent.name : ''}
               onChange={findAndChangeEvent}
             >
-              <MenuItem key={-1} value={"newEventKey"}>
+              <MenuItem value={"newEventKey"}>
                 {"Neues Event erstellen"}
               </MenuItem>
               {
@@ -75,14 +78,24 @@ const Sidebar: FunctionComponent = (props) => {
             <ListItem 
               key={-1} 
               button
-              selected
               onClick={() => {/*TODO open Dialog*/}}
             >
               <ListItemIcon>
                 <Icon>add</Icon>
               </ListItemIcon>
-              <ListItemText>Neuen Part hinzufügen</ListItemText>
+              <ListItemText>Part hinzufügen</ListItemText>
             </ListItem>
+            <ListItem 
+              key={-2} 
+              button
+              onClick={() => {/*TODO open Dialog*/}}
+            >
+              <ListItemIcon>
+                <Icon>edit</Icon>
+              </ListItemIcon>
+              <ListItemText>Reihenfolge bearbeiten</ListItemText>
+            </ListItem>
+            <Divider />
             <Divider />
             {
               editorStore.parts.map((part: Part, index: number) => (
@@ -102,6 +115,10 @@ const Sidebar: FunctionComponent = (props) => {
           </List>
         </Paper>  
       </Grid>
+      <AddNewEventDialog 
+        open={addNewEventDialog}
+        onClose={() => setAddNewEventDialogOpen(false)}
+      />
     </Box>
   );
 }

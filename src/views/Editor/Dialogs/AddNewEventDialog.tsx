@@ -31,6 +31,7 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
         <TextField 
           label="Name"
           fullWidth
+          autoFocus
           variant="outlined"
           value={eventName}
           onChange={(changeEvent) => {setEventName(changeEvent.target.value)}}
@@ -51,9 +52,13 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
         <StyledButton
           variant="outlined"
           size="large"
-          onClick={() => props.onClose()}
+          onClick={() => {
+            props.onClose();
+            setEventName('');
+            setEventDesription('');
+          }}
         >
-          Zurück
+          Abbrechen
         </StyledButton>
         <StyledButton
           variant="contained"

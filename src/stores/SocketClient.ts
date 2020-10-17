@@ -1,5 +1,4 @@
 import socketIOClient from 'socket.io-client';
-import config from './Config'
 
-const socket = socketIOClient(config.socketHost);
+const socket = socketIOClient(process.env.REACT_APP_SOCKET_HOST + "");
 export default socket;

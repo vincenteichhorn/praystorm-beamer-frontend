@@ -1,15 +1,9 @@
-import React, { FunctionComponent, ChangeEvent } from 'react';
+import React, { FunctionComponent, ChangeEvent, useContext, useEffect, useState } from 'react';
 import { Box, Grid, FormControl, Select, MenuItem, Paper, List, ListItem, ListItemIcon, Icon, ListItemText, makeStyles, Divider } from '@material-ui/core';
 import { Part, PartTypes, Event } from '../../models/DataModels';
-
-interface Props {
-  events: Event[];
-  currentEvent: Event | undefined;
-  onChangeEvent: (newEvent: Event) => void;
-  parts: Part[]; 
-  currentPart: Part | undefined 
-  onChangePart: (newPart: Part) => void;
-}
+import { observer } from 'mobx-react';
+import { StoreContext } from '../../App';
+import AddNewEventDialog from './Dialogs/AddNewEventDialog';
 
 const useStyles = makeStyles(theme => ({
   select: {
@@ -22,17 +16,36 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Sidebar: FunctionComponent<Props> = (props) => {
+const Sidebar: FunctionComponent = (props) => {
   const classes = useStyles();
+  const { editorStore } = useContext(StoreContext);
+
+  const [addNewEventDialog, setAddNewEventDialogOpen] = useState(false);
 
   const findAndChangeEvent = (changeEvent: ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
     if(changeEvent.target.value === 'newEventKey') {
-      //TODO open Dialog
+      setAddNewEventDialogOpen(true);
       return;
     }
-    const newEvent = props.events.find((event) => event.name === changeEvent.target.value);
-    if(newEvent) props.onChangeEvent(newEvent);
+    const newEvent = editorStore.events.find((event) => event.name === changeEvent.target.value);
+    if(newEvent) changeCurrentEvent(newEvent);
   }
+
+  const changeCurrentEvent = (newEvent: Event) => {
+    editorStore.currentEvent = newEvent;
+    editorStore.updateParts();
+  }
+
+  const changeCurrentPart = (newPart: Part) => {
+    editorStore.currentPart = newPart;
+    editorStore.updateSlides();
+  }
+
+  useEffect(() => {
+    editorStore.currentPart = editorStore.parts.find((part) => part.title === editorStore.currentPart?.title);
+    editorStore.updateSlides();
+  })
+
 
   return (
     <Box>
@@ -43,18 +56,18 @@ const Sidebar: FunctionComponent<Props> = (props) => {
             fullWidth
           >
             <Select
-              value={(props.currentEvent) ? props.currentEvent.name : ''}
+              value={(editorStore.currentEvent) ? editorStore.currentEvent.name : ''}
               onChange={findAndChangeEvent}
             >
-              <MenuItem key={-1} value={"newEventKey"}>
+              <MenuItem value={"newEventKey"}>
                 {"Neues Event erstellen"}
               </MenuItem>
               {
-                (props.events) ? props.events.map((event: Event, index: number) => (
+                editorStore.events.map((event: Event, index: number) => (
                   <MenuItem key={index} value={event.name}>
                     {event.name}
                   </MenuItem>
-                )) : null
+                ))
               }
             </Select>
           </FormControl> 
@@ -65,35 +78,49 @@ const Sidebar: FunctionComponent<Props> = (props) => {
             <ListItem 
               key={-1} 
               button
-              selected
               onClick={() => {/*TODO open Dialog*/}}
             >
               <ListItemIcon>
                 <Icon>add</Icon>
               </ListItemIcon>
-              <ListItemText>Neuen Part hinzufügen</ListItemText>
+              <ListItemText>Part hinzufügen</ListItemText>
+            </ListItem>
+            <ListItem 
+              key={-2} 
+              button
+              onClick={() => {/*TODO open Dialog*/}}
+            >
+              <ListItemIcon>
+                <Icon>edit</Icon>
+              </ListItemIcon>
+              <ListItemText>Reihenfolge bearbeiten</ListItemText>
             </ListItem>
             <Divider />
+            <Divider />
             {
-              (props.parts) ? props.parts.map((part: Part, index: number) => (
+              editorStore.parts.map((part: Part, index: number) => (
                 <ListItem 
                   key={index} 
                   button
-                  selected={(part.title === props.currentPart?.title)}
-                  onClick={() => props.onChangePart(part)}
+                  selected={(part.title === editorStore.currentPart?.title)}
+                  onClick={() => changeCurrentPart(part)}
                 >
                   <ListItemIcon>
                     { (part.type === PartTypes.SONG) ? <Icon>music_note</Icon> : <Icon>class</Icon>}
                   </ListItemIcon>
                   <ListItemText>{part.title}</ListItemText>
                 </ListItem>
-              )) : null
+              ))
             }
           </List>
         </Paper>  
       </Grid>
+      <AddNewEventDialog 
+        open={addNewEventDialog}
+        onClose={() => setAddNewEventDialogOpen(false)}
+      />
     </Box>
   );
 }
 
-export default Sidebar;
+export default observer(Sidebar);

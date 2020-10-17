@@ -85,7 +85,7 @@ const Loading: FunctionComponent<Props> = (props) => {
         >
           {
             loadingSlide.data.lyrics.map((verse, index) => (
-              <tspan x="50%" dy={(index > 0) ? `${loadingSlide.data.style.verseSpacing}em` : ''}>{verse}</tspan>
+              <tspan x="50%" key={index} dy={(index > 0) ? `${loadingSlide.data.style.verseSpacing}em` : ''}>{verse}</tspan>
             ))
           }
         </text>

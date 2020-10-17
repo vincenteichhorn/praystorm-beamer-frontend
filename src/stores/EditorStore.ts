@@ -1,7 +1,5 @@
 import { decorate, observable, runInAction, action } from 'mobx';
 import { Part, Event, Slide } from '../models/DataModels';
-import config from './Config';
-import Editor from '../views/Editor/Editor';
 
 export default class EditorStore {
 
@@ -22,7 +20,7 @@ export default class EditorStore {
     this.fetchEvents();
   }
   fetchEvents() {
-    fetch(config.apiHost + '/getEvents')
+    fetch(process.env.REACT_APP_API_HOST + '/getEvents')
     .then((response) => response.json())
     .then((data) => {
       runInAction(() =>{
@@ -44,7 +42,7 @@ export default class EditorStore {
       const postParams = new FormData();
       postParams.append('name', this.currentEvent.name);
       postParams.append('date', this.currentEvent.date.toString());
-      fetch(config.apiHost + '/getParts', {
+      fetch(process.env.REACT_APP_API_HOST + '/getParts', {
         method: 'POST',
         body: postParams,
       })
@@ -68,7 +66,7 @@ export default class EditorStore {
     if(this.currentPart) { 
       const postParams = new FormData();
       postParams.append('partname', this.currentPart.title);
-      fetch(config.apiHost + '/getSlides', {
+      fetch(process.env.REACT_APP_API_HOST + '/getSlides', {
         method: 'POST',
         body: postParams,
       })

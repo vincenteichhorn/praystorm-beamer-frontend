@@ -8,40 +8,16 @@ import { observer } from 'mobx-react';
 
 const Editor: FunctionComponent = (props) => {
 
-  const { editorStore } = useContext(StoreContext);
-
-  const changeCurrentEvent = (newEvent: Event) => {
-    editorStore.currentEvent = newEvent;
-    editorStore.updateParts();
-  }
-
-  const changeCurrentPart = (newPart: Part) => {
-    editorStore.currentPart = newPart;
-    editorStore.updateSlides();
-  }
-
   return (
     <Grid
       container
       spacing={2}
     >
       <Grid item xs={12} md={3}>
-        <Sidebar
-          events={editorStore.events}
-          currentEvent={editorStore.currentEvent}
-          onChangeEvent={changeCurrentEvent}
-          parts={editorStore.parts}
-          currentPart={editorStore.currentPart}
-          onChangePart={changeCurrentPart}
-        />
+        <Sidebar />
       </Grid>
       <Grid item xs={12} md={9}>
-        <MainWindow
-          currentEvent={editorStore.currentEvent}
-          currentPart={editorStore.currentPart}
-          parts={editorStore.parts}
-          slides={editorStore.slides}
-        />
+        <MainWindow />
       </Grid>
     </Grid>
   );

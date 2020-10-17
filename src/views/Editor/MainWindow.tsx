@@ -4,13 +4,7 @@ import { Box, Paper, Toolbar, Divider, makeStyles, Tabs, Tab, IconButton, Grid, 
 import General from './SlideTables/General';
 import Body from './SlideTables/Body';
 import Style from './SlideTables/Style';
-
-interface Props {
-  currentEvent: Event | undefined;
-  currentPart: Part | undefined;
-  parts: Part[] | undefined;
-  slides: Slide[] | undefined;
-}
+import { observer } from 'mobx-react';
 
 const useStyles = makeStyles(theme => ({
   toolbar: {
@@ -22,16 +16,15 @@ const useStyles = makeStyles(theme => ({
   inner: {
     padding: theme.spacing(2),
     [theme.breakpoints.up('md')]: {
-      height: '76.2vh'
+      height: '72.8vh'
     },
+    overflow: 'auto',
   }
 }));
 
-const MainWindow: FunctionComponent<Props> = (props) => {
+const MainWindow: FunctionComponent = (props) => {
   const classes = useStyles();
-
   const [tab, setTab] = useState(0);
-
 
   return (
     <Paper>
@@ -48,9 +41,13 @@ const MainWindow: FunctionComponent<Props> = (props) => {
             <Tab label="Body" value={1}/>
             <Tab label="Style" value={2}/>
           </Tabs>
-          <IconButton>
-            <Icon>add</Icon>
-          </IconButton>
+          {
+            (tab === 1) ? (
+              <IconButton>
+                <Icon>add</Icon>
+              </IconButton>
+            ) : null
+          }
         </Grid>
       </Toolbar> 
      
@@ -58,10 +55,7 @@ const MainWindow: FunctionComponent<Props> = (props) => {
       <Box className={classes.inner}>
          {
             (tab === 0) ? (
-              <General 
-                slides={props.slides}
-                currentPart={props.currentPart}
-              />
+              <General/>
             ) : (tab === 1) ? (
               <Body />
             ) : (tab === 2) ? (
@@ -73,4 +67,4 @@ const MainWindow: FunctionComponent<Props> = (props) => {
   );
 }
 
-export default MainWindow;
+export default observer(MainWindow);

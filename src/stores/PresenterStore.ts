@@ -1,5 +1,4 @@
 import { Event, Part, Slide } from '../models/DataModels';
-import config from './Config';
 import { decorate, observable, runInAction, action } from 'mobx';
 import socket from './SocketClient';
 
@@ -53,7 +52,7 @@ export default class PresenterStore {
     this.fetchEvents();
   }
   fetchEvents() {
-    fetch(config.apiHost + '/getEvents')
+    fetch(process.env.REACT_APP_API_HOST + '/getEvents')
     .then((response) => response.json())
     .then((data) => {
       runInAction(() =>{
@@ -75,7 +74,7 @@ export default class PresenterStore {
       const postParams = new FormData();
       postParams.append('name', this.currentEvent.name);
       postParams.append('date', this.currentEvent.date.toString());
-      fetch(config.apiHost + '/getParts', {
+      fetch(process.env.REACT_APP_API_HOST + '/getParts', {
         method: 'POST',
         body: postParams,
       })
@@ -100,7 +99,7 @@ export default class PresenterStore {
     if(this.currentPart) { 
       const postParams = new FormData();
       postParams.append('partname', this.currentPart.title);
-      fetch(config.apiHost + '/getSlides', {
+      fetch(process.env.REACT_APP_API_HOST + '/getSlides', {
         method: 'POST',
         body: postParams,
       })

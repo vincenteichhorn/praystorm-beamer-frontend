@@ -25,7 +25,7 @@ const Imagepart: FunctionComponent<Props> = (props) => {
   }, [slide, props])
 
   return(
-    <Box style={{height: '100%'}}>
+    <Box style={{height: '100%', overflow: 'hidden'}}>
       <svg
         viewBox={(!props.preview) ? `0 0 ${document.documentElement.clientWidth} ${document.documentElement.clientHeight}` : "0 0 1600 900"}
         style={{
@@ -34,8 +34,8 @@ const Imagepart: FunctionComponent<Props> = (props) => {
           backgroundColor: (imageExists) ? `url(${slide.data.style.backgroundColor})` : '',
           backgroundImage: (imageExists) ? `url(${slide.data.image})` : '',
           backgroundRepeat: (imageExists) ? 'no-repeat' : '',
-          backgroundPosition: (imageExists) ? 'left top' : '',
-          backgroundSize: (imageExists) ? 'cover' : '',
+          backgroundPosition: (imageExists) ? 'center' : '',
+          backgroundSize: (imageExists) ? 'contain' : '',
         }}
         id={(props.gridSize) ? 'beamerSvgPrevGrid' : 'beamerSvg'}
       >

@@ -73,7 +73,7 @@ const Sidebar: FunctionComponent<Props> = (props) => {
               {
                 (props.events) ? props.events.map((event: Event, index: number) => (
                   <MenuItem key={index} value={event.name}>
-                    {event.name}
+                    {event.name} ({event.date})
                   </MenuItem>
                 )) : null
               }

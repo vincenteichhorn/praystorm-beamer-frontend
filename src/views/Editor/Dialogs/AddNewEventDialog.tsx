@@ -72,7 +72,7 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
             }
             editorStore.events.push(newEvent);
             editorStore.currentEvent = newEvent;
-            //TODO: fetch
+            editorStore.createNewEventFromCurrent();
             editorStore.updateParts();
             setEventName('');
             setEventDesription('');

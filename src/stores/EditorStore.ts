@@ -90,18 +90,16 @@ export default class EditorStore {
   }
 
   createNewEventFromCurrent() {
-    const postParams = new FormData();
-    const name = (this.currentEvent)? this.currentEvent.name : 'Error: No name found!';
-    const date = (this.currentEvent)? this.currentEvent.date.toString() : 'Error: No date found!';
-    const description = (this.currentEvent)? this.currentEvent.description : 'Error: No description found!';
-    postParams.append('name', name);
-    postParams.append('date', date);
-    postParams.append('description', description)
-    fetch(process.env.REACT_APP_API_HOST + '/addEvent', {
-      method: 'POST',
-      body: postParams,
-    })
-    .then((resp) => console.log(resp));
+    if(this.currentEvent) {
+      const postParams = new FormData();
+      postParams.append('name', this.currentEvent.name);
+      postParams.append('date', this.currentEvent.date.toString());
+      postParams.append('description', this.currentEvent.description)
+      fetch(process.env.REACT_APP_API_HOST + '/addEvent', {
+        method: 'POST',
+        body: postParams,
+      })
+    }
   }
 
 }

@@ -10,6 +10,8 @@ export default class EditorStore {
   currentPart: Part | undefined = undefined;
   slides: Slide[] = [];
 
+  error: boolean | undefined = undefined;
+
   constructor() {
     // fetch all data from backend
     if(this.events.length < 1) this.fetchEvents();
@@ -89,16 +91,25 @@ export default class EditorStore {
     }
   }
 
-  createNewEventFromCurrent() {
+  preFetch() {
+    this.error = undefined;
+  }
+
+  async createNewEventFromCurrent() {
     if(this.currentEvent) {
       const postParams = new FormData();
       postParams.append('name', this.currentEvent.name);
-      postParams.append('date', this.currentEvent.date.toString());
+      postParams.append('date', this.currentEvent.date.toISOString().split("T")[0]);
       postParams.append('description', this.currentEvent.description)
-      fetch(process.env.REACT_APP_API_HOST + '/addEvent', {
+      const resp = await fetch(process.env.REACT_APP_API_HOST + '/addEvent', {
         method: 'POST',
         body: postParams,
-      })
+      });
+      if(resp.ok) {
+        this.error = false;
+      } else {
+        this.error = true;
+      }
     }
   }
 
@@ -110,9 +121,11 @@ decorate(EditorStore, {
   parts: observable,
   currentPart: observable,
   slides: observable,
+  error: observable,
 
   updateEvents: action,
   updateParts: action,
   updateSlides: action,
+  preFetch: action,
   createNewEventFromCurrent: action,
 });

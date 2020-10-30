@@ -25,6 +25,7 @@ const Sidebar: FunctionComponent = (props) => {
   const findAndChangeEvent = (changeEvent: ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
     if(changeEvent.target.value === 'newEventKey') {
       setAddNewEventDialogOpen(true);
+      editorStore.preFetch();
       return;
     }
     const newEvent = editorStore.events.find((event) => event.name === changeEvent.target.value);

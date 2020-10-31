@@ -1,4 +1,4 @@
-import React, { Dispatch, Fragment, FunctionComponent, SetStateAction, useContext, useEffect, useState } from 'react';
+import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
 import { Dialog, Divider, TextField, DialogContent, DialogActions } from '@material-ui/core';
 import StyledDialogTitle from '../../../components/Styled/StyledDialogTitle';
 import StyledButton from '../../../components/StyledButton';
@@ -7,7 +7,6 @@ import { StoreContext } from '../../../App';
 import DateFnsUtils from '@date-io/date-fns';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import Alert from '@material-ui/lab/Alert';
-import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 
 interface Props {
@@ -24,17 +23,17 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
   const [date, setDate] = useState(new Date());
 
   useEffect(() => {
-    if(editorStore.error == false && props.open) {
+    if(editorStore.error === false && props.open) {
       if(editorStore.currentEvent) editorStore.events.push(editorStore.currentEvent);
       editorStore.fetchEvents();
       editorStore.updateParts();
       setEventName('');
       setEventDesription('');
       props.onClose();
-    } else if(editorStore.error == true){
+    } else if(editorStore.error === true){
       editorStore.currentEvent = editorStore.events[0];
     }
-  });
+  }, [editorStore, props]);
 
   return (
     <Dialog

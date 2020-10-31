@@ -27,7 +27,6 @@ import Beamer from './Beamer/Beamer';
 import Stage from './Stage/Stage';
 import Home from './Home/Home';
 import { StoreContext } from '../App';
-import { link } from 'fs';
 
 const drawerWidth = 270;
 

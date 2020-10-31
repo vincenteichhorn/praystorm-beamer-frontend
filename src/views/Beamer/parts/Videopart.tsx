@@ -1,7 +1,6 @@
-import React, { FunctionComponent, useState, useEffect, useContext } from 'react';
+import React, { FunctionComponent, useState, useEffect } from 'react';
 import { Box, Typography } from '@material-ui/core';
 import { Slide } from '../../../models/DataModels';
-import { StoreContext } from '../../../App';
 
 interface Props {
   slide: Slide;
@@ -12,7 +11,6 @@ interface Props {
 const Videopart: FunctionComponent<Props> = (props) => {
 
   const { slide } = props;
-  const { presenterStore } = useContext(StoreContext);
   const [videoExists, setVideoExists] = useState(false);
 
   useEffect(() => {

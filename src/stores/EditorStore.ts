@@ -1,4 +1,3 @@
-import { BluetoothDisabled } from '@material-ui/icons';
 import { decorate, observable, runInAction, action } from 'mobx';
 import { Part, Event, Slide } from '../models/DataModels';
 

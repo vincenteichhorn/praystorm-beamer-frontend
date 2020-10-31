@@ -1,4 +1,4 @@
-import React, { FunctionComponent, createContext, useEffect } from 'react';
+import React, { FunctionComponent, createContext } from 'react';
 import Routing from './views/Routing';
 import { BrowserRouter } from 'react-router-dom';
 import HomeStore from './stores/HomeStore';

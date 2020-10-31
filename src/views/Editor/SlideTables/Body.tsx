@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { Typography, Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
+import {Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
 
 interface Props {
 

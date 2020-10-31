@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useContext, useState } from 'react';
+import React, { FunctionComponent, useEffect, useContext } from 'react';
 import { SlideTypes } from '../../models/DataModels';
 import Songpart from './parts/Songpart';
 import Imagepart from './parts/Imagepart';

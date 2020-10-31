@@ -1,5 +1,4 @@
 import React, { FunctionComponent, ChangeEvent, useState } from 'react';
-import { Part, Slide, Event } from '../../models/DataModels';
 import { Box, Paper, Toolbar, Divider, makeStyles, Tabs, Tab, IconButton, Grid, Icon } from '@material-ui/core';
 import General from './SlideTables/General';
 import Body from './SlideTables/Body';

@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState, useEffect, ChangeEvent, SetStateAction, useContext, Dispatch } from 'react';
-import { TextField, Box, Divider, ClickAwayListener, Select, MenuItem, FormControl, InputLabel, Button, Typography, Grid } from '@material-ui/core';
-import { Slide, Part, PartTypes } from '../../../models/DataModels';
+import { TextField, Box, Divider, ClickAwayListener, Select, MenuItem, FormControl, InputLabel, Typography } from '@material-ui/core';
+import { PartTypes } from '../../../models/DataModels';
 import { StoreContext } from '../../../App';
 import { observer } from 'mobx-react';
 
@@ -24,7 +24,7 @@ const General: FunctionComponent = (props) => {
       setCopyrightAuthor((editorStore.slides[0].copyright.author) ? editorStore.slides[0]?.copyright.author : '');
       setCopyright((editorStore.slides[0].copyright.copyright) ? editorStore.slides[0]?.copyright.copyright : '');
     }
-  });
+  }, [editorStore.currentPart, editorStore.slides]);
 
   const updatePartObj = () => {
     //TODO fetch

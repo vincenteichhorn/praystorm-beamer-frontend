@@ -37,7 +37,7 @@ const General: FunctionComponent = (props) => {
       >
         <TextField
           style={{ marginBottom: '8px' }}
-          label="Part Title"
+          label="Titel"
           fullWidth
           variant="outlined"
           value={(editorStore.currentPart) ? editorStore.currentPart?.title : ''}
@@ -78,7 +78,7 @@ const General: FunctionComponent = (props) => {
       >
         <TextField
           style={{ marginBottom: '8px', marginTop: '10px' }}
-          label="Copyright Author"
+          label="Copyright Autor"
           fullWidth
           variant="outlined"
           value={(editorStore.currentPart) ? (editorStore.currentPart.author) ? editorStore.currentPart.author : '' : ''}
@@ -121,28 +121,23 @@ const General: FunctionComponent = (props) => {
             paddingTop: '10px',
           }}
         >
-          <FormControl
+          <Select
             variant="outlined"
             fullWidth
+            value={(editorStore.currentPart) ? editorStore.currentPart.type : ''}
+            onChange={(changeEvent: ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
+              if (editorStore.currentPart && (changeEvent.target.value === PartTypes.INSERT || changeEvent.target.value === PartTypes.SONG)) {
+                editorStore.currentPart.type = changeEvent.target.value;
+              }
+            }}
+            label='Art'
           >
-            <InputLabel>Type</InputLabel>
-            <Select
-              value={(editorStore.currentPart) ? editorStore.currentPart.type : ''}
-              onChange={(changeEvent: ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
-                if (editorStore.currentPart && (changeEvent.target.value === PartTypes.INSERT || changeEvent.target.value === PartTypes.SONG)) {
-                  editorStore.currentPart.type = changeEvent.target.value;
-                }
-              }}
-              label='Type'
-            >
-              <MenuItem key={1} value={PartTypes.INSERT}>
-                {"Insert"}
-              </MenuItem>
-              <MenuItem key={1} value={PartTypes.SONG}>
-                {"Song"}
-              </MenuItem>
-            </Select>
-          </FormControl>
+           {
+              Object.keys(PartTypes).map((type, index) => (
+                <MenuItem key={index} value={type}>{type.toLowerCase().charAt(0).toUpperCase() + type.toLowerCase().slice(1)}</MenuItem>
+              ))
+            }
+          </Select>
         </Box>
       </ClickAwayListener>
     </Box>

@@ -4,6 +4,7 @@ import { Part, PartTypes, Event } from '../../models/DataModels';
 import { observer } from 'mobx-react';
 import { StoreContext } from '../../App';
 import AddNewEventDialog from './Dialogs/AddNewEventDialog';
+import AddNewPartDialog from './Dialogs/AddNewPartDialog';
 
 const useStyles = makeStyles(theme => ({
   select: {
@@ -21,6 +22,7 @@ const Sidebar: FunctionComponent = (props) => {
   const { editorStore } = useContext(StoreContext);
 
   const [addNewEventDialog, setAddNewEventDialogOpen] = useState(false);
+  const [addNewPartDialog, setAddNewPartDialog] = useState(false);
 
   const findAndChangeEvent = (changeEvent: ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
     if(changeEvent.target.value === 'newEventKey') {
@@ -74,12 +76,15 @@ const Sidebar: FunctionComponent = (props) => {
           </FormControl> 
         </Box>
         
-        <Paper  className={classes.paper}>
+        <Paper className={classes.paper}>
           <List>
             <ListItem 
               key={-1} 
               button
-              onClick={() => {/*TODO open Dialog*/}}
+              onClick={() => {
+                setAddNewPartDialog(true); 
+                editorStore.preFetch();
+              }}
             >
               <ListItemIcon>
                 <Icon>add</Icon>
@@ -119,6 +124,10 @@ const Sidebar: FunctionComponent = (props) => {
       <AddNewEventDialog 
         open={addNewEventDialog}
         onClose={() => setAddNewEventDialogOpen(false)}
+      />
+      <AddNewPartDialog
+        open={addNewPartDialog}
+        onClose={() => setAddNewPartDialog(false)}
       />
     </Box>
   );

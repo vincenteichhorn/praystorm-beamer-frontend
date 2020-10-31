@@ -112,6 +112,10 @@ export default class EditorStore {
     }
   }
 
+  async creatNewPartFromCurrent() {
+    this.error = false;
+  }
+
 }
 
 decorate(EditorStore, {
@@ -127,4 +131,5 @@ decorate(EditorStore, {
   updateSlides: action,
   preFetch: action,
   createNewEventFromCurrent: action,
+  creatNewPartFromCurrent: action,
 });

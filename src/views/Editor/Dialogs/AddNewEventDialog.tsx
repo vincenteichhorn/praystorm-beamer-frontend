@@ -23,7 +23,7 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
   const [date, setDate] = useState(new Date());
 
   useEffect(() => {
-    if(editorStore.error === false && props.open) {
+    if(!editorStore.error === false && props.open) {
       if(editorStore.currentEvent) editorStore.events.push(editorStore.currentEvent);
       editorStore.fetchEvents();
       editorStore.updateParts();
@@ -33,7 +33,7 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
     } else if(editorStore.error === true){
       editorStore.currentEvent = editorStore.events[0];
     }
-  }, [editorStore, props]);
+  }, [editorStore.error, props]);
 
   return (
     <Dialog
@@ -92,8 +92,6 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
           size="large"
           onClick={() => {
             props.onClose();
-            setEventName('');
-            setEventDesription('');
           }}
         >
           Abbrechen

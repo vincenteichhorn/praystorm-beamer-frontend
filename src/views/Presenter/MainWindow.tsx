@@ -302,7 +302,7 @@ const MainWindow: FunctionComponent = () => {
                 <Box className={classes.tableContainer}>
                   <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
                     <Typography>
-                      In diesem Part gibt es noch eine Slides. Du kannst welche im Editor hinzufügen.
+                      Du hast zu dem Event noch keine Parts und Slides hinzugefügt. Du kannst diese im Editor hinzufügen.
                     </Typography>
                     <Button
                       style={{marginTop: '20px'}}

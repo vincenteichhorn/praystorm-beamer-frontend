@@ -115,10 +115,11 @@ export default class PresenterStore {
             }
             slide.copyright = copyright;
             return slide;
-          })
-          if(!this.currentSlide) this.currentSlide = [...data][0];
+          });
         });
       });
+    } else {
+      this.slides = [];
     }
   }
 

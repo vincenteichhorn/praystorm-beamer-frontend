@@ -68,3 +68,8 @@ export interface Adjustment {
   rotateY: number;
   scale: number;
 }
+
+export enum ViewTypes {
+  LIST = 'LIST',
+  CARDS = 'CARDS',
+};

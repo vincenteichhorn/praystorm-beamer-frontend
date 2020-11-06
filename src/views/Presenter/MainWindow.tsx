@@ -1,14 +1,13 @@
 import React, { FunctionComponent, useState, useContext, useEffect } from 'react';
-import { Paper, Toolbar, Typography, makeStyles, Divider, Breadcrumbs, Grid, IconButton, Icon, TableContainer, TableHead, Table, TableRow, TableCell, TableBody, Box, Slider } from '@material-ui/core';
-import ViewTypes from '../../models/ViewTypes';
-import { Part, Event, Slide, SlideTypes } from '../../models/DataModels';
+import { Paper, Toolbar, Typography, makeStyles, Divider, Breadcrumbs, Grid, IconButton, Icon, TableContainer, TableHead, Table, TableRow, TableCell, TableBody, Box, Slider, Button } from '@material-ui/core';
+import { Part, Event, Slide, SlideTypes, ViewTypes } from '../../models/DataModels';
 import { StoreContext } from '../../App';
 import AdjustmentDialog from './AdjustmentDialog';
 import { observer } from 'mobx-react';
 import Songpart from '../Beamer/parts/Songpart';
-import './style.css';
 import Imagepart from '../Beamer/parts/Imagepart';
 import Videopart from '../Beamer/parts/Videopart';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles(theme => ({
   actionBar: {
@@ -35,21 +34,19 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-interface Props {
-  currentEvent: Event | undefined;
-  currentPart: Part | undefined;
-  parts: Part[] | undefined;
-  slides: Slide[] | undefined;
-  currentSlide: Slide | undefined;
-  onChangeSlide: (newSlide: Slide) => void;
-}
 
-const MainWindow: FunctionComponent<Props> = (props) => {
+const MainWindow: FunctionComponent = () => {
   const classes = useStyles();
+  const history = useHistory();
   const [view, setView] = useState(ViewTypes.CARDS);
-  const { presenterStore } = useContext(StoreContext);
+  const { presenterStore, editorStore } = useContext(StoreContext);
   const [adjustmentDialogOpen, setAdjustmentDialogOpen] = useState(false);
   const [gridSize, setGridSize] = useState(3);
+
+  const changeCurrentSlide = (newSlide: Slide) => {
+    presenterStore.currentSlide = newSlide;
+    presenterStore.sendSlide();
+  }
 
   useEffect(() => {
     const keyUpEventListener = (event: KeyboardEvent) => {
@@ -59,23 +56,25 @@ const MainWindow: FunctionComponent<Props> = (props) => {
       if(event.keyCode === 72) {
         presenterStore.blackoutForeground();
       }
-      if(event.keyCode === 39 && props.currentSlide && props.slides) { //->
-        let id = props.slides?.findIndex((element) => element.title === props.currentSlide?.title);
-        if(id < 0 || id > props.slides?.length - 2) {
+      if(event.keyCode === 39 && presenterStore.currentSlide && presenterStore.slides) { //->
+        let id = presenterStore.slides?.findIndex((element) => element.title === presenterStore.currentSlide?.title);
+        if(id < 0 || id > presenterStore.slides?.length - 2) {
           id = 0;
         } else {
           id = id + 1;
         }
-        props.onChangeSlide(props.slides[id]);
+        changeCurrentSlide(presenterStore.slides[id]);
       }
-      if(event.keyCode === 37 && props.currentSlide && props.slides) { //<-
-        let id = props.slides?.findIndex((element) => element.title === props.currentSlide?.title);
-        if(id < 1 || id > props.slides?.length - 1) {
-          id = props.slides?.length - 1;
-        } else {
-          id = id - 1;
+      if(event.keyCode === 37 && presenterStore.currentSlide && presenterStore.slides) { //<-
+        let id = presenterStore.slides?.findIndex((element) => element.title === presenterStore.currentSlide?.title);
+        if(id) {
+          if(id < 1 || id > presenterStore.slides?.length - 1) {
+            id = presenterStore.slides?.length - 1;
+          } else {
+            id = id - 1;
+          }
         }
-        props.onChangeSlide(props.slides[id]);
+        changeCurrentSlide(presenterStore.slides[id]);
       }
       if(event.keyCode === 38) { // ^
         presenterStore.blackoutForeground();
@@ -84,7 +83,7 @@ const MainWindow: FunctionComponent<Props> = (props) => {
         presenterStore.blackoutForeground();
       }
       if(event.keyCode === 13) {
-        props.onChangeSlide(presenterStore.slides[0]);
+        changeCurrentSlide(presenterStore.slides[0]);
       }
     }
     document.addEventListener('keyup', keyUpEventListener);
@@ -99,15 +98,25 @@ const MainWindow: FunctionComponent<Props> = (props) => {
         <Toolbar variant="dense" className={classes.toolbar}>
           <Grid container justify="space-between" direction="row" alignItems="center">
             <Breadcrumbs>
-              <Typography>
-                { props.currentEvent?.name }
-              </Typography>
-              <Typography color="textPrimary">
-                { props.currentPart?.title }
-              </Typography>
-              <Typography color="textPrimary">
-                { props.currentSlide?.title }
-              </Typography>
+              {
+                (presenterStore.currentEvent) ? (
+                  <Typography>
+                    { presenterStore.currentEvent?.name }
+                  </Typography>
+                ) : null
+              }{
+                (presenterStore.currentPart) ? (
+                  <Typography color="textPrimary">
+                    { presenterStore.currentPart?.title }
+                  </Typography>
+                ) : null
+              }{
+                (presenterStore.currentSlide) ? (
+                  <Typography color="textPrimary">
+                    { presenterStore.currentSlide?.title }
+                  </Typography>
+                ) : null
+              }
             </Breadcrumbs>
             <Grid item>
               <Grid container direction="row" alignItems="center" className={classes.actionBar}>
@@ -182,7 +191,8 @@ const MainWindow: FunctionComponent<Props> = (props) => {
           </Grid>
         </Toolbar>
         <Divider />
-            {
+          {
+            (presenterStore.slides.length > 0) ? (
               (view === ViewTypes.CARDS) ? (
                 <Grid container className={classes.gridContainer} spacing={1} alignContent='flex-start'
                   style={{
@@ -191,13 +201,13 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                   }}
                 >
                   {
-                    props.slides?.map((slide: Slide, index: number) => (
+                    presenterStore.slides?.map((slide: Slide, index: number) => (
                       <Grid 
                         id='test'
                         item
                         xs={12/gridSize as 3 | 4 | 6}
                         key={index} 
-                        onClick={() => props.onChangeSlide(slide)}
+                        onClick={() => changeCurrentSlide(slide)}
                       >
                         <div
                           style={{
@@ -240,11 +250,11 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                     </TableHead>
                     <TableBody>
                       {
-                        props.slides?.map((slide: Slide, index: number) => (
+                        presenterStore.slides?.map((slide: Slide, index: number) => (
                           <TableRow 
                             key={index} 
-                            onClick={() => props.onChangeSlide(slide)}
-                            style={{ backgroundColor: (props.currentSlide?.title === slide.title) ? 'rgba(0, 0, 0, 0.08)' : '' }}
+                            onClick={() => changeCurrentSlide(slide)}
+                            style={{ backgroundColor: (presenterStore.currentSlide?.title === slide.title) ? 'rgba(0, 0, 0, 0.08)' : '' }}
                           >
                             <TableCell style={{ fontWeight: 'bold' }}>{slide.shorthand}</TableCell>
                             <TableCell>
@@ -267,7 +277,49 @@ const MainWindow: FunctionComponent<Props> = (props) => {
                   </Table>
                 </TableContainer>
               )
-            }
+            ) : (
+              (presenterStore.parts.length > 0) ? (
+                <Box className={classes.tableContainer}>
+                  <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
+                    <Typography>
+                      In diesem Part gibt es noch eine Slides. Du kannst welche im Editor hinzufügen.
+                    </Typography>
+                    <Button
+                      style={{marginTop: '20px'}}
+                      variant="outlined"
+                      onClick={() => {
+                        editorStore.currentEvent = presenterStore.currentEvent;
+                        editorStore.currentPart = presenterStore.currentPart;
+                        editorStore.updateSlides();
+                        history.push('/editor');
+                      }}
+                    >
+                      zum Editor
+                    </Button>
+                  </Grid>
+                </Box>
+              ) : (
+                <Box className={classes.tableContainer}>
+                  <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
+                    <Typography>
+                      In diesem Part gibt es noch eine Slides. Du kannst welche im Editor hinzufügen.
+                    </Typography>
+                    <Button
+                      style={{marginTop: '20px'}}
+                      variant="outlined"
+                      onClick={() => {
+                        editorStore.currentEvent = presenterStore.currentEvent;
+                        editorStore.updateParts();
+                        history.push('/editor');
+                      }}
+                    >
+                      zum Editor
+                    </Button>
+                  </Grid>
+                </Box>
+              )
+            )
+          }     
       </Paper>
       <AdjustmentDialog 
         open={adjustmentDialogOpen}

@@ -2,6 +2,10 @@ import React, { FunctionComponent, ChangeEvent, useEffect } from 'react';
 import { Paper, Grid, FormControl, Select, MenuItem, List, ListItem, ListItemText, makeStyles, Box, ListItemIcon, Icon } from '@material-ui/core';
 import { Event, Part, PartTypes } from '../../models/DataModels';
 import Beamer from '../Beamer/Beamer';
+import { StoreContext } from '../../App';
+import { useContext } from 'react';
+import { observer } from 'mobx-react';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   select: {
@@ -14,42 +18,50 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-interface Props {
-  events: Event[];
-  currentEvent: Event | undefined;
-  onChangeEvent: (newEvent: Event) => void;
-  parts: Part[]; 
-  currentPart: Part | undefined 
-  onChangePart: (newPart: Part) => void;
-}
-
-const Sidebar: FunctionComponent<Props> = (props) => {
+const Sidebar: FunctionComponent = () => {
   const classes = useStyles();
 
+  const history = useHistory();
+  const { presenterStore, editorStore } = useContext(StoreContext);
+
+  const changeCurrentPart = (newPart: Part) => {
+    presenterStore.currentPart = newPart;
+    presenterStore.updateSlides();
+    presenterStore.sendPart();
+  }
+
   const findAndChangeEvent = (changeEvent: ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
-    const newEvent = props.events.find((event) => event.name === changeEvent.target.value);
-    if(newEvent) props.onChangeEvent(newEvent);
+    const newEvent = presenterStore.events.find((event) => event.name === changeEvent.target.value);
+    if(newEvent) {
+      presenterStore.currentEvent = newEvent;
+      presenterStore.updateParts();
+      presenterStore.sendEvent();
+    }
   }
 
   useEffect(() => {
     const keyUpEventListener = (event: KeyboardEvent) => {
-      if(event.keyCode === 38) { // ^
-        let id = props.parts?.findIndex((element) => element.title === props.currentPart?.title);
-        if(id < 1 || id > props.parts?.length - 1) {
-          id = props.parts?.length - 1;
-        } else {
-          id = id - 1;
+      if(event.keyCode === 38) { // ^ up 
+        let id = presenterStore.parts?.findIndex((element) => element.title === presenterStore.currentPart?.title);
+        if(id) {
+          if(id < 1 || id > presenterStore.parts?.length - 1) {
+            id = presenterStore.parts?.length - 1;
+          } else {
+            id = id - 1;
+          }
         }
-        props.onChangePart(props.parts[id]);
+        changeCurrentPart(presenterStore.parts[id]);
       }
-      if(event.keyCode === 40) { // V
-        let id = props.parts?.findIndex((element) => element.title === props.currentPart?.title);
-        if(id < 0 || id > props.parts?.length - 2) {
-          id = 0;
-        } else {
-          id = id + 1;
+      if(event.keyCode === 40) { // V down
+        let id = presenterStore.parts?.findIndex((element) => element.title === presenterStore.currentPart?.title);
+        if(id) {
+          if(id < 0 || id > presenterStore.parts?.length - 2) {
+            id = 0;
+          } else {
+            id = id + 1;
+          }
         }
-        props.onChangePart(props.parts[id]);
+        changeCurrentPart(presenterStore.parts[id]);
       }
     }
     document.addEventListener('keyup', keyUpEventListener);
@@ -67,11 +79,11 @@ const Sidebar: FunctionComponent<Props> = (props) => {
             fullWidth
           >
             <Select
-              value={(props.currentEvent) ? props.currentEvent.name : ''}
+              value={(presenterStore.currentEvent) ? presenterStore.currentEvent.name : ''}
               onChange={findAndChangeEvent}
             >
               {
-                (props.events) ? props.events.map((event: Event, index: number) => (
+                (presenterStore.events) ? presenterStore.events.map((event: Event, index: number) => (
                   <MenuItem key={index} value={event.name}>
                     {event.name} ({event.date})
                   </MenuItem>
@@ -86,19 +98,34 @@ const Sidebar: FunctionComponent<Props> = (props) => {
             <Grid item style={{overflow: 'auto'}}>
               <List>
                 {
-                  (props.parts) ? props.parts.map((part: Part, index: number) => (
+                  (presenterStore.parts.length > 0) ? presenterStore.parts.map((part: Part, index: number) => (
                     <ListItem 
                       key={index} 
                       button
-                      selected={(part.title === props.currentPart?.title)}
-                      onClick={() => props.onChangePart(part)}
+                      selected={(part.title === presenterStore.currentPart?.title)}
+                      onClick={() => changeCurrentPart(part)}
                     >
                       <ListItemIcon>
                         { (part.type === PartTypes.SONG) ? <Icon>music_note</Icon> : <Icon>class</Icon>}
                       </ListItemIcon>
                       <ListItemText>{part.title}</ListItemText>
                     </ListItem>
-                  )) : null
+                  )) : (
+                    <ListItem  
+                      button
+                      selected={true}
+                      onClick={() => {
+                        editorStore.currentEvent = presenterStore.currentEvent;
+                        editorStore.updateParts();
+                        history.push('/editor');
+                      }}
+                    >
+                      <ListItemIcon>
+                        { <Icon>info</Icon> }
+                      </ListItemIcon>
+                      <ListItemText>In diesem Event gibt es noch keine Parts. Du kannst diese im Editor erstellen.</ListItemText>
+                    </ListItem>
+                  )
                 }
               </List>
             </Grid>
@@ -130,4 +157,4 @@ const Sidebar: FunctionComponent<Props> = (props) => {
   );
 }
 
-export default Sidebar;
+export default observer(Sidebar);

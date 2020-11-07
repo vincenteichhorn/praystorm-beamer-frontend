@@ -12,8 +12,8 @@ const Body: FunctionComponent<Props> = (props) => {
         <TableRow>
           <TableCell>Titel</TableCell>
           <TableCell>Shorthand</TableCell>
-          <TableCell>Type</TableCell>
-          <TableCell>Body</TableCell>
+          <TableCell>Typ</TableCell>
+          <TableCell>Inhalte</TableCell>
           <TableCell align="right">Style</TableCell>
         </TableRow>
       </TableHead>

@@ -36,8 +36,8 @@ const MainWindow: FunctionComponent = (props) => {
             onChange={(event: ChangeEvent<{}>, number: any) => setTab(number)}
             centered
           >
-            <Tab label="General" value={0}/>
-            <Tab label="Body" value={1}/>
+            <Tab label="Allgemein" value={0}/>
+            <Tab label="Inhalte" value={1}/>
             <Tab label="Style" value={2}/>
           </Tabs>
           {

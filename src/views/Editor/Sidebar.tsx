@@ -1,5 +1,5 @@
 import React, { FunctionComponent, ChangeEvent, useContext, useEffect, useState } from 'react';
-import { Box, Grid, FormControl, Select, MenuItem, Paper, List, ListItem, ListItemIcon, Icon, ListItemText, makeStyles, Divider } from '@material-ui/core';
+import { Box, Grid, FormControl, Select, MenuItem, Paper, List, ListItem, ListItemIcon, Icon, ListItemText, makeStyles, Divider, TextField } from '@material-ui/core';
 import { Part, PartTypes, Event } from '../../models/DataModels';
 import { observer } from 'mobx-react';
 import { StoreContext } from '../../App';
@@ -50,6 +50,7 @@ const Sidebar: FunctionComponent = (props) => {
   })
 
 
+
   return (
     <Box>
       <Grid container direction="column">
@@ -89,7 +90,16 @@ const Sidebar: FunctionComponent = (props) => {
               <ListItemIcon>
                 <Icon>add</Icon>
               </ListItemIcon>
-              <ListItemText>Part hinzufügen</ListItemText>
+              <ListItemText>neuen Part erstellen</ListItemText>
+            </ListItem>
+            <ListItem 
+              key={-1} 
+            >
+              <TextField 
+                label="+ Part hinzufügen"
+                fullWidth
+                variant="outlined"
+              />
             </ListItem>
             <ListItem 
               key={-2} 
@@ -129,7 +139,9 @@ const Sidebar: FunctionComponent = (props) => {
         open={addNewPartDialog}
         onClose={() => setAddNewPartDialog(false)}
       />
+      
     </Box>
+
   );
 }
 

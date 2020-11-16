@@ -161,9 +161,9 @@ const MainWindow: FunctionComponent = () => {
                 {(view === ViewTypes.CARDS) ? (
                   <IconButton 
                     disableRipple
-                    onClick={(event) => {(gridSize > 2) ? setGridSize(gridSize - 1) : setGridSize(gridSize)}}
+                    onClick={(event) => {(gridSize > -4) ? setGridSize(gridSize - 1) : setGridSize(gridSize)}}
                   >
-                    <Icon>zoom_in</Icon>
+                    <Icon>zoom_out</Icon>
                   </IconButton>
                 ) : null}
                 {(view === ViewTypes.CARDS) ? (
@@ -174,16 +174,16 @@ const MainWindow: FunctionComponent = () => {
                     value={gridSize}
                     onChange={(event, val) => {setGridSize(val as number)}}
                     step={1}
-                    min={2}
-                    max={4} 
+                    min={-4}
+                    max={-2} 
                   />
                 ):('')}
                 {(view === ViewTypes.CARDS) ? (
                   <IconButton 
                     disableRipple
-                    onClick={(event) => {(gridSize < 4) ? setGridSize(gridSize + 1) : setGridSize(gridSize)}}
+                    onClick={(event) => {(gridSize < -2) ? setGridSize(gridSize + 1) : setGridSize(gridSize)}}
                   >
-                    <Icon>zoom_out</Icon>
+                    <Icon>zoom_in</Icon>
                   </IconButton>
                 ) : null}
               </Grid>
@@ -205,7 +205,7 @@ const MainWindow: FunctionComponent = () => {
                       <Grid 
                         id='test'
                         item
-                        xs={12/gridSize as 3 | 4 | 6}
+                        xs={12/(-1*gridSize) as 3 | 4 | 6}
                         key={index} 
                         onClick={() => changeCurrentSlide(slide)}
                       >

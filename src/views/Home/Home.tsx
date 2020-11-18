@@ -75,7 +75,7 @@ const Home: FunctionComponent<Props> = (props) => {
   }
 
   return (
-    <div style={{height: '100%', overflow: 'scroll'}}>
+    <div style={{height: '86vh', overflowY: 'scroll'}}>
       <Grid
         container
         direction="column"

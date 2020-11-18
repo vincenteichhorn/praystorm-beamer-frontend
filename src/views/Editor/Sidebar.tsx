@@ -5,6 +5,7 @@ import { observer } from 'mobx-react';
 import { StoreContext } from '../../App';
 import AddNewEventDialog from './Dialogs/AddNewEventDialog';
 import AddNewPartDialog from './Dialogs/AddNewPartDialog';
+import SearchPartDialog from './Dialogs/SearchPartDialog';
 
 const useStyles = makeStyles(theme => ({
   select: {
@@ -23,6 +24,7 @@ const Sidebar: FunctionComponent = (props) => {
 
   const [addNewEventDialog, setAddNewEventDialogOpen] = useState(false);
   const [addNewPartDialog, setAddNewPartDialog] = useState(false);
+  const [searchPartDialog, setSearchPartDialog] = useState(false);
 
   const findAndChangeEvent = (changeEvent: ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
     if(changeEvent.target.value === 'newEventKey') {
@@ -69,7 +71,7 @@ const Sidebar: FunctionComponent = (props) => {
               {
                 editorStore.events.map((event: Event, index: number) => (
                   <MenuItem key={index} value={event.name}>
-                    {event.name}
+                    {event.name} ({event.date})
                   </MenuItem>
                 ))
               }
@@ -93,36 +95,31 @@ const Sidebar: FunctionComponent = (props) => {
               <ListItemText>neuen Part erstellen</ListItemText>
             </ListItem>
             <ListItem 
-              key={-1} 
-            >
-              <TextField 
-                label="+ Part hinzufügen"
-                fullWidth
-                variant="outlined"
-              />
-            </ListItem>
-            <ListItem 
               key={-2} 
               button
-              onClick={() => {/*TODO open Dialog*/}}
+              onClick={() => {
+                setSearchPartDialog(true);
+                editorStore.fetchAllParts();
+              }}
             >
               <ListItemIcon>
-                <Icon>edit</Icon>
+                <Icon>search</Icon>
               </ListItemIcon>
-              <ListItemText>Reihenfolge bearbeiten</ListItemText>
+              <ListItemText>Part suchen</ListItemText>
             </ListItem>
-            <Divider />
             <Divider />
             {
               editorStore.parts.map((part: Part, index: number) => (
                 <ListItem 
                   key={index} 
                   button
-                  selected={(part.title === editorStore.currentPart?.title)}
-                  onClick={() => changeCurrentPart(part)}
+                  selected={(part.title == editorStore.currentPart?.title)}
+                  onClick={() => {
+                    changeCurrentPart(part)
+                  }}
                 >
                   <ListItemIcon>
-                    { (part.type === PartTypes.SONG) ? <Icon>music_note</Icon> : <Icon>class</Icon>}
+                    {(part.type === PartTypes.SONG) ? <Icon>music_note</Icon> : <Icon>class</Icon>}
                   </ListItemIcon>
                   <ListItemText>{part.title}</ListItemText>
                 </ListItem>
@@ -139,7 +136,10 @@ const Sidebar: FunctionComponent = (props) => {
         open={addNewPartDialog}
         onClose={() => setAddNewPartDialog(false)}
       />
-      
+      <SearchPartDialog 
+        open={searchPartDialog}
+        onClose={() => setSearchPartDialog(false)}
+      />
     </Box>
 
   );

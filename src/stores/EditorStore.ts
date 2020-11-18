@@ -2,12 +2,14 @@ import { decorate, observable, runInAction, action } from 'mobx';
 import { Part, Event, Slide } from '../models/DataModels';
 
 export default class EditorStore {
-
   events: Event[] = [];
   currentEvent: Event | undefined = undefined;
   parts: Part[] = [];
   currentPart: Part | undefined = undefined;
   slides: Slide[] = [];
+  
+  allParts: Part[] = [];
+  searchedParts: Part[] = [];
 
   error: boolean | undefined = undefined;
 
@@ -44,7 +46,7 @@ export default class EditorStore {
       const postParams = new FormData();
       postParams.append('name', this.currentEvent.name);
       postParams.append('date', this.currentEvent.date.toString());
-      fetch(process.env.REACT_APP_API_HOST + '/getParts', {
+      fetch(process.env.REACT_APP_API_HOST + '/getPartsFromEvent', {
         method: 'POST',
         body: postParams,
       })
@@ -90,6 +92,44 @@ export default class EditorStore {
     }
   }
 
+  fetchAllParts() {
+    runInAction(() => {
+      this.allParts = [];
+    });
+    fetch(process.env.REACT_APP_API_HOST + '/getParts', {
+      method: 'GET',
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      runInAction(() => {
+        this.allParts = [...data];
+        this.searchedParts = this.allParts;
+      })
+    })
+  }
+
+  searchAllParts(searchVal: string) {
+    if(!searchVal){
+      this.searchedParts = this.allParts;
+    } else {
+      this.searchedParts = this.allParts.filter((el) => el.title.toLocaleLowerCase().includes(searchVal.toLocaleLowerCase()));
+    }
+  }
+
+  addPartToEvent(part: Part) {
+    const postParams = new FormData();
+    postParams.append('partTitle', part.title);
+    postParams.append('partPosition', part.position.toString());
+    postParams.append('partAuthor', part.author);
+    postParams.append('eventName', (this.currentEvent) ? this.currentEvent?.name : '');
+    postParams.append('eventDate', (this.currentEvent) ? this.currentEvent?.date.toString() : '');
+    fetch(process.env.REACT_APP_API_HOST + '/addPartToEvent', {
+      method: 'POST',
+      body: postParams,
+    })
+    .then((resp) => console.log(resp));
+  }
+
   preFetch() {
     this.error = undefined;
   }
@@ -113,8 +153,46 @@ export default class EditorStore {
   }
 
   async creatNewPartFromCurrent() {
-    this.error = false;
+    if(this.currentPart) {
+      const postParams = new FormData();
+      postParams.append('partTitle', this.currentPart.title);
+      postParams.append('partPosition', this.currentPart.position.toString());
+      postParams.append('partType', this.currentPart.type);
+      postParams.append('partAuthor', this.currentPart.author);
+      postParams.append('partAlbum', this.currentPart.album);
+      postParams.append('partCopyright', this.currentPart.copyright);
+      postParams.append('eventName', (this.currentEvent) ? this.currentEvent?.name : '');
+      postParams.append('eventDate', (this.currentEvent) ? this.currentEvent?.date.toString() : '');
+      const resp = await fetch(process.env.REACT_APP_API_HOST + '/addPart', {
+        method: 'POST',
+        body: postParams,
+      });
+      if(resp.ok) {
+        this.error = false;
+      } else {
+        this.error = true;
+      }
+    }
   }
+
+  async updateSlide(slide: Slide) {
+    const postParams = new FormData();
+      postParams.append('partTitle', (this.currentPart) ? this.currentPart.title : '');
+      postParams.append('partAuthor', (this.currentPart) ? this.currentPart.author : '');
+      postParams.append('slideTitle', slide.title);
+      postParams.append('data', JSON.stringify({
+        lyrics: slide.data.lyrics,
+        video: slide.data.video,
+        image: slide.data.image,
+      }));
+      console.log(Array.from(postParams.entries()));
+      const resp = await fetch(process.env.REACT_APP_API_HOST + '/updateSlide', {
+        method: 'POST',
+        body: postParams,
+      });
+      console.log(resp.ok);
+  }
+
 
 }
 
@@ -125,6 +203,8 @@ decorate(EditorStore, {
   currentPart: observable,
   slides: observable,
   error: observable,
+  allParts: observable,
+  searchedParts: observable,
 
   updateEvents: action,
   updateParts: action,
@@ -132,4 +212,5 @@ decorate(EditorStore, {
   preFetch: action,
   createNewEventFromCurrent: action,
   creatNewPartFromCurrent: action,
+  searchAllParts: action,
 });

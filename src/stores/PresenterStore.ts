@@ -74,7 +74,7 @@ export default class PresenterStore {
       const postParams = new FormData();
       postParams.append('name', this.currentEvent.name);
       postParams.append('date', this.currentEvent.date.toString());
-      fetch(process.env.REACT_APP_API_HOST + '/getParts', {
+      fetch(process.env.REACT_APP_API_HOST + '/getPartsFromEvent', {
         method: 'POST',
         body: postParams,
       })

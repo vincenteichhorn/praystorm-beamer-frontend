@@ -100,7 +100,7 @@ interface Props extends RouteComponentProps {
 
 const Routing: FunctionComponent<Props> = (props) => {
   const classes = useStyles();
-  const { homeStore } = useContext(StoreContext);
+  const { homeStore, presenterStore, editorStore } = useContext(StoreContext);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [renderAppBar, setRenderAppBar] = useState(true);
 
@@ -118,6 +118,15 @@ const Routing: FunctionComponent<Props> = (props) => {
 
   const redirect = (link: string) => {
     setDrawerOpen(false);
+    if(link === '/editor' && window.location.pathname !== '/editor') {
+      editorStore.updateEvents();
+      editorStore.currentEvent = presenterStore.currentEvent;
+      editorStore.updateParts();
+    } else if(link === '/presenter' && window.location.pathname !== '/presenter') {
+      presenterStore.updateEvents();
+      presenterStore.currentEvent = editorStore.currentEvent;
+      presenterStore.updateParts();
+    }
     props.history.push(link);
   }
 

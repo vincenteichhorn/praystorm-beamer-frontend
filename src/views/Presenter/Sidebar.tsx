@@ -102,7 +102,7 @@ const Sidebar: FunctionComponent = () => {
                     <ListItem 
                       key={index} 
                       button
-                      selected={(part.title === presenterStore.currentPart?.title)}
+                      selected={(part.title === editorStore.currentPart?.title)}
                       onClick={() => changeCurrentPart(part)}
                     >
                       <ListItemIcon>

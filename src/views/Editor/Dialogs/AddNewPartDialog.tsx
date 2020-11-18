@@ -18,7 +18,7 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
   const { editorStore } = useContext(StoreContext);
 
   const [partTitle, setPartTitle] = useState<string>('');
-  const [partType, setPartType] = useState<PartTypes>();
+  const [partType, setPartType] = useState<PartTypes>(PartTypes.SONG);
   const [partAuthor, setPartAuthor] = useState<string>('');
   const [partAlbum, setPartAlbum] = useState<string>('');
   const [partCopyright, setPartCopyright] = useState<string>('');
@@ -62,10 +62,15 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
           fullWidth
           variant="outlined" 
           style={{marginTop: '10px', marginBottom: '8px'}}
-          value={partType}
+          value={(partType) ? partType : PartTypes.SONG}
           onChange={(event) => {
-            const type = event.target.name;
-            console.log(type);
+            const type = event.target.value;
+            if(type === PartTypes.INSERT) {
+              setPartType(PartTypes.INSERT);
+            } else {
+              setPartType(PartTypes.SONG);
+            }
+            console.log(partType);
           }}
           label="Art"
         >
@@ -105,6 +110,9 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
           onChange={(changeEvent) => {setPartCopyright(changeEvent.target.value)}}
           error={partCopyright.length < 1 || partCopyright.length > 250}
         />
+        {
+          (editorStore.error) ? <Alert severity="error">Der Part konnte nicht hinzugefügt werden, da er bereits existiert.</Alert> : null
+        }
       </DialogContent>
       <Divider />
       <DialogActions style={{ padding: '10px' }}>
@@ -125,13 +133,14 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
             if(partTitle !== '') {
               const newPart: Part = {
                 title: partTitle,
-                position: -1,
+                position: editorStore.parts.length,
                 type: (partType) ? partType : PartTypes.SONG,
                 author: partAuthor,
                 album: partAlbum,
                 copyright: partCopyright,
               }
               editorStore.currentPart = newPart;
+              console.log(newPart);
               editorStore.creatNewPartFromCurrent();
             }
           }}

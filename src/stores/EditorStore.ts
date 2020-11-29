@@ -177,20 +177,19 @@ export default class EditorStore {
 
   async updateSlide(slide: Slide) {
     const postParams = new FormData();
-      postParams.append('partTitle', (this.currentPart) ? this.currentPart.title : '');
-      postParams.append('partAuthor', (this.currentPart) ? this.currentPart.author : '');
-      postParams.append('slideTitle', slide.title);
-      postParams.append('data', JSON.stringify({
-        lyrics: slide.data.lyrics,
-        video: slide.data.video,
-        image: slide.data.image,
-      }));
-      console.log(Array.from(postParams.entries()));
-      const resp = await fetch(process.env.REACT_APP_API_HOST + '/updateSlide', {
-        method: 'POST',
-        body: postParams,
-      });
-      console.log(resp.ok);
+    postParams.append('partTitle', (this.currentPart) ? this.currentPart.title : '');
+    postParams.append('partAuthor', (this.currentPart) ? (this.currentPart.author !== null) ? this.currentPart.author : '' : '');
+    postParams.append('slideTitle', slide.title);
+    postParams.append('data', JSON.stringify({
+      lyrics: slide.data.lyrics,
+      video: slide.data.video,
+      image: slide.data.image,
+    }));
+    console.log(Array.from(postParams.entries()));
+    const resp = await fetch(process.env.REACT_APP_API_HOST + '/updateSlide', {
+      method: 'POST',
+      body: postParams,
+    });
   }
 
 

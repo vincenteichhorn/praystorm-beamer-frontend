@@ -13,12 +13,13 @@ interface Props {
 const Songpart: FunctionComponent<Props> = (props) => {
   const { slide } = props;
   const { presenterStore } = useContext(StoreContext);
+  const [clientSize, setClientSize] = useState({clientHeight: 0, clientWidth: 0});
   const [computedVerseOffsetTop, setComputedVerseOffsetTop] = useState(0);
   const [computedCopyrightOffsetTop, setComputedCopyrightOffsetTop] = useState(0);
   const prevClientWidth = 900;
   const [backgroundImageExists, setBackgroundImageExists] = useState(false);
 
-  useEffect(() => {
+  const computeHeights = () => {
     let verseContainerHeight = slide.data.lyrics.length * slide.data.style.verseSpacing * slide.data.style.verseFontSize;
     let copyrightContainerHeight = 3 * slide.data.style.copyrightFontSize - slide.data.style.copyrightFontSize/2;
     if(slide.data.style.verseSpacing > 1) {
@@ -34,20 +35,36 @@ const Songpart: FunctionComponent<Props> = (props) => {
       setComputedVerseOffsetTop((document.documentElement.clientHeight - verseContainerHeight) / 2);
       setComputedCopyrightOffsetTop(document.documentElement.clientHeight - copyrightContainerHeight);
     }
+  }
+
+  useEffect(() => {
+    computeHeights();
     const img = new Image();
     img.onload = () => {
       setBackgroundImageExists(true);
     };
     img.src = slide.data.style.backgroundImage;
+
+    const resizeEvent = () => {
+      const clientWidth = document.documentElement.clientWidth;
+      const clientHeight = document.documentElement.clientHeight;
+      setClientSize({clientWidth, clientHeight});
+      computeHeights();
+    }
+    window.addEventListener('resize', resizeEvent);
+    return () => {
+      resizeEvent();
+      //document.removeEventListener('resize', resizeEvent);
+    };
   }, [setComputedVerseOffsetTop, prevClientWidth, slide, props])
 
   return(
     <Box style={{height: '100%', overflow: 'hidden',}}>
       <svg
-        viewBox={(!props.preview) ? `0 0 ${document.documentElement.clientWidth} ${document.documentElement.clientHeight}` : "0 0 1600 900"}
+        viewBox={(!props.preview) ? `0 0 ${clientSize.clientWidth} ${clientSize.clientHeight}` : "0 0 1600 900"}
         style={{
-          width: (!props.preview) ? document.documentElement.clientWidth + 'px' : '100%',
-          height: (!props.preview) ? document.documentElement.clientHeight + 'px': '100%',
+          width: (!props.preview) ? clientSize.clientWidth + 'px' : '100%',
+          height: (!props.preview) ? clientSize.clientHeight + 'px': '100%',
           backgroundColor: (backgroundImageExists) ? 'black' : slide.data.style.backgroundColor,
           backgroundImage: (backgroundImageExists) ? `url(${slide.data.style.backgroundImage})` : '',
           backgroundRepeat: (backgroundImageExists) ? 'no-repeat' : '',
@@ -65,7 +82,6 @@ const Songpart: FunctionComponent<Props> = (props) => {
           </g>
         ) : null}
         <text 
-          x="50%"
           y={`${computedVerseOffsetTop}px`}
           style={{
             fill: slide.data.style.verseColor,

@@ -169,7 +169,7 @@ const Routing: FunctionComponent<Props> = (props) => {
                     onClick={() => {
                       let host = homeStore.IPAddress;
                       let link = '/beamer'
-                      window.open((window.document.location.port) ? ' http://' + host + ':' + window.document.location.port + link : ' http://' + host + link, '_blank', 'width=800,height=450,scrollbars=no,status=yes,fullscreen=yes');
+                      window.open((window.document.location.port) ? ' http://' + host + ':' + window.document.location.port + link : ' http://' + host + link, '_blank', 'scrollbars=no,status=yes,fullscreen=yes,width=5000,height=5000');
                     }}
                   >Beamer</Button>
                 ) : null}
@@ -184,8 +184,8 @@ const Routing: FunctionComponent<Props> = (props) => {
                 paper: classes.drawerPaper,
               }}
             >
-              <Grid container direction="column" justify="space-between" className={classes.drawerHeader} >
-                <Grid container direction="row" justify="space-between" alignItems="flex-start" style={{ marginBottom: '20px' }}>
+              <Grid container direction="column" justifyContent="space-between" className={classes.drawerHeader} >
+                <Grid container direction="row" justifyContent="space-between" alignItems="flex-start" style={{ marginBottom: '20px' }}>
                   <Avatar 
                     src={process.env.PUBLIC_URL + '/media/praystorm-logo.png'} 
                     className={classes.large} 

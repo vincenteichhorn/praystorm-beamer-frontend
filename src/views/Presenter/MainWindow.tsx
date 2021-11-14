@@ -41,7 +41,7 @@ const MainWindow: FunctionComponent = () => {
   const [view, setView] = useState(ViewTypes.CARDS);
   const { presenterStore, editorStore } = useContext(StoreContext);
   const [adjustmentDialogOpen, setAdjustmentDialogOpen] = useState(false);
-  const [gridSize, setGridSize] = useState(3);
+  const [gridSize, setGridSize] = useState(-3);
 
   const changeCurrentSlide = (newSlide: Slide) => {
     presenterStore.currentSlide = newSlide;

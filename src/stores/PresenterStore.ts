@@ -92,6 +92,7 @@ export default class PresenterStore {
   }
 
   updateSlides() { 
+    console.log(this.currentPart?.title);
     this.currentSlide = undefined;
     this.fetchSlides();
   }

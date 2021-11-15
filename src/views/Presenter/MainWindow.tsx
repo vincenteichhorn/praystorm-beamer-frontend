@@ -76,10 +76,10 @@ const MainWindow: FunctionComponent = () => {
         }
         changeCurrentSlide(presenterStore.slides[id]);
       }
-      if(event.keyCode === 38) { // ^
+      if(event.keyCode === 38) { 
         presenterStore.blackoutForeground();
       }
-      if(event.keyCode === 40) { // V
+      if(event.keyCode === 40) {
         presenterStore.blackoutForeground();
       }
       if(event.keyCode === 13) {

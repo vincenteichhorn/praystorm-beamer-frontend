@@ -65,10 +65,7 @@ const Sidebar: FunctionComponent = () => {
       }
     }
     document.addEventListener('keyup', keyUpEventListener);
-    return () => {
-      document.removeEventListener('keyup', keyUpEventListener);
-    };
-  })
+  }, []);
 
   return (
     <Box>
@@ -102,8 +99,11 @@ const Sidebar: FunctionComponent = () => {
                     <ListItem 
                       key={index} 
                       button
-                      selected={(part.title === editorStore.currentPart?.title)}
-                      onClick={() => changeCurrentPart(part)}
+                      selected={(part.title === presenterStore.currentPart?.title)}
+                      onClick={() => {
+                        changeCurrentPart(part);
+                        console.log((part.title === presenterStore.currentPart?.title), part.title, presenterStore.currentPart?.title);
+                      }}
                     >
                       <ListItemIcon>
                         { (part.type === PartTypes.SONG) ? <Icon>music_note</Icon> : <Icon>class</Icon>}

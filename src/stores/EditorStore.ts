@@ -149,6 +149,36 @@ export default class EditorStore {
       } else {
         this.error = true;
       }
+      this.updateEvents();
+    }
+  }
+
+  async updateCurrentPart(oldTitle: string, oldAuthor: string) {
+    if(this.currentPart) {
+      console.log("updatePart");
+      const postParams = new FormData();
+      postParams.append('oldPartTitle', oldTitle);
+      postParams.append('oldPartAuthor', oldAuthor);
+      postParams.append('partTitle', this.currentPart.title);
+      postParams.append('partType', this.currentPart.type);
+      postParams.append('partAuthor', this.currentPart.author);
+      postParams.append('partAlbum', this.currentPart.album);
+      postParams.append('partCopyright', this.currentPart.copyright);
+      postParams.append('partPosition', this.currentPart.position.toString());
+      const resp = await fetch(process.env.REACT_APP_API_HOST + '/updatePart', {
+        method: 'POST',
+        body: postParams,
+      });
+      console.log(resp.ok);
+      for (var pair of postParams.entries())
+      {
+      console.log(pair[0]+ ', '+ pair[1]); 
+      }
+      if(resp.ok) {
+        this.error = false;
+      } else {
+        this.error = true;
+      }
     }
   }
 
@@ -211,5 +241,6 @@ decorate(EditorStore, {
   preFetch: action,
   createNewEventFromCurrent: action,
   creatNewPartFromCurrent: action,
+  updateCurrentPart: action,
   searchAllParts: action,
 });

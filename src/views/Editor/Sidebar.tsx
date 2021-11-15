@@ -66,7 +66,10 @@ const Sidebar: FunctionComponent = (props) => {
               onChange={findAndChangeEvent}
             >
               <MenuItem value={"newEventKey"}>
-                {"Neues Event erstellen"}
+                <ListItemIcon>
+                  <Icon>add</Icon>
+                </ListItemIcon>
+                <ListItemText primary="neues Event erstellen" />
               </MenuItem>
               {
                 editorStore.events.map((event: Event, index: number) => (
@@ -130,6 +133,10 @@ const Sidebar: FunctionComponent = (props) => {
       </Grid>
       <AddNewEventDialog 
         open={addNewEventDialog}
+        updateCurrentEvent={() => {
+          if(editorStore.currentEvent) changeCurrentEvent(editorStore.currentEvent);
+          console.log("chjanged");
+        }}
         onClose={() => setAddNewEventDialogOpen(false)}
       />
       <AddNewPartDialog

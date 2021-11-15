@@ -1,5 +1,5 @@
 import React, { FunctionComponent, ChangeEvent, useState } from 'react';
-import { Box, Paper, Toolbar, Divider, makeStyles, Tabs, Tab, IconButton, Grid, Icon } from '@material-ui/core';
+import { Box, Paper, Toolbar, Divider, makeStyles, Tabs, Tab, IconButton, Grid, Icon, Popover, List, ListItem, ListItemText, ListItemIcon } from '@material-ui/core';
 import General from './SlideTables/General';
 import Body from './SlideTables/Body';
 import Style from './SlideTables/Style';
@@ -25,6 +25,17 @@ const MainWindow: FunctionComponent = (props) => {
   const classes = useStyles();
   const [tab, setTab] = useState(0);
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const openPopover = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const closePopover = () => {
+    setAnchorEl(null);
+  };
+  const open = Boolean(anchorEl);
+  const popoverId = open ? 'simple-popover' : undefined;
+
   return (
     <Paper>
       <Toolbar variant="dense" className={classes.toolbar}>
@@ -40,13 +51,59 @@ const MainWindow: FunctionComponent = (props) => {
             <Tab label="Inhalte" value={1}/>
             <Tab label="Style" value={2}/>
           </Tabs>
-          {
-            (tab === 1) ? (
-              <IconButton>
-                <Icon>add</Icon>
-              </IconButton>
-            ) : null
-          }
+          <Box>
+            {
+              (tab === 1) ? (
+                <IconButton>
+                  <Icon>add</Icon>
+                </IconButton>
+              ) : null  
+            }
+            <IconButton
+              onClick={(event) => openPopover(event)}
+            >
+              <Icon>more_vert</Icon>
+            </IconButton>
+            <Popover
+              id={popoverId}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={closePopover}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+            >
+              <List>
+                <ListItem 
+                  key={-1} 
+                  button
+                  onClick={() => {
+                    //TODO delete Event
+                    closePopover();
+                  }}
+                >
+                  <ListItemIcon>
+                    <Icon>delete</Icon>
+                  </ListItemIcon>
+                  <ListItemText>aktuelles Event löschen</ListItemText>
+                </ListItem>
+                <ListItem 
+                  key={-1} 
+                  button
+                  onClick={() => {
+                    //TODO delete Part
+                    closePopover();
+                  }}
+                >
+                <ListItemIcon>
+                  <Icon>delete</Icon>
+                </ListItemIcon>
+                <ListItemText>aktuellen Part löschen</ListItemText>
+              </ListItem>
+              </List>
+            </Popover>
+          </Box>
         </Grid>
       </Toolbar> 
      

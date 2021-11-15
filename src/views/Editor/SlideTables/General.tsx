@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState, useEffect, ChangeEvent, SetStateAction, useContext, Dispatch } from 'react';
-import { TextField, Box, Divider, ClickAwayListener, Select, MenuItem, FormControl, InputLabel, Typography } from '@material-ui/core';
-import { PartTypes } from '../../../models/DataModels';
+import { TextField, Box, Divider, Select, MenuItem, FormControl, InputLabel, Typography, Button } from '@material-ui/core';
+import { Part, PartTypes } from '../../../models/DataModels';
 import { StoreContext } from '../../../App';
 import { observer } from 'mobx-react';
 
@@ -14,6 +14,9 @@ const General: FunctionComponent = (props) => {
   const [copyright, setCopyright] = useState('');
   const [position, setPosition]: [any, SetStateAction<any>] = useState();
   const [type, setType]: [PartTypes | undefined, Dispatch<SetStateAction<PartTypes | undefined>>] = useState();
+  const [unsaved, setUnsaved] = useState(false);
+  const [oldTitle, setOldTitle] = useState("");
+  const [oldAuthor, setOldAuthor] = useState("");
 
   useEffect(() => {
     setPartTitle((editorStore.currentPart) ? editorStore.currentPart?.title : '');
@@ -26,15 +29,35 @@ const General: FunctionComponent = (props) => {
     }
   }, [editorStore.currentPart, editorStore.slides]);
 
+  useEffect(() => {
+    if(editorStore.currentPart) {
+      setOldTitle(editorStore.currentPart.title);
+      setOldAuthor(editorStore.currentPart.author);
+    }
+  }, []);
+
   const updatePartObj = () => {
-    //TODO fetch
+    console.log("update");
+    const newCurrentPart: Part = {
+      title: partTitle,
+      position: position,
+      type: (type) ? type : PartTypes.SONG,
+      author: copyrightAuthor,
+      album: copyrightAlbum,
+      copyright: copyright,
+    }
+    if(editorStore.currentPart) {
+      editorStore.currentPart = newCurrentPart;
+      editorStore.updateCurrentPart(oldTitle, oldAuthor);
+      setOldAuthor(copyrightAuthor);
+      setOldTitle(partTitle);
+      setUnsaved(false);
+    }
   }
 
   return (editorStore.currentPart) ? (
     <Box>
-      <ClickAwayListener
-        onClickAway={updatePartObj}
-      >
+      <Box>
         <TextField
           style={{ marginBottom: '8px' }}
           label="Titel"
@@ -42,6 +65,7 @@ const General: FunctionComponent = (props) => {
           variant="outlined"
           value={(editorStore.currentPart) ? editorStore.currentPart?.title : ''}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            if(!unsaved) setUnsaved(true);
             if (editorStore.currentPart && event.target.value.length >= 0 &&event.target.value.length <= 250) {
               editorStore.currentPart.title = event.target.value;
             }
@@ -51,11 +75,9 @@ const General: FunctionComponent = (props) => {
             shrink: true,
           }}
         />
-      </ClickAwayListener>
+      </Box>
       <Divider />
-      <ClickAwayListener
-        onClickAway={updatePartObj}
-      >
+      <Box>
         <TextField
           style={{ marginBottom: '8px', marginTop: '10px' }}
           label="Copyright Album"
@@ -63,6 +85,7 @@ const General: FunctionComponent = (props) => {
           variant="outlined"
           value={(editorStore.currentPart) ? (editorStore.currentPart.album) ? editorStore.currentPart.album : '' : ''}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            if(!unsaved) setUnsaved(true);
             if (editorStore.currentPart && event.target.value.length < 251) {
               editorStore.currentPart.album = event.target.value;
             }
@@ -72,10 +95,8 @@ const General: FunctionComponent = (props) => {
             shrink: true,
           }}
         />
-      </ClickAwayListener>
-      <ClickAwayListener
-        onClickAway={updatePartObj}
-      >
+      </Box>
+      <Box>
         <TextField
           style={{ marginBottom: '8px', marginTop: '10px' }}
           label="Copyright Autor"
@@ -83,6 +104,7 @@ const General: FunctionComponent = (props) => {
           variant="outlined"
           value={(editorStore.currentPart) ? (editorStore.currentPart.author) ? editorStore.currentPart.author : '' : ''}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            if(!unsaved) setUnsaved(true);
             if (editorStore.currentPart && event.target.value.length <= 250) {
               editorStore.currentPart.author = event.target.value;
             }
@@ -92,10 +114,8 @@ const General: FunctionComponent = (props) => {
             shrink: true,
           }}
         />
-      </ClickAwayListener>
-      <ClickAwayListener
-        onClickAway={updatePartObj}
-      >
+      </Box>
+      <Box>
         <TextField
           style={{ marginBottom: '8px', marginTop: '10px' }}
           label="Copyright"
@@ -103,6 +123,7 @@ const General: FunctionComponent = (props) => {
           variant="outlined"
           value={(editorStore.currentPart) ? (editorStore.currentPart.copyright) ? editorStore.currentPart.copyright : '' : ''}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            if(!unsaved) setUnsaved(true);
             if (editorStore.currentPart && event.target.value.length <= 250) {
               editorStore.currentPart.copyright = event.target.value;
             }
@@ -112,38 +133,49 @@ const General: FunctionComponent = (props) => {
             shrink: true,
           }}
         />
-      </ClickAwayListener>
-      <ClickAwayListener
-        onClickAway={updatePartObj}
+      </Box>
+      <Box
+        style={{
+          paddingTop: '8px',
+        }}
       >
-        <Box
-          style={{
-            paddingTop: '10px',
-          }}
-        >
-          <Select
-            variant="outlined"
-            fullWidth
-            value={(editorStore.currentPart) ? editorStore.currentPart.type : ''}
-            onChange={(changeEvent: ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
-              if (editorStore.currentPart && (changeEvent.target.value === PartTypes.INSERT || changeEvent.target.value === PartTypes.SONG)) {
-                editorStore.currentPart.type = changeEvent.target.value;
-              }
-            }}
-            label='Art'
-          >
-           {
-              Object.keys(PartTypes).map((type, index) => (
-                <MenuItem key={index} value={type}>{type.toLowerCase().charAt(0).toUpperCase() + type.toLowerCase().slice(1)}</MenuItem>
-              ))
+        <Select
+          variant="outlined"
+          fullWidth
+          value={(editorStore.currentPart) ? editorStore.currentPart.type : ''}
+          onChange={(changeEvent: ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
+            if(!unsaved) setUnsaved(true);
+            if (editorStore.currentPart && (changeEvent.target.value === PartTypes.INSERT || changeEvent.target.value === PartTypes.SONG)) {
+              editorStore.currentPart.type = changeEvent.target.value;
             }
-          </Select>
-        </Box>
-      </ClickAwayListener>
+          }}
+          label='Art'
+        >
+        {
+            Object.keys(PartTypes).map((type, index) => (
+              <MenuItem key={index} value={type}>{type.toLowerCase().charAt(0).toUpperCase() + type.toLowerCase().slice(1)}</MenuItem>
+            ))
+          }
+        </Select>
+      </Box>
+      <Box
+        style={{
+          paddingTop: '10px',
+        }}
+      >
+        <Button
+          variant="contained"
+          disabled={!unsaved}
+          color="primary"
+          onClick={() => {
+            updatePartObj();
+          }}
+        >Änderungen Speichern</Button>
+      </Box>
     </Box>
   ) : (
     <Box>
-      <Typography>Klicke links auf "Part hinzufügen" um deinen Ablauf zu erstellen</Typography>
+      <Typography>Klicke links auf "neuen Part hinzufügen" um deinen Ablauf zu erstellen</Typography>
     </Box>
   )
 }

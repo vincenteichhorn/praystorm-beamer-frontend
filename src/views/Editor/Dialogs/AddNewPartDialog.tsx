@@ -140,7 +140,6 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
                 copyright: partCopyright,
               }
               editorStore.currentPart = newPart;
-              console.log(newPart);
               editorStore.creatNewPartFromCurrent();
             }
           }}

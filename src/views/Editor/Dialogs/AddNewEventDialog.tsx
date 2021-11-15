@@ -11,6 +11,7 @@ import { observer } from 'mobx-react';
 
 interface Props {
   open: boolean;
+  updateCurrentEvent: () => void;
   onClose: () => void;
 }
 
@@ -23,17 +24,17 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
   const [date, setDate] = useState(new Date());
 
   useEffect(() => {
+    setEventName('');
+    setEventDesription('');
     if(!editorStore.error === false && props.open) {
       if(editorStore.currentEvent) editorStore.events.push(editorStore.currentEvent);
       editorStore.fetchEvents();
       editorStore.updateParts();
-      setEventName('');
-      setEventDesription('');
       props.onClose();
     } else if(editorStore.error === true){
       editorStore.currentEvent = editorStore.events[0];
     }
-  }, [editorStore.error, props]);
+  }, [editorStore, editorStore.error, props]);
 
   return (
     <Dialog
@@ -109,6 +110,8 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
               }
               editorStore.currentEvent = newEvent;
               editorStore.createNewEventFromCurrent();
+              props.onClose();
+              props.updateCurrentEvent();
             }
           }}
         >

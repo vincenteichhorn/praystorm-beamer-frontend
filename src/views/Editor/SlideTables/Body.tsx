@@ -41,7 +41,7 @@ const Body: FunctionComponent<Props> = (props) => {
     }
   }
 
-  return (
+  return (editorStore.currentPart) ? (
     <Table>
       <TableHead>
         <TableRow>
@@ -89,6 +89,10 @@ const Body: FunctionComponent<Props> = (props) => {
         }
       </TableBody>
     </Table>
+  ) : (
+    <Box>
+      <Typography>Klicke links auf "neuen Part hinzufügen" um deinen Ablauf zu erstellen</Typography>
+    </Box>
   );
 }
 

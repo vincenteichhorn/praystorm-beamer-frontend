@@ -37,12 +37,15 @@ const Sidebar: FunctionComponent = (props) => {
   }
 
   const changeCurrentEvent = (newEvent: Event) => {
+    if(editorStore.unsavedPart) editorStore.saveChanges();
     editorStore.currentEvent = newEvent;
     editorStore.updateParts();
   }
 
   const changeCurrentPart = (newPart: Part) => {
+    if(editorStore.unsavedPart) editorStore.saveChanges();
     editorStore.currentPart = newPart;
+    editorStore.currentPartIdentity = {title: editorStore.currentPart.title, author: editorStore.currentPart.author};
     editorStore.updateSlides();
   }
 
@@ -116,7 +119,7 @@ const Sidebar: FunctionComponent = (props) => {
                 <ListItem 
                   key={index} 
                   button
-                  selected={(part.title == editorStore.currentPart?.title)}
+                  selected={(part.title === editorStore.currentPart?.title)}
                   onClick={() => {
                     changeCurrentPart(part)
                   }}

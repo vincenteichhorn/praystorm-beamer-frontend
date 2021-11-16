@@ -1,9 +1,12 @@
-import React, { FunctionComponent, ChangeEvent, useState } from 'react';
+import React, { FunctionComponent, ChangeEvent, useState, useContext } from 'react';
 import { Box, Paper, Toolbar, Divider, makeStyles, Tabs, Tab, IconButton, Grid, Icon, Popover, List, ListItem, ListItemText, ListItemIcon } from '@material-ui/core';
 import General from './SlideTables/General';
 import Body from './SlideTables/Body';
 import Style from './SlideTables/Style';
 import { observer } from 'mobx-react';
+import EditorStore from '../../stores/EditorStore';
+import { StoreContext } from '../../App';
+import { Part } from '../../models/DataModels';
 
 const useStyles = makeStyles(theme => ({
   toolbar: {
@@ -24,6 +27,7 @@ const useStyles = makeStyles(theme => ({
 const MainWindow: FunctionComponent = (props) => {
   const classes = useStyles();
   const [tab, setTab] = useState(0);
+  const { editorStore, homeStore } = useContext(StoreContext);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -51,7 +55,11 @@ const MainWindow: FunctionComponent = (props) => {
             <Tab label="Inhalte" value={1}/>
             <Tab label="Style" value={2}/>
           </Tabs>
-          <Box>
+          <Box
+            style={{
+              marginRight: '10px',
+            }}
+          >
             {
               (tab === 1) ? (
                 <IconButton>
@@ -103,6 +111,31 @@ const MainWindow: FunctionComponent = (props) => {
               </ListItem>
               </List>
             </Popover>
+            <IconButton
+              disabled={!editorStore.unsavedPart}
+              onClick={() => {
+                let count = 0;
+                editorStore.parts.forEach((part: Part, index: number) => {
+                  if(editorStore.currentPart) {
+                    if(editorStore.currentPart.title + editorStore.currentPart.author === part.title + part.author) {
+                      count++;
+                    }
+                  }
+                });
+
+                if(count < 1) {
+                  editorStore.saveChanges();
+                } else {
+                  homeStore.openSnackBar('Diese Kombination aus Titel und Autor des Parts ist leider schon vergeben. Den Part kannst du über ´Part suchen´ hinzufügen');
+                  if(editorStore.currentPart) {
+                    editorStore.currentPart.title = editorStore.currentPartIdentity.title;
+                    editorStore.currentPart.author = editorStore.currentPartIdentity.author;
+                  }
+                }
+              }}
+            >
+              <Icon>save</Icon>
+            </IconButton>
           </Box>
         </Grid>
       </Toolbar> 

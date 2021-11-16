@@ -6,12 +6,15 @@ export default class EditorStore {
   currentEvent: Event | undefined = undefined;
   parts: Part[] = [];
   currentPart: Part | undefined = undefined;
+  currentPartIdentity: {title: string, author: string} = {title: "", author: ""};
   slides: Slide[] = [];
+  changedSlideIdentity: string = "";
   
   allParts: Part[] = [];
   searchedParts: Part[] = [];
 
   error: boolean | undefined = undefined;
+  unsavedPart: boolean = false;
 
   constructor() {
     // fetch all data from backend
@@ -57,6 +60,9 @@ export default class EditorStore {
           if(!this.currentPart) {
             this.currentPart = [...data][0];
             this.updateSlides();
+          }
+          if(this.currentPart) {
+            this.currentPartIdentity = {title: this.currentPart?.title, author: this.currentPart?.author};
           }
         });
       });
@@ -153,12 +159,11 @@ export default class EditorStore {
     }
   }
 
-  async updateCurrentPart(oldTitle: string, oldAuthor: string) {
+  async saveChanges() {
     if(this.currentPart) {
-      console.log("updatePart");
       const postParams = new FormData();
-      postParams.append('oldPartTitle', oldTitle);
-      postParams.append('oldPartAuthor', oldAuthor);
+      postParams.append('oldPartTitle', this.currentPartIdentity.title);
+      postParams.append('oldPartAuthor', this.currentPartIdentity.author);
       postParams.append('partTitle', this.currentPart.title);
       postParams.append('partType', this.currentPart.type);
       postParams.append('partAuthor', this.currentPart.author);
@@ -169,16 +174,13 @@ export default class EditorStore {
         method: 'POST',
         body: postParams,
       });
-      console.log(resp.ok);
-      for (var pair of postParams.entries())
-      {
-      console.log(pair[0]+ ', '+ pair[1]); 
-      }
       if(resp.ok) {
         this.error = false;
       } else {
         this.error = true;
       }
+      this.currentPartIdentity = {title: this.currentPart.title, author: this.currentPart.author};
+      this.unsavedPart = false;
     }
   }
 
@@ -205,17 +207,18 @@ export default class EditorStore {
     }
   }
 
-  async updateSlide(slide: Slide) {
+  async saveSlide(slide: Slide) {
     const postParams = new FormData();
-    postParams.append('partTitle', (this.currentPart) ? this.currentPart.title : '');
-    postParams.append('partAuthor', (this.currentPart) ? (this.currentPart.author !== null) ? this.currentPart.author : '' : '');
+    postParams.append('partTitle', this.currentPartIdentity.title);
+    postParams.append('partAuthor', this.currentPartIdentity.author);
+    postParams.append('oldSlideTitle', this.changedSlideIdentity);
     postParams.append('slideTitle', slide.title);
+    postParams.append('slideType', slide.type);
     postParams.append('data', JSON.stringify({
       lyrics: slide.data.lyrics,
       video: slide.data.video,
       image: slide.data.image,
     }));
-    console.log(Array.from(postParams.entries()));
     const resp = await fetch(process.env.REACT_APP_API_HOST + '/updateSlide', {
       method: 'POST',
       body: postParams,
@@ -234,6 +237,7 @@ decorate(EditorStore, {
   error: observable,
   allParts: observable,
   searchedParts: observable,
+  unsavedPart: observable,
 
   updateEvents: action,
   updateParts: action,
@@ -241,6 +245,5 @@ decorate(EditorStore, {
   preFetch: action,
   createNewEventFromCurrent: action,
   creatNewPartFromCurrent: action,
-  updateCurrentPart: action,
   searchAllParts: action,
 });

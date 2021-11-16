@@ -1,4 +1,5 @@
 import React, { FunctionComponent, useState, useEffect, useContext } from 'react';
+import {Snackbar} from '@material-ui/core';
 import clsx from 'clsx';
 import {
   Box, 
@@ -27,6 +28,7 @@ import Beamer from './Beamer/Beamer';
 import Stage from './Stage/Stage';
 import Home from './Home/Home';
 import { StoreContext } from '../App';
+import { observer } from 'mobx-react';
 
 const drawerWidth = 270;
 
@@ -249,8 +251,29 @@ const Routing: FunctionComponent<Props> = (props) => {
           />
         ))}
       </main>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        open={(homeStore.infoSnackBar !== '')}
+        autoHideDuration={12000}
+        onClose={() => homeStore.closeSnackBar()}
+        message={
+          <Box>
+            <Typography variant="caption">{homeStore.infoSnackBar}</Typography>
+          </Box>
+        }
+        action={
+          <React.Fragment>
+            <IconButton size="small" aria-label="close" color="inherit" onClick={() => homeStore.closeSnackBar()}>
+              <Icon>close</Icon>
+            </IconButton>
+          </React.Fragment>
+        }
+      />
     </Box>
   );
 };
 
-export default withRouter(Routing);
+export default withRouter(observer(Routing));

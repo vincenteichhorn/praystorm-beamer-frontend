@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FunctionComponent, useContext, useEffect, useState } from 'react';
-import {Table, TableHead, TableRow, TableCell, TableBody, Box, Typography, TextField, ClickAwayListener, IconButton, Icon, Select, MenuItem, Link, Snackbar} from '@material-ui/core';
+import {Table, TableHead, TableRow, TableCell, TableBody, Box, Typography, TextField, ClickAwayListener, IconButton, Icon, Select, MenuItem, Link, Snackbar, Popover} from '@material-ui/core';
 import { StoreContext } from '../../../App';
 import { PartTypes, Slide, SlideTypes } from '../../../models/DataModels';
 import { observer } from 'mobx-react';
@@ -132,6 +132,16 @@ const Body: FunctionComponent<Props> = (props) => {
       if(activeContentId !== undefined) saveContent(editorStore.slides[activeContentId], activeContentId);
     }
   });
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openPopover = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const closePopover = () => {
+    setAnchorEl(null);
+  };
+  const open = Boolean(anchorEl);
+  const popoverId = open ? 'simple-popover' : undefined;
 
   return (editorStore.currentPart) ? (
     <Table>
@@ -301,9 +311,32 @@ const Body: FunctionComponent<Props> = (props) => {
                 >
                   <Icon>save</Icon>
                 </IconButton>
-                <IconButton>
+                <IconButton
+                  onClick={(event) => openPopover(event)}
+                >
                   <Icon>delete</Icon>
                 </IconButton>
+                <Popover
+                  id={popoverId}
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={closePopover}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                  }}
+                >
+                   <IconButton
+                    onClick={closePopover}
+                  >
+                    <Icon>close</Icon>
+                  </IconButton>
+                  <IconButton
+                    onClick={() => editorStore.deleteSlide(slide.title)}
+                  >
+                    <Icon>done</Icon>
+                  </IconButton>
+                </Popover>
               </TableCell>
             </TableRow>
           ))

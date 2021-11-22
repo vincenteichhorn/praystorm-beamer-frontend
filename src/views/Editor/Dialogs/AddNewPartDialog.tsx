@@ -126,8 +126,7 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
                 setError(true);
               } else {
                 setError(false);
-                editorStore.currentPart = newPart;
-                editorStore.creatNewPartFromCurrent();
+                editorStore.creatNewPart(newPart);
                 props.onClose();
               }
             }

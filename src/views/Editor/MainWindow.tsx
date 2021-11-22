@@ -88,31 +88,44 @@ const MainWindow: FunctionComponent = (props) => {
             >
               <List>
                 <ListItem 
-                  key={-1} 
+                  key={1} 
                   button
                   onClick={() => {
-                    //TODO delete Event
+                    editorStore.deleteCurrentEvent();
                     closePopover();
                   }}
                 >
                   <ListItemIcon>
                     <Icon>delete</Icon>
                   </ListItemIcon>
-                  <ListItemText>aktuelles Event löschen</ListItemText>
+                  <ListItemText>gewähltes Event löschen</ListItemText>
                 </ListItem>
                 <ListItem 
-                  key={-1} 
+                  key={2} 
                   button
                   onClick={() => {
-                    //TODO delete Part
+                    editorStore.deleteCurrentPart(false);
                     closePopover();
                   }}
                 >
-                <ListItemIcon>
-                  <Icon>delete</Icon>
-                </ListItemIcon>
-                <ListItemText>aktuellen Part löschen</ListItemText>
-              </ListItem>
+                  <ListItemIcon>
+                    <Icon>delete</Icon>
+                  </ListItemIcon>
+                  <ListItemText>gewählten Part aus Event entfernen</ListItemText>
+                </ListItem>
+                <ListItem 
+                  key={3} 
+                  button
+                  onClick={() => {
+                    editorStore.deleteCurrentPart(true);
+                    closePopover();
+                  }}
+                >
+                  <ListItemIcon>
+                    <Icon>delete</Icon>
+                  </ListItemIcon>
+                  <ListItemText>gewählten Part löschen</ListItemText>
+                </ListItem>
               </List>
             </Popover>
             <IconButton
@@ -129,7 +142,7 @@ const MainWindow: FunctionComponent = (props) => {
                 });
 
                 if(count <= 1) {
-                  editorStore.saveChanges();
+                  editorStore.savePartChanges();
                 } else {
                   homeStore.openSnackBar('Diese Kombination aus Titel und Autor des Parts ist leider schon vergeben. Den Part kannst du über ´Part suchen´ hinzufügen');
                   if(editorStore.currentPart) {

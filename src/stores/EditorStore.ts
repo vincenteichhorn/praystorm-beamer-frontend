@@ -24,7 +24,8 @@ export default class EditorStore {
     if(this.slides.length < 1) this.fetchSlides();
   }
 
-  updateEvents() { 
+  updateEvents() {
+    this.currentEvent = undefined;
     this.fetchEvents();
   }
   fetchEvents() {
@@ -123,14 +124,14 @@ export default class EditorStore {
     }
   }
 
-  addPartToEvent(part: Part) {
+  async addPartToEvent(part: Part) {
     const postParams = new FormData();
     postParams.append('partTitle', part.title);
     postParams.append('partPosition', part.position.toString());
     postParams.append('partAuthor', part.author);
     postParams.append('eventName', (this.currentEvent) ? this.currentEvent?.name : '');
     postParams.append('eventDate', (this.currentEvent) ? this.currentEvent?.date.toString() : '');
-    fetch(process.env.REACT_APP_API_HOST + '/addPartToEvent', {
+    await fetch(process.env.REACT_APP_API_HOST + '/addPartToEvent', {
       method: 'POST',
       body: postParams,
     })
@@ -138,23 +139,21 @@ export default class EditorStore {
   }
 
 
-  async createNewEventFromCurrent() {
-    if(this.currentEvent) {
-      const postParams = new FormData();
-      postParams.append('name', this.currentEvent.name);
-      const offset = this.currentEvent.date.getTimezoneOffset()
-      this.currentEvent.date = new Date(this.currentEvent.date.getTime() - (offset*60*1000))
-      postParams.append('date', this.currentEvent.date.toISOString().split('T')[0]);
-      postParams.append('description', this.currentEvent.description)
-      const resp = await fetch(process.env.REACT_APP_API_HOST + '/addEvent', {
-        method: 'POST',
-        body: postParams,
-      });
-      this.updateEvents();
-    }
+  async createNewEvent(newEvent: Event) {
+    const postParams = new FormData();
+    postParams.append('name', newEvent.name);
+    const offset = newEvent.date.getTimezoneOffset()
+    newEvent.date = new Date(newEvent.date.getTime() - (offset*60*1000))
+    postParams.append('date', newEvent.date.toISOString().split('T')[0]);
+    postParams.append('description', newEvent.description)
+    await fetch(process.env.REACT_APP_API_HOST + '/addEvent', {
+      method: 'POST',
+      body: postParams,
+    });
+    this.updateEvents();
   }
 
-  async saveChanges() {
+  async savePartChanges() {
     if(this.currentPart) {
       const postParams = new FormData();
       postParams.append('oldPartTitle', this.currentPartIdentity.title);
@@ -165,7 +164,7 @@ export default class EditorStore {
       postParams.append('partAlbum', this.currentPart.album);
       postParams.append('partCopyright', this.currentPart.copyright);
       postParams.append('partPosition', this.currentPart.position.toString());
-      const resp = await fetch(process.env.REACT_APP_API_HOST + '/updatePart', {
+      await fetch(process.env.REACT_APP_API_HOST + '/updatePart', {
         method: 'POST',
         body: postParams,
       });
@@ -174,23 +173,21 @@ export default class EditorStore {
     }
   }
 
-  async creatNewPartFromCurrent() {
-    if(this.currentPart) {
-      const postParams = new FormData();
-      postParams.append('partTitle', this.currentPart.title);
-      postParams.append('partPosition', this.currentPart.position.toString());
-      postParams.append('partType', this.currentPart.type);
-      postParams.append('partAuthor', this.currentPart.author);
-      postParams.append('partAlbum', this.currentPart.album);
-      postParams.append('partCopyright', this.currentPart.copyright);
-      postParams.append('eventName', (this.currentEvent) ? this.currentEvent?.name : '');
-      postParams.append('eventDate', (this.currentEvent) ? this.currentEvent?.date.toString() : '');
-      const resp = await fetch(process.env.REACT_APP_API_HOST + '/addPart', {
-        method: 'POST',
-        body: postParams,
-      });
-      this.updateParts();
-    }
+  async creatNewPart(newPart: Part) {
+    const postParams = new FormData();
+    postParams.append('partTitle', newPart.title);
+    postParams.append('partPosition', newPart.position.toString());
+    postParams.append('partType', newPart.type);
+    postParams.append('partAuthor', newPart.author);
+    postParams.append('partAlbum', newPart.album);
+    postParams.append('partCopyright', newPart.copyright);
+    postParams.append('eventName', (this.currentEvent) ? this.currentEvent?.name : '');
+    postParams.append('eventDate', (this.currentEvent) ? this.currentEvent?.date.toString() : '');
+    await fetch(process.env.REACT_APP_API_HOST + '/addPart', {
+      method: 'POST',
+      body: postParams,
+    });
+    this.updateParts();
   }
 
   async saveSlide(slide: Slide) {
@@ -205,7 +202,7 @@ export default class EditorStore {
       video: slide.data.video,
       image: slide.data.image,
     }));
-    const resp = await fetch(process.env.REACT_APP_API_HOST + '/updateSlide', {
+    await fetch(process.env.REACT_APP_API_HOST + '/updateSlide', {
       method: 'POST',
       body: postParams,
     });
@@ -234,6 +231,52 @@ export default class EditorStore {
     }
   }
 
+  async deleteSlide(title: string) {
+    if(this.currentPart) {
+      const postParams = new FormData();
+      postParams.append('partTitle', this.currentPart.title);
+      postParams.append('partAuthor', this.currentPart.author);
+      postParams.append('slideTitle', title);
+      await fetch(process.env.REACT_APP_API_HOST + '/deleteSlide', {
+        method: 'POST',
+        body: postParams,
+      });
+      this.updateSlides();
+    }
+  }
+
+  async deleteCurrentEvent() {
+    console.log("deletze");
+    if(this.currentEvent) {
+      console.log('currentEvrnt');
+      const postParams = new FormData();
+      postParams.append('eventName', this.currentEvent.name);
+      postParams.append('eventDate', this.currentEvent.date.toString());
+      await fetch(process.env.REACT_APP_API_HOST + '/deleteEvent', {
+        method: 'POST',
+        body: postParams,
+      });
+      this.currentEvent = undefined;
+      this.updateEvents();
+    }
+  }
+  async deleteCurrentPart(cascade: boolean) {
+    if(this.currentPart && this.currentEvent) {
+      const postParams = new FormData();
+      postParams.append('eventName', this.currentEvent.name);
+      postParams.append('eventDate', this.currentEvent.date.toString());
+      postParams.append('partTitle', this.currentPart.title);
+      postParams.append('partAuthor', this.currentPart.author);
+      postParams.append('cascade', cascade.toString());
+      const resp = await fetch(process.env.REACT_APP_API_HOST + '/deletePart', {
+        method: 'POST',
+        body: postParams,
+      });
+      this.currentPart = undefined;
+      console.log(resp);
+      this.updateParts();
+    }
+  } 
 
 }
 
@@ -251,9 +294,11 @@ decorate(EditorStore, {
   updateEvents: action,
   updateParts: action,
   updateSlides: action,
-  createNewEventFromCurrent: action,
-  creatNewPartFromCurrent: action,
+  createNewEvent: action,
+  creatNewPart: action,
   searchAllParts: action,
   openNewSlide: action,
   addSlide: action,
+  deleteCurrentEvent: action,
+  deleteCurrentPart: action,
 });

@@ -37,13 +37,13 @@ const Sidebar: FunctionComponent = (props) => {
   }
 
   const changeCurrentEvent = (newEvent: Event) => {
-    if(editorStore.unsavedPart) editorStore.saveChanges();
+    if(editorStore.unsaved) editorStore.savePartChanges();
     editorStore.currentEvent = newEvent;
     editorStore.updateParts();
   }
 
   const changeCurrentPart = (newPart: Part) => {
-    if(editorStore.unsavedPart) editorStore.saveChanges();
+    if(editorStore.unsaved) editorStore.savePartChanges();
     editorStore.currentPart = newPart;
     editorStore.currentPartIdentity = {title: editorStore.currentPart.title, author: editorStore.currentPart.author};
     editorStore.updateSlides();
@@ -136,9 +136,6 @@ const Sidebar: FunctionComponent = (props) => {
       </Grid>
       <AddNewEventDialog 
         open={addNewEventDialog}
-        updateCurrentEvent={() => {
-          if(editorStore.currentEvent) changeCurrentEvent(editorStore.currentEvent);
-        }}
         onClose={() => setAddNewEventDialogOpen(false)}
       />
       <AddNewPartDialog

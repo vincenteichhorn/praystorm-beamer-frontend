@@ -1,5 +1,6 @@
 import { Dialog, DialogActions, DialogContent, Divider, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
+import useEventListener from '@use-it/event-listener';
 import { observer } from 'mobx-react';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useContext } from 'react';
@@ -22,7 +23,36 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
   const [partAuthor, setPartAuthor] = useState<string>('');
   const [partAlbum, setPartAlbum] = useState<string>('');
   const [partCopyright, setPartCopyright] = useState<string>('');
-  const [error, setError] = useState(false);
+  const [error, setError] = useState('');
+
+  const savePart = () => {
+    setError("");
+    if(partTitle !== '' && partAuthor !== '') {
+      const newPart: Part = {
+        title: partTitle,
+        position: editorStore.parts.length,
+        type: (partType) ? partType : PartTypes.SONG,
+        author: partAuthor,
+        album: partAlbum,
+        copyright: partCopyright,
+      }
+      if(editorStore.allParts.filter((part) => part.title + part.author === partTitle + partAuthor).length !== 0) {
+        setError("Der Part konnte nicht hinzugefügt werden, da er bereits existiert.");
+      } else {
+        setError("");
+        editorStore.creatNewPart(newPart);
+        props.onClose();
+      }
+    } else {
+      setError("Titel und Autor dürfen nicht leer sein.")
+    }
+  }
+
+  useEventListener('keydown', (event: KeyboardEvent) => {
+    if(['13', 'Enter'].includes(String(event.key))) {
+      if(editorStore.unsaved) savePart();
+    }
+  });
 
   return (
     <Dialog
@@ -82,7 +112,6 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
           variant="outlined"
           value={partAlbum}
           onChange={(changeEvent) => {setPartAlbum(changeEvent.target.value)}}
-          error={partAlbum.length < 1 || partAlbum.length > 250}
         />
         <TextField 
           label="Copyright"
@@ -91,10 +120,9 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
           variant="outlined"
           value={partCopyright}
           onChange={(changeEvent) => {setPartCopyright(changeEvent.target.value)}}
-          error={partCopyright.length < 1 || partCopyright.length > 250}
         />
         {
-          (error) ? (<Alert severity="error">Der Part konnte nicht hinzugefügt werden, da er bereits existiert.</Alert>) : null
+          (error) ? (<Alert severity="error">{error}</Alert>) : null
         }
       </DialogContent>
       <Divider />
@@ -112,25 +140,7 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
           variant="contained"
           color="primary"
           size="large"
-          onClick={() => {
-            if(partTitle !== '') {
-              const newPart: Part = {
-                title: partTitle,
-                position: editorStore.parts.length,
-                type: (partType) ? partType : PartTypes.SONG,
-                author: partAuthor,
-                album: partAlbum,
-                copyright: partCopyright,
-              }
-              if(editorStore.allParts.filter((part) => part.title + part.author === partTitle + partAuthor).length !== 0) {
-                setError(true);
-              } else {
-                setError(false);
-                editorStore.creatNewPart(newPart);
-                props.onClose();
-              }
-            }
-          }}
+          onClick={() => savePart()}
         >
           Speichern
         </StyledButton>

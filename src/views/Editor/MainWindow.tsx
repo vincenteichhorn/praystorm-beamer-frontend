@@ -4,9 +4,9 @@ import General from './SlideTables/General';
 import Body from './SlideTables/Body';
 import Style from './SlideTables/Style';
 import { observer } from 'mobx-react';
-import EditorStore from '../../stores/EditorStore';
 import { StoreContext } from '../../App';
 import { Part } from '../../models/DataModels';
+import useEventListener from '@use-it/event-listener';
 
 const useStyles = makeStyles(theme => ({
   toolbar: {
@@ -39,6 +39,35 @@ const MainWindow: FunctionComponent = (props) => {
   };
   const open = Boolean(anchorEl);
   const popoverId = open ? 'simple-popover' : undefined;
+
+  const savePartChanges = () => {
+    let count = 0;
+    editorStore.parts.forEach((part: Part, index: number) => {
+      if(editorStore.currentPart) {
+        console.log(editorStore.currentPart.title + editorStore.currentPart.author, part.title + part.author);
+        if(editorStore.currentPart.title + editorStore.currentPart.author === part.title + part.author) {
+          count++;
+        }
+      }
+    });
+
+    if(count <= 1) {
+      editorStore.savePartChanges();
+    } else {
+      homeStore.openSnackBar('Diese Kombination aus Titel und Autor des Parts ist leider schon vergeben. Den Part kannst du über ´Part suchen´ hinzufügen');
+      if(editorStore.currentPart) {
+        editorStore.currentPart.title = editorStore.currentPartIdentity.title;
+        editorStore.currentPart.author = editorStore.currentPartIdentity.author;
+      }
+    }
+  }
+
+  useEventListener('keydown', (event: KeyboardEvent) => {
+    if(['13', 'Enter'].includes(String(event.key))) {
+      if(editorStore.unsaved) savePartChanges();
+      if(window.document.activeElement) (window.document.activeElement as HTMLElement).blur();
+    }
+  });
 
   return (
     <Paper>
@@ -130,27 +159,7 @@ const MainWindow: FunctionComponent = (props) => {
             </Popover>
             <IconButton
               disabled={!editorStore.unsaved}
-              onClick={() => {
-                let count = 0;
-                editorStore.parts.forEach((part: Part, index: number) => {
-                  if(editorStore.currentPart) {
-                    console.log(editorStore.currentPart.title + editorStore.currentPart.author, part.title + part.author);
-                    if(editorStore.currentPart.title + editorStore.currentPart.author === part.title + part.author) {
-                      count++;
-                    }
-                  }
-                });
-
-                if(count <= 1) {
-                  editorStore.savePartChanges();
-                } else {
-                  homeStore.openSnackBar('Diese Kombination aus Titel und Autor des Parts ist leider schon vergeben. Den Part kannst du über ´Part suchen´ hinzufügen');
-                  if(editorStore.currentPart) {
-                    editorStore.currentPart.title = editorStore.currentPartIdentity.title;
-                    editorStore.currentPart.author = editorStore.currentPartIdentity.author;
-                  }
-                }
-              }}
+              onClick={() => savePartChanges()}
             >
               <Icon>save</Icon>
             </IconButton>

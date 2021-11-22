@@ -1,6 +1,6 @@
-import React, { FunctionComponent, useState, useEffect, ChangeEvent, SetStateAction, useContext, Dispatch } from 'react';
-import { TextField, Box, Divider, Select, MenuItem, FormControl, InputLabel, Typography, Button } from '@material-ui/core';
-import { Part, PartTypes } from '../../../models/DataModels';
+import React, { FunctionComponent, ChangeEvent, useContext } from 'react';
+import { TextField, Box, Divider, Select, MenuItem, Typography } from '@material-ui/core';
+import { PartTypes } from '../../../models/DataModels';
 import { StoreContext } from '../../../App';
 import { observer } from 'mobx-react';
 

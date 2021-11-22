@@ -8,6 +8,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import Alert from '@material-ui/lab/Alert';
 import { observer } from 'mobx-react';
+import useEventListener from '@use-it/event-listener';
 
 interface Props {
   open: boolean;
@@ -21,7 +22,33 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
   const [eventName, setEventName] = useState('');
   const [eventDesription, setEventDesription] = useState('');
   const [date, setDate] = useState(new Date());
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
+
+  const saveEvent = () => {
+    setError("");
+    if(eventName !== '') {
+      const newEvent: Event = {
+        name: eventName,
+        description: eventDesription,
+        date: date,
+      }
+      if(editorStore.events.filter((event) => event.name + new Date(event.date).toLocaleDateString('en-GB').replace(/\//g, '.') === eventName + date.toLocaleDateString('en-GB').replace(/\//g, '.')).length !== 0) {
+        setError("Das Event konnte nicht hinzugefügt werden, da es bereits existiert.");
+      } else {
+        setError("");
+        editorStore.createNewEvent(newEvent);
+        props.onClose();
+      }
+    } else {
+      setError("Der Titel darf nicht leer sein.")
+    }
+  }
+
+  useEventListener('keydown', (event: KeyboardEvent) => {
+    if(['13', 'Enter'].includes(String(event.key))) {
+      if(editorStore.unsaved) saveEvent();
+    }
+  });
 
   return (
     <Dialog
@@ -70,7 +97,7 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
           error={eventName.length > 250}
         />
         {
-          (error) ? (<Alert severity="error">Das Event konnte nicht hinzugefügt werden, da es bereits existiert.</Alert>) : null
+          (error) ? (<Alert severity="error">{error}</Alert>) : null
         }
       </DialogContent>
       <Divider />
@@ -88,22 +115,7 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
           variant="contained"
           color="primary"
           size="large"
-          onClick={() => {
-            if(eventName !== '') {
-              const newEvent: Event = {
-                name: eventName,
-                description: eventDesription,
-                date: date,
-              }
-              if(editorStore.events.filter((event) => event.name + new Date(event.date).toLocaleDateString('en-GB').replace(/\//g, '.') === eventName + date.toLocaleDateString('en-GB').replace(/\//g, '.')).length !== 0) {
-                setError(true);
-              } else {
-                setError(false);
-                editorStore.createNewEvent(newEvent);
-                props.onClose();
-              }
-            }
-          }}
+          onClick={() => saveEvent()}
         >
           Speichern
         </StyledButton>

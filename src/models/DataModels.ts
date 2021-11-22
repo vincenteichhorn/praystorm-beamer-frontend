@@ -32,7 +32,6 @@ export interface Slide {
   data: {
     lyrics: string[],
     image: string,
-    text: string,
     video: string,
     style: {
       backgroundImage: string;
@@ -42,7 +41,6 @@ export interface Slide {
       copyrightFontSize: number;
       verseColor: string;
       copyrightColor: string;
-      lineHeight: number;
     };
   };
   copyright: {

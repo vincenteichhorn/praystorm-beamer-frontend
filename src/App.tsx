@@ -1,6 +1,6 @@
 import React, { FunctionComponent, createContext } from 'react';
 import Routing from './views/Routing';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import HomeStore from './stores/HomeStore';
 import PresenterStore from './stores/PresenterStore';
 import BeamerStore from './stores/BeamerStore';
@@ -18,9 +18,9 @@ export const StoreContext = createContext(stores);
 const App: FunctionComponent = () => {
   return (
     <StoreContext.Provider value={stores}>
-      <BrowserRouter>
+      <HashRouter>
         <Routing />
-      </BrowserRouter>
+      </HashRouter>
     </StoreContext.Provider>
   );
 }

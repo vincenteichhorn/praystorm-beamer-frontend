@@ -22,21 +22,7 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
   const [partAuthor, setPartAuthor] = useState<string>('');
   const [partAlbum, setPartAlbum] = useState<string>('');
   const [partCopyright, setPartCopyright] = useState<string>('');
-
-  useEffect(() => {
-    if(editorStore.error === false && props.open) {
-      if(editorStore.currentPart) editorStore.parts.push(editorStore.currentPart);
-      editorStore.fetchParts();
-      editorStore.updateSlides();
-      setPartTitle('');
-      setPartAuthor('');
-      setPartAlbum('');
-      setPartCopyright('');
-      props.onClose();
-    } else if(editorStore.error === true){
-      editorStore.currentPart = editorStore.parts[0];
-    }
-  }, [editorStore.error, props]);
+  const [error, setError] = useState(false);
 
   return (
     <Dialog
@@ -84,7 +70,6 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
           label="Autor"
           style={{marginTop: '10px', marginBottom: '8px'}}
           fullWidth
-          autoFocus
           variant="outlined"
           value={partAuthor}
           onChange={(changeEvent) => {setPartAuthor(changeEvent.target.value)}}
@@ -94,7 +79,6 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
           label="Album"
           fullWidth
           style={{marginTop: '10px', marginBottom: '8px'}}
-          autoFocus
           variant="outlined"
           value={partAlbum}
           onChange={(changeEvent) => {setPartAlbum(changeEvent.target.value)}}
@@ -104,14 +88,13 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
           label="Copyright"
           fullWidth
           style={{marginTop: '10px', marginBottom: '8px'}}
-          autoFocus
           variant="outlined"
           value={partCopyright}
           onChange={(changeEvent) => {setPartCopyright(changeEvent.target.value)}}
           error={partCopyright.length < 1 || partCopyright.length > 250}
         />
         {
-          (editorStore.error) ? <Alert severity="error">Der Part konnte nicht hinzugefügt werden, da er bereits existiert.</Alert> : null
+          (error) ? (<Alert severity="error">Der Part konnte nicht hinzugefügt werden, da er bereits existiert.</Alert>) : null
         }
       </DialogContent>
       <Divider />
@@ -139,8 +122,14 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
                 album: partAlbum,
                 copyright: partCopyright,
               }
-              editorStore.currentPart = newPart;
-              editorStore.creatNewPartFromCurrent();
+              if(editorStore.allParts.filter((part) => part.title + part.author === partTitle + partAuthor).length !== 0) {
+                setError(true);
+              } else {
+                setError(false);
+                editorStore.currentPart = newPart;
+                editorStore.creatNewPartFromCurrent();
+                props.onClose();
+              }
             }
           }}
         >

@@ -1,8 +1,9 @@
-import React, { ChangeEvent, FunctionComponent, useContext, useState } from 'react';
+import React, { ChangeEvent, FunctionComponent, useContext, useEffect, useState } from 'react';
 import {Table, TableHead, TableRow, TableCell, TableBody, Box, Typography, TextField, ClickAwayListener, IconButton, Icon, Select, MenuItem, Link, Snackbar} from '@material-ui/core';
 import { StoreContext } from '../../../App';
 import { PartTypes, Slide, SlideTypes } from '../../../models/DataModels';
 import { observer } from 'mobx-react';
+import useEventListener from '@use-it/event-listener'
 
 interface Props {
 
@@ -16,6 +17,9 @@ const Body: FunctionComponent<Props> = (props) => {
   const [activeContent, setActiveContent] = useState<string>();
   const [activeTitleId, setActiveTitleId] = useState<number>();
   const [activeTitle, setActiveTitle] = useState<string>();
+  const [newSlideTitle, setNewSlideTitle] = useState<string>('Neuer Slide');
+  const [newSlideContent, setNewSlideContent] = useState<string>('Inhalt');
+  const [newSlideType, setNewSlideType] = useState(SlideTypes.IMAGE);
 
   const getSlideData = (slide: Slide) => {
     if(editorStore.currentPart?.type === PartTypes.INSERT && slide.type === SlideTypes.SONGPART) editorStore.updateSlides();
@@ -44,6 +48,91 @@ const Body: FunctionComponent<Props> = (props) => {
     }
   }
 
+  const saveNewSlide = () => {
+    if(editorStore.currentPart) {
+      const slides = [...editorStore.slides];
+      let title = newSlideTitle;
+      const res = slides.filter((slide) => slide.title === title);
+      if(res.length !== 0) {
+        homeStore.openSnackBar('Dieser Slide-Title ist schon vergeben.');
+        title += '+';
+      }
+      const newSlide = {
+        title: title,
+        shorthand: 'S',
+        position: 0,
+        type: (editorStore.currentPart.type === PartTypes.SONG) ? SlideTypes.SONGPART : newSlideType,
+        data: {
+          lyrics: (editorStore.currentPart.type === PartTypes.SONG) ? newSlideContent.split('\n') : [],
+          image: (editorStore.currentPart.type !== PartTypes.SONG && newSlideType === SlideTypes.IMAGE) ? newSlideContent : '',
+          video: (editorStore.currentPart.type !== PartTypes.SONG && newSlideType === SlideTypes.VIDEO) ? newSlideContent : '',
+          style: {
+            backgroundImage: '',
+            backgroundColor: 'black',
+            verseFontSize: 52,
+            verseSpacing: 2,
+            copyrightFontSize: 20,
+            copyrightColor: 'orange',
+            verseColor: 'white',
+          },
+        },
+        copyright: {
+          author: '',
+          album: '',
+          copyright: '',
+        }
+      }
+      editorStore.addSlide(newSlide);
+      setNewSlideType(SlideTypes.IMAGE);
+      setNewSlideTitle('Neuer Slide');
+      setNewSlideContent('Inhalt');
+    }
+  }
+
+  const saveTitle = (slide: Slide, index: number) => {
+    console.log('saveSlide');
+    editorStore.unsaved = false;
+    editorStore.changedSlideIdentity = slide.title;
+    if(activeTitle) {
+      if(editorStore.slides[index].title !== activeTitle) {
+        const slides = [...editorStore.slides];
+        const res = slides.filter((slide) => slide.title === activeTitle);
+        if(res.length === 0) {
+          editorStore.slides[index].title = activeTitle;
+        } else {
+          editorStore.slides[index].title = activeTitle + '+';
+        }
+      }
+    }
+    setActiveTitleId(undefined);
+    setActiveTitle(undefined);
+    editorStore.saveSlide(editorStore.slides[index]);
+  }
+
+  const saveContent = (slide: Slide, index: number) => {
+    console.log('saveCOntent');
+    editorStore.unsaved = false;
+    editorStore.changedSlideIdentity = slide.title;
+    if(slide.type === SlideTypes.SONGPART) {
+      editorStore.slides[index].data.lyrics = (activeContent) ? activeContent?.split('\n') : [];
+    } else if(slide.type === SlideTypes.VIDEO) {
+      editorStore.slides[index].data.video = (activeContent) ? activeContent : '';
+    } else if(slide.type === SlideTypes.IMAGE) {
+      editorStore.slides[index].data.image = (activeContent) ? activeContent : '';
+    }
+    setActiveContentId(undefined);
+    setActiveContent(undefined);
+    editorStore.saveSlide(editorStore.slides[index]);
+  }
+
+  useEventListener('keydown', (event: KeyboardEvent) => {
+    if(['13', 'Enter'].includes(String(event.key))) {
+      if(editorStore.newSlide) saveNewSlide();
+      if(activeTitleId !== undefined) saveTitle(editorStore.slides[activeTitleId], activeTitleId);
+      if(activeContentId !== undefined) saveContent(editorStore.slides[activeContentId], activeContentId);
+    }
+  });
+
   return (editorStore.currentPart) ? (
     <Table>
       <TableHead>
@@ -55,37 +144,87 @@ const Body: FunctionComponent<Props> = (props) => {
         </TableRow>
       </TableHead>
       <TableBody>
+        {(editorStore.newSlide) ? (
+          <TableRow>
+            <TableCell>
+              <TextField
+                variant="outlined"
+                size="small"
+                value={newSlideTitle}
+                onChange={(changeEvent) => {
+                  setNewSlideTitle(changeEvent.target.value);
+                }}
+              />
+            </TableCell>
+            {
+              (editorStore.currentPart?.type === PartTypes.INSERT) ? 
+                (
+                  <TableCell>
+                    <Select
+                      variant="outlined"
+                      value={newSlideType}
+                      onChange={(changeEvent: ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
+                        if (changeEvent.target.value === SlideTypes.IMAGE || changeEvent.target.value === SlideTypes.VIDEO ) {
+                          setNewSlideType(changeEvent.target.value);
+                        }
+                      }}
+                    >
+                      {
+                        Object.keys(SlideTypes).map((type, index) => {
+                          return (type !== SlideTypes.SONGPART) ? (<MenuItem key={index} value={type}>{type.toLowerCase().charAt(0).toUpperCase() + type.toLowerCase().slice(1)}</MenuItem>) : null
+                        })
+                      }
+                    </Select>
+                  </TableCell>
+                ) : null
+            }
+            <TableCell>
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                multiline
+                value={newSlideContent}
+                onChange={(changeEvent) => {
+                  setNewSlideContent(changeEvent.target.value);
+                }}
+              />
+            </TableCell>
+            <TableCell
+                align="right"
+              >
+                <IconButton
+                  onClick={() => {
+                    editorStore.newSlide = false;
+                    setNewSlideType(SlideTypes.IMAGE);
+                    setNewSlideTitle('Neuer Slide');
+                    setNewSlideContent('Inhalt');
+                  }}
+                >
+                  <Icon>close</Icon>
+                </IconButton>
+                <IconButton
+                  onClick={() => saveNewSlide()}
+                >
+                  <Icon>done</Icon>
+                </IconButton>
+              </TableCell>
+          </TableRow>
+        ) : null}
         {
           editorStore.slides.map((slide: Slide, index) => (
             <TableRow key={index}>
               <TableCell
                 onClick={() => {
                   setActiveTitleId(index);
-                  editorStore.unsavedPart = true;
-                  editorStore.changedSlideIdentity = slide.title;
+                  editorStore.unsaved = true;
                   if(activeTitleId !== index) setActiveTitle(slide.title);
                 }}
               >
                 {
                   (activeTitleId === index) ? (
                     <ClickAwayListener
-                      onClickAway={() => {
-                        setActiveTitleId(undefined);
-                        editorStore.unsavedPart = false;
-                        if(activeTitle) {
-                          if(editorStore.slides[index].title !== activeTitle) {
-                            const slides = [...editorStore.slides];
-                            const res = slides.filter((slide) => slide.title === activeTitle);
-                            console.log(res);
-                            if(res.length === 0) {
-                              editorStore.slides[index].title = activeTitle;
-                            } else {
-                              homeStore.openSnackBar('Dieser Titel ist leider schon als Slidetitel vergeben.');
-                            }
-                          }
-                        }
-                        editorStore.saveSlide(editorStore.slides[index]);
-                      }}
+                      onClickAway={() => saveTitle(slide, index)}
                     >
                       <TextField
                         variant="outlined"
@@ -106,11 +245,11 @@ const Body: FunctionComponent<Props> = (props) => {
                       variant="outlined"
                       value={editorStore.slides[index].type}
                       onOpen={() => {
-                        editorStore.unsavedPart = true;
+                        editorStore.unsaved = true;
                       }}
                       onChange={(changeEvent: ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
                         if (changeEvent.target.value === SlideTypes.IMAGE || changeEvent.target.value === SlideTypes.VIDEO ) {
-                          editorStore.unsavedPart = false;
+                          editorStore.unsaved = false;
                           editorStore.changedSlideIdentity = slide.title;
                           editorStore.slides[index].type = changeEvent.target.value;
                           editorStore.saveSlide(editorStore.slides[index]);
@@ -128,29 +267,16 @@ const Body: FunctionComponent<Props> = (props) => {
               }
               <TableCell
                 onClick={() => {
+                  console.log('click')
                   setActiveContentId(index);
-                  editorStore.unsavedPart = true;
-                  editorStore.changedSlideIdentity = slide.title;
+                  editorStore.unsaved = true;
                   if(activeContentId !== index) setActiveContent(getActiveContentData(slide));
                 }}
               >
                 {
                   (activeContentId === index) ? (
                     <ClickAwayListener
-                      onClickAway={() => {
-                        setActiveContentId(undefined);
-                        editorStore.unsavedPart = false;
-                        if(slide.type === SlideTypes.SONGPART) {
-                          editorStore.slides[index].data.lyrics = (activeContent) ? activeContent?.split('\n') : [];
-                        } else if(slide.type === SlideTypes.VIDEO) {
-                          editorStore.slides[index].data.video = (activeContent) ? activeContent : '';
-                        } else if(slide.type === SlideTypes.IMAGE) {
-                          editorStore.slides[index].data.image = (activeContent) ? activeContent : '';
-                          console.log(editorStore.slides[index].data.image);
-                        }
-
-                        editorStore.saveSlide(editorStore.slides[index]);
-                      }}
+                      onClickAway={() => saveContent(slide, index)}
                     >
                       <TextField 
                         fullWidth

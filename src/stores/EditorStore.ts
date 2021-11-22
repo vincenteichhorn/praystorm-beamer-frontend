@@ -13,8 +13,9 @@ export default class EditorStore {
   allParts: Part[] = [];
   searchedParts: Part[] = [];
 
-  error: boolean | undefined = undefined;
-  unsavedPart: boolean = false;
+  unsaved: boolean = false;
+
+  newSlide: boolean = false;
 
   constructor() {
     // fetch all data from backend
@@ -136,25 +137,19 @@ export default class EditorStore {
     .then((resp) => console.log(resp));
   }
 
-  preFetch() {
-    this.error = undefined;
-  }
 
   async createNewEventFromCurrent() {
     if(this.currentEvent) {
       const postParams = new FormData();
       postParams.append('name', this.currentEvent.name);
-      postParams.append('date', this.currentEvent.date.toISOString().split("T")[0]);
+      const offset = this.currentEvent.date.getTimezoneOffset()
+      this.currentEvent.date = new Date(this.currentEvent.date.getTime() - (offset*60*1000))
+      postParams.append('date', this.currentEvent.date.toISOString().split('T')[0]);
       postParams.append('description', this.currentEvent.description)
       const resp = await fetch(process.env.REACT_APP_API_HOST + '/addEvent', {
         method: 'POST',
         body: postParams,
       });
-      if(resp.ok) {
-        this.error = false;
-      } else {
-        this.error = true;
-      }
       this.updateEvents();
     }
   }
@@ -174,13 +169,8 @@ export default class EditorStore {
         method: 'POST',
         body: postParams,
       });
-      if(resp.ok) {
-        this.error = false;
-      } else {
-        this.error = true;
-      }
       this.currentPartIdentity = {title: this.currentPart.title, author: this.currentPart.author};
-      this.unsavedPart = false;
+      this.unsaved = false;
     }
   }
 
@@ -199,11 +189,7 @@ export default class EditorStore {
         method: 'POST',
         body: postParams,
       });
-      if(resp.ok) {
-        this.error = false;
-      } else {
-        this.error = true;
-      }
+      this.updateParts();
     }
   }
 
@@ -225,6 +211,29 @@ export default class EditorStore {
     });
   }
 
+  openNewSlide() {
+    this.newSlide = true;
+  }
+
+  async addSlide(newSlide: Slide) {
+    if(this.currentPart) {
+      const postParams = new FormData();
+      postParams.append('newTitle', newSlide.title);
+      postParams.append('newShorthand', newSlide.shorthand);
+      postParams.append('newPositon', newSlide.position.toString());
+      postParams.append('newType', newSlide.type);
+      postParams.append('newContent', JSON.stringify(newSlide.data));
+      postParams.append('partAuthor', this.currentPart.author);
+      postParams.append('partTitle', this.currentPart.title);
+      const resp = await fetch(process.env.REACT_APP_API_HOST + '/addSlide', {
+        method: 'POST',
+        body: postParams,
+      });
+      this.updateSlides();
+      this.newSlide = false;
+    }
+  }
+
 
 }
 
@@ -234,16 +243,17 @@ decorate(EditorStore, {
   parts: observable,
   currentPart: observable,
   slides: observable,
-  error: observable,
   allParts: observable,
   searchedParts: observable,
-  unsavedPart: observable,
+  unsaved: observable,
+  newSlide: observable,
 
   updateEvents: action,
   updateParts: action,
   updateSlides: action,
-  preFetch: action,
   createNewEventFromCurrent: action,
   creatNewPartFromCurrent: action,
   searchAllParts: action,
+  openNewSlide: action,
+  addSlide: action,
 });

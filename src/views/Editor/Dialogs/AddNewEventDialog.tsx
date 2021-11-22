@@ -22,19 +22,7 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
   const [eventName, setEventName] = useState('');
   const [eventDesription, setEventDesription] = useState('');
   const [date, setDate] = useState(new Date());
-
-  useEffect(() => {
-    setEventName('');
-    setEventDesription('');
-    if(!editorStore.error === false && props.open) {
-      if(editorStore.currentEvent) editorStore.events.push(editorStore.currentEvent);
-      editorStore.fetchEvents();
-      editorStore.updateParts();
-      props.onClose();
-    } else if(editorStore.error === true){
-      editorStore.currentEvent = editorStore.events[0];
-    }
-  }, [editorStore, editorStore.error, props]);
+  const [error, setError] = useState(false);
 
   return (
     <Dialog
@@ -83,7 +71,7 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
           error={eventName.length > 250}
         />
         {
-          (editorStore.error) ? <Alert severity="error">Das Event konnte nicht hinzugefügt werden, da es bereits existiert.</Alert> : null
+          (error) ? (<Alert severity="error">Das Event konnte nicht hinzugefügt werden, da es bereits existiert.</Alert>) : null
         }
       </DialogContent>
       <Divider />
@@ -108,10 +96,17 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
                 description: eventDesription,
                 date: date,
               }
-              editorStore.currentEvent = newEvent;
-              editorStore.createNewEventFromCurrent();
-              props.onClose();
-              props.updateCurrentEvent();
+              if(editorStore.events.filter((event) => event.name + new Date(event.date).toLocaleDateString('en-GB').replace(/\//g, '.') === eventName + date.toLocaleDateString('en-GB').replace(/\//g, '.')).length !== 0) {
+                setError(true);
+              } else {
+                setError(false);
+                editorStore.currentEvent = newEvent;
+                editorStore.createNewEventFromCurrent();
+                props.onClose();
+                props.updateCurrentEvent();
+              }
+              
+
             }
           }}
         >

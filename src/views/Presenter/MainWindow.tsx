@@ -121,7 +121,10 @@ const MainWindow: FunctionComponent = () => {
             <Grid item>
               <Grid container direction="row" alignItems="center" className={classes.actionBar}>
                 <IconButton
-                  onClick={() => presenterStore.blackout()}
+                  onClick={() => {
+                    presenterStore.blackout();
+                    //if(presenterStore.hideForeground) presenterStore.blackoutForeground();
+                  }}
                 >
                   {(presenterStore.hide) ? (
                     <Icon>visibility_off</Icon>
@@ -130,7 +133,10 @@ const MainWindow: FunctionComponent = () => {
                   )}
                 </IconButton>
                 <IconButton
-                  onClick={() => presenterStore.blackoutForeground()}
+                  onClick={() => {
+                    presenterStore.blackoutForeground();
+                    //if(presenterStore.hide) presenterStore.blackout();
+                  }}
                 >
                   {(presenterStore.hideForeground) ? (
                     <Icon>flip_to_back</Icon>
@@ -244,7 +250,7 @@ const MainWindow: FunctionComponent = () => {
                   <Table stickyHeader >
                     <TableHead>
                       <TableRow>
-                        <TableCell>Short</TableCell>
+                        <TableCell>Titel</TableCell>
                         <TableCell>Data</TableCell>
                       </TableRow>
                     </TableHead>
@@ -256,7 +262,7 @@ const MainWindow: FunctionComponent = () => {
                             onClick={() => changeCurrentSlide(slide)}
                             style={{ backgroundColor: (presenterStore.currentSlide?.title === slide.title) ? 'rgba(0, 0, 0, 0.08)' : '' }}
                           >
-                            <TableCell style={{ fontWeight: 'bold' }}>{slide.shorthand}</TableCell>
+                            <TableCell>{slide.title}</TableCell>
                             <TableCell>
                               {
                                 (slide.type === SlideTypes.SONGPART) ? (

@@ -62,7 +62,11 @@ const MainWindow: FunctionComponent = (props) => {
           >
             {
               (tab === 1) ? (
-                <IconButton>
+                <IconButton
+                  onClick={() => {
+                    editorStore.openNewSlide();
+                  }}
+                >
                   <Icon>add</Icon>
                 </IconButton>
               ) : null  
@@ -112,18 +116,19 @@ const MainWindow: FunctionComponent = (props) => {
               </List>
             </Popover>
             <IconButton
-              disabled={!editorStore.unsavedPart}
+              disabled={!editorStore.unsaved}
               onClick={() => {
                 let count = 0;
                 editorStore.parts.forEach((part: Part, index: number) => {
                   if(editorStore.currentPart) {
+                    console.log(editorStore.currentPart.title + editorStore.currentPart.author, part.title + part.author);
                     if(editorStore.currentPart.title + editorStore.currentPart.author === part.title + part.author) {
                       count++;
                     }
                   }
                 });
 
-                if(count < 1) {
+                if(count <= 1) {
                   editorStore.saveChanges();
                 } else {
                   homeStore.openSnackBar('Diese Kombination aus Titel und Autor des Parts ist leider schon vergeben. Den Part kannst du über ´Part suchen´ hinzufügen');

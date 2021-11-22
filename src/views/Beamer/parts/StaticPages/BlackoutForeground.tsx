@@ -16,7 +16,7 @@ const BlackoutForeground: FunctionComponent<Props> = (props) => {
     img.onload = () => {
       setBackgroundImageExists(true);
     };
-    img.src = props.slide.data.style.backgroundImage;
+    img.src = window.document.location.pathname.slice(0, -1) + props.slide.data.style.backgroundImage;
   })
 
   return(
@@ -31,7 +31,7 @@ const BlackoutForeground: FunctionComponent<Props> = (props) => {
           width: (!props.preview) ? document.documentElement.clientWidth + 'px' : '100%',
           height: (!props.preview) ? document.documentElement.clientHeight + 'px': '100%',
           backgroundColor: (backgroundImageExists) ? `url(${props.slide.data.style.backgroundColor})` : '',
-          backgroundImage: (backgroundImageExists) ? `url(${props.slide.data.style.backgroundImage})` : '',
+          backgroundImage: (backgroundImageExists) ? `url(${window.document.location.pathname.slice(0, -1).concat(props.slide.data.style.backgroundImage)})` : '',
           backgroundRepeat: (backgroundImageExists) ? 'no-repeat' : '',
           backgroundPosition: (backgroundImageExists) ? 'left top' : '',
           backgroundSize: (backgroundImageExists) ? 'cover' : '',

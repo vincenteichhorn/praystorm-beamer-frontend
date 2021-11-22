@@ -108,8 +108,13 @@ const Routing: FunctionComponent<Props> = (props) => {
 
   useEffect(() => {
     homeStore.getIPAddress();
+    //only for production
+    if(window.document.location.pathname.substr(window.document.location.pathname.length - 1) !== '/') {
+      window.location.href = window.location.origin + window.location.pathname + '/' + window.location.hash;
+    }
+
     mainRoutes.filter((route) => {
-      if(route.link === `/${window.document.location.pathname.split('/')[1]}` && route.appbar === false) {
+      if(route.link === window.document.location.hash.substr(1) && route.appbar === false) {
         setRenderAppBar(false);
       } else if(route.appbar !== false) {
         setRenderAppBar(true);
@@ -120,11 +125,11 @@ const Routing: FunctionComponent<Props> = (props) => {
 
   const redirect = (link: string) => {
     setDrawerOpen(false);
-    if(link === '/editor' && window.location.pathname !== '/editor') {
+    if(link === '/editor' && window.location.hash.substr(1) !== '/editor') {
       editorStore.updateEvents();
       editorStore.currentEvent = presenterStore.currentEvent;
       editorStore.updateParts();
-    } else if(link === '/presenter' && window.location.pathname !== '/presenter') {
+    } else if(link === '/presenter' && window.location.hash.substr(1) !== '/presenter') {
       presenterStore.updateEvents();
       presenterStore.currentEvent = editorStore.currentEvent;
       presenterStore.updateParts();
@@ -170,7 +175,8 @@ const Routing: FunctionComponent<Props> = (props) => {
                     }}
                     onClick={() => {
                       let host = homeStore.IPAddress;
-                      let link = '/beamer'
+                      let link = `${window.document.location.pathname}#/beamer`;
+                      console.log(link);
                       window.open((window.document.location.port) ? ' http://' + host + ':' + window.document.location.port + link : ' http://' + host + link, '_blank', 'scrollbars=no,status=yes,fullscreen=yes,width=5000,height=5000');
                     }}
                   >Beamer</Button>

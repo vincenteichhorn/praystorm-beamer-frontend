@@ -20,9 +20,10 @@ const Imagepart: FunctionComponent<Props> = (props) => {
     const img = new Image();
     img.onload = () => {
       setImageExists(true);
+      console.log(true);
     };
-    img.src = slide.data.image;
-  }, [slide, props])
+    img.src = window.document.location.pathname.slice(0, -1) + slide.data.image;
+  });
 
   return(
     <Box style={{height: '100%', overflow: 'hidden'}}>
@@ -31,8 +32,8 @@ const Imagepart: FunctionComponent<Props> = (props) => {
         style={{
           width: (!props.preview) ? document.documentElement.clientWidth + 'px' : '100%',
           height: (!props.preview) ? document.documentElement.clientHeight + 'px': '100%',
-          backgroundColor: (imageExists) ? `url(${slide.data.style.backgroundColor})` : '',
-          backgroundImage: (imageExists) ? `url(${slide.data.image})` : '',
+          backgroundColor: (imageExists) ? 'black' : slide.data.style.backgroundColor,
+          backgroundImage: (imageExists) ? `url(${window.document.location.pathname.slice(0, -1).concat(slide.data.image)})` : '',
           backgroundRepeat: (imageExists) ? 'no-repeat' : '',
           backgroundPosition: (imageExists) ? 'center' : '',
           backgroundSize: (imageExists) ? 'contain' : '',

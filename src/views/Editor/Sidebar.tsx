@@ -29,10 +29,10 @@ const Sidebar: FunctionComponent = (props) => {
   const findAndChangeEvent = (changeEvent: ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
     if(changeEvent.target.value === 'newEventKey') {
       setAddNewEventDialogOpen(true);
-      editorStore.preFetch();
       return;
     }
-    const newEvent = editorStore.events.find((event) => event.name === changeEvent.target.value);
+    const val = String(changeEvent.target.value);
+    const newEvent = editorStore.events.find((event) => event.name + new Date(event.date).toLocaleDateString('en-GB').replace(/\//g, '.') === val);
     if(newEvent) changeCurrentEvent(newEvent);
   }
 
@@ -65,7 +65,7 @@ const Sidebar: FunctionComponent = (props) => {
             fullWidth
           >
             <Select
-              value={(editorStore.currentEvent) ? editorStore.currentEvent.name : ''}
+              value={(editorStore.currentEvent) ? editorStore.currentEvent.name + new Date(editorStore.currentEvent.date).toLocaleDateString('en-GB').replace(/\//g, '.') : ''}
               onChange={findAndChangeEvent}
             >
               <MenuItem value={"newEventKey"}>
@@ -76,8 +76,8 @@ const Sidebar: FunctionComponent = (props) => {
               </MenuItem>
               {
                 editorStore.events.map((event: Event, index: number) => (
-                  <MenuItem key={index} value={event.name}>
-                    {event.name} ({event.date})
+                  <MenuItem key={index} value={event.name + new Date(event.date).toLocaleDateString('en-GB').replace(/\//g, '.')}>
+                    {event.name} ({new Date(event.date).toLocaleDateString('en-GB').replace(/\//g, '.')})
                   </MenuItem>
                 ))
               }
@@ -92,7 +92,7 @@ const Sidebar: FunctionComponent = (props) => {
               button
               onClick={() => {
                 setAddNewPartDialog(true); 
-                editorStore.preFetch();
+                editorStore.fetchAllParts();
               }}
             >
               <ListItemIcon>
@@ -138,7 +138,6 @@ const Sidebar: FunctionComponent = (props) => {
         open={addNewEventDialog}
         updateCurrentEvent={() => {
           if(editorStore.currentEvent) changeCurrentEvent(editorStore.currentEvent);
-          console.log("chjanged");
         }}
         onClose={() => setAddNewEventDialogOpen(false)}
       />

@@ -42,6 +42,12 @@ const AddNewEventDialog: FunctionComponent<Props> = (props) => {
         setError("");
         editorStore.creatNewPart(newPart);
         props.onClose();
+        setPartTitle('');
+        setPartType(PartTypes.SONG);
+        setPartAuthor('');
+        setPartAlbum('');
+        setPartCopyright('');
+
       }
     } else {
       setError("Titel und Autor dürfen nicht leer sein.")

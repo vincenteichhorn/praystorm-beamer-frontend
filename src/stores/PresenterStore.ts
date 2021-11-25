@@ -98,7 +98,7 @@ export default class PresenterStore {
   fetchSlides() {
     if(this.currentPart) { 
       const postParams = new FormData();
-      postParams.append('partname', this.currentPart.title);
+      postParams.append('partTitle', this.currentPart.title);
       fetch(process.env.REACT_APP_API_HOST + '/getSlides', {
         method: 'POST',
         body: postParams,

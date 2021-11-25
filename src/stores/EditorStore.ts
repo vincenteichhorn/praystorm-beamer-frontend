@@ -1,5 +1,5 @@
 import { decorate, observable, runInAction, action } from 'mobx';
-import { Part, Event, Slide } from '../models/DataModels';
+import { Part, Event, Slide, Style } from '../models/DataModels';
 
 export default class EditorStore {
   events: Event[] = [];
@@ -8,6 +8,7 @@ export default class EditorStore {
   currentPart: Part | undefined = undefined;
   currentPartIdentity: {title: string, author: string} = {title: "", author: ""};
   slides: Slide[] = [];
+  slideStyles: Style[] = [];
   changedSlideIdentity: string = "";
   
   allParts: Part[] = [];
@@ -22,6 +23,7 @@ export default class EditorStore {
     if(this.events.length < 1) this.fetchEvents();
     if(this.parts.length < 1) this.fetchParts();
     if(this.slides.length < 1) this.fetchSlides();
+    if(this.slideStyles.length < 1) this.fetchSlideStyles();
   }
 
   updateEvents() {
@@ -77,7 +79,7 @@ export default class EditorStore {
   fetchSlides() {
     if(this.currentPart) { 
       const postParams = new FormData();
-      postParams.append('partname', this.currentPart.title);
+      postParams.append('partTitle', this.currentPart.title);
       fetch(process.env.REACT_APP_API_HOST + '/getSlides', {
         method: 'POST',
         body: postParams,
@@ -116,6 +118,18 @@ export default class EditorStore {
     })
   }
 
+  fetchSlideStyles() {
+    fetch(process.env.REACT_APP_API_HOST + '/getSlideStyles', {
+      method: 'GET',
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      runInAction(() => {
+        this.slideStyles = [...data];
+      })
+    })
+  }
+
   searchAllParts(searchVal: string) {
     if(!searchVal){
       this.searchedParts = this.allParts;
@@ -135,7 +149,6 @@ export default class EditorStore {
       method: 'POST',
       body: postParams,
     })
-    .then((resp) => console.log(resp));
   }
 
 
@@ -202,6 +215,7 @@ export default class EditorStore {
       video: slide.data.video,
       image: slide.data.image,
     }));
+    postParams.append('styleName', (slide.data.style.name) ? slide.data.style.name : '');
     await fetch(process.env.REACT_APP_API_HOST + '/updateSlide', {
       method: 'POST',
       body: postParams,
@@ -222,7 +236,7 @@ export default class EditorStore {
       postParams.append('newContent', JSON.stringify(newSlide.data));
       postParams.append('partAuthor', this.currentPart.author);
       postParams.append('partTitle', this.currentPart.title);
-      const resp = await fetch(process.env.REACT_APP_API_HOST + '/addSlide', {
+      await fetch(process.env.REACT_APP_API_HOST + '/addSlide', {
         method: 'POST',
         body: postParams,
       });
@@ -246,9 +260,7 @@ export default class EditorStore {
   }
 
   async deleteCurrentEvent() {
-    console.log("deletze");
     if(this.currentEvent) {
-      console.log('currentEvrnt');
       const postParams = new FormData();
       postParams.append('eventName', this.currentEvent.name);
       postParams.append('eventDate', this.currentEvent.date.toString());
@@ -268,15 +280,51 @@ export default class EditorStore {
       postParams.append('partTitle', this.currentPart.title);
       postParams.append('partAuthor', this.currentPart.author);
       postParams.append('cascade', cascade.toString());
-      const resp = await fetch(process.env.REACT_APP_API_HOST + '/deletePart', {
+      await fetch(process.env.REACT_APP_API_HOST + '/deletePart', {
         method: 'POST',
         body: postParams,
       });
       this.currentPart = undefined;
-      console.log(resp);
       this.updateParts();
     }
   } 
+
+  async updateEvent(event: Event, identity: string[]) {
+    const [identityName, identityDate] = identity;
+    if(this.currentEvent) {
+      const offset = new Date(event.date).getTimezoneOffset()
+      event.date = new Date(new Date(event.date).getTime() - (offset*60*1000))
+      this.currentEvent.name = event.name;
+      this.currentEvent.date = event.date;
+      this.currentEvent.description = event.description;
+      const postParams = new FormData();
+      postParams.append('eventName', event.name);
+      postParams.append('eventDate', event.date.toISOString().split('T')[0]);
+      postParams.append('eventDesc', event.description);
+      postParams.append('identityName', identityName);
+      postParams.append('identityDate', identityDate);
+      await fetch(process.env.REACT_APP_API_HOST + '/updateEvent', {
+        method: 'POST',
+        body: postParams,
+      })
+    }
+    this.updateEvents();
+  }
+
+  async updateStyle(id: number, name: string) {
+    if(name && id > -1) {
+      let style = this.slideStyles[id]
+      console.log(style);
+      const postParams = new FormData();
+      postParams.append('styleName', name);
+      postParams.append('styleData', JSON.stringify(style));
+      await fetch(process.env.REACT_APP_API_HOST + '/updateStyle', {
+       method: 'POST',
+       body: postParams,
+      });
+      this.updateSlides();
+    }
+  }
 
 }
 
@@ -287,6 +335,7 @@ decorate(EditorStore, {
   currentPart: observable,
   slides: observable,
   allParts: observable,
+  slideStyles: observable,
   searchedParts: observable,
   unsaved: observable,
   newSlide: observable,
@@ -301,4 +350,5 @@ decorate(EditorStore, {
   addSlide: action,
   deleteCurrentEvent: action,
   deleteCurrentPart: action,
+  updateEvent: action,
 });

@@ -33,21 +33,24 @@ export interface Slide {
     lyrics: string[],
     image: string,
     video: string,
-    style: {
-      backgroundImage: string;
-      backgroundColor: string;
-      verseFontSize: number;
-      verseSpacing: number;
-      copyrightFontSize: number;
-      verseColor: string;
-      copyrightColor: string;
-    };
+    style: Style,
   };
   copyright: {
     author: string;
     album: string;
     copyright: string;
   }
+}
+
+export interface Style {
+  name?: string,
+  backgroundImage?: string;
+  backgroundColor?: string;
+  verseFontSize?: number;
+  verseSpacing?: number;
+  copyrightFontSize?: number;
+  verseColor?: string;
+  copyrightColor?: string;
 }
 
 export interface Route {

@@ -6,6 +6,7 @@ import { StoreContext } from '../../App';
 import AddNewEventDialog from './Dialogs/AddNewEventDialog';
 import AddNewPartDialog from './Dialogs/AddNewPartDialog';
 import SearchPartDialog from './Dialogs/SearchPartDialog';
+import EditEventDialog from './Dialogs/EditEventDialog';
 
 const useStyles = makeStyles(theme => ({
   select: {
@@ -15,6 +16,7 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('md')]: {
       height: '75.6vh'
     },
+    overflow: 'auto',
   },
 }));
 
@@ -25,6 +27,7 @@ const Sidebar: FunctionComponent = (props) => {
   const [addNewEventDialog, setAddNewEventDialogOpen] = useState(false);
   const [addNewPartDialog, setAddNewPartDialog] = useState(false);
   const [searchPartDialog, setSearchPartDialog] = useState(false);
+  const [editEventDialog, setEditEventDialog] = useState(false);
 
   const findAndChangeEvent = (changeEvent: ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
     if(changeEvent.target.value === 'newEventKey') {
@@ -67,17 +70,20 @@ const Sidebar: FunctionComponent = (props) => {
             <Select
               value={(editorStore.currentEvent) ? editorStore.currentEvent.name + new Date(editorStore.currentEvent.date).toLocaleDateString('en-GB').replace(/\//g, '.') : ''}
               onChange={findAndChangeEvent}
+              margin="dense"
             >
               <MenuItem value={"newEventKey"}>
                 <ListItemIcon>
                   <Icon>add</Icon>
                 </ListItemIcon>
-                <ListItemText primary="neues Event erstellen" />
+                <ListItemText style={{margin: '4px'}} >
+                  neues Event erstellen
+                </ListItemText>
               </MenuItem>
               {
                 editorStore.events.map((event: Event, index: number) => (
                   <MenuItem key={index} value={event.name + new Date(event.date).toLocaleDateString('en-GB').replace(/\//g, '.')}>
-                    {event.name} ({new Date(event.date).toLocaleDateString('en-GB').replace(/\//g, '.')})
+                    <ListItemText>{event.name} ({new Date(event.date).toLocaleDateString('en-GB').replace(/\//g, '.')})</ListItemText>
                   </MenuItem>
                 ))
               }
@@ -86,7 +92,19 @@ const Sidebar: FunctionComponent = (props) => {
         </Box>
         
         <Paper className={classes.paper}>
-          <List>
+          <List dense style={{paddingBottom: '0'}}>
+            <ListItem 
+              key={-0} 
+              button
+              onClick={() => {
+                setEditEventDialog(true);
+              }}
+            >
+              <ListItemIcon>
+                <Icon>edit</Icon>
+              </ListItemIcon>
+              <ListItemText>Event bearbeiten</ListItemText>
+            </ListItem>
             <ListItem 
               key={-1} 
               button
@@ -98,7 +116,7 @@ const Sidebar: FunctionComponent = (props) => {
               <ListItemIcon>
                 <Icon>add</Icon>
               </ListItemIcon>
-              <ListItemText>neuen Part erstellen</ListItemText>
+              <ListItemText>Part erstellen</ListItemText>
             </ListItem>
             <ListItem 
               key={-2} 
@@ -111,9 +129,11 @@ const Sidebar: FunctionComponent = (props) => {
               <ListItemIcon>
                 <Icon>search</Icon>
               </ListItemIcon>
-              <ListItemText>Part suchen</ListItemText>
+              <ListItemText>Partbibliothek durchsuchen</ListItemText>
             </ListItem>
-            <Divider />
+          </List>
+          <List>
+            <Divider/>
             {
               editorStore.parts.map((part: Part, index: number) => (
                 <ListItem 
@@ -145,6 +165,10 @@ const Sidebar: FunctionComponent = (props) => {
       <SearchPartDialog 
         open={searchPartDialog}
         onClose={() => setSearchPartDialog(false)}
+      />
+      <EditEventDialog
+        open={editEventDialog}
+        onClose={() => setEditEventDialog(false)}
       />
     </Box>
 

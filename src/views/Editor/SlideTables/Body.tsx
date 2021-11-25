@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FunctionComponent, useContext, useEffect, useState } from 'react';
 import {Table, TableHead, TableRow, TableCell, TableBody, Box, Typography, TextField, ClickAwayListener, IconButton, Icon, Select, MenuItem, Link, Snackbar, Popover} from '@material-ui/core';
 import { StoreContext } from '../../../App';
-import { PartTypes, Slide, SlideTypes } from '../../../models/DataModels';
+import { PartTypes, Slide, SlideTypes, Style } from '../../../models/DataModels';
 import { observer } from 'mobx-react';
 import useEventListener from '@use-it/event-listener'
 
@@ -66,15 +66,7 @@ const Body: FunctionComponent<Props> = (props) => {
           lyrics: (editorStore.currentPart.type === PartTypes.SONG) ? newSlideContent.split('\n') : [],
           image: (editorStore.currentPart.type !== PartTypes.SONG && newSlideType === SlideTypes.IMAGE) ? newSlideContent : '',
           video: (editorStore.currentPart.type !== PartTypes.SONG && newSlideType === SlideTypes.VIDEO) ? newSlideContent : '',
-          style: {
-            backgroundImage: '',
-            backgroundColor: 'black',
-            verseFontSize: 52,
-            verseSpacing: 2,
-            copyrightFontSize: 20,
-            copyrightColor: 'orange',
-            verseColor: 'white',
-          },
+          style: {},
         },
         copyright: {
           author: '',
@@ -90,7 +82,6 @@ const Body: FunctionComponent<Props> = (props) => {
   }
 
   const saveTitle = (slide: Slide, index: number) => {
-    console.log('saveSlide');
     editorStore.unsaved = false;
     editorStore.changedSlideIdentity = slide.title;
     if(activeTitle) {
@@ -110,7 +101,6 @@ const Body: FunctionComponent<Props> = (props) => {
   }
 
   const saveContent = (slide: Slide, index: number) => {
-    console.log('saveCOntent');
     editorStore.unsaved = false;
     editorStore.changedSlideIdentity = slide.title;
     if(slide.type === SlideTypes.SONGPART) {
@@ -129,7 +119,7 @@ const Body: FunctionComponent<Props> = (props) => {
     if(['13', 'Enter'].includes(String(event.key))) {
       if(editorStore.newSlide) saveNewSlide();
       if(activeTitleId !== undefined) saveTitle(editorStore.slides[activeTitleId], activeTitleId);
-      if(activeContentId !== undefined) saveContent(editorStore.slides[activeContentId], activeContentId);
+      if(activeContentId !== undefined && event.shiftKey) saveContent(editorStore.slides[activeContentId], activeContentId);
     }
   });
 
@@ -150,6 +140,7 @@ const Body: FunctionComponent<Props> = (props) => {
           <TableCell>Titel</TableCell>
           {(editorStore.currentPart?.type === PartTypes.INSERT) ? <TableCell>Typ</TableCell> : null}
           <TableCell>Inhalte</TableCell>
+          <TableCell>Style-Vorlage </TableCell>
           <TableCell></TableCell>
         </TableRow>
       </TableHead>
@@ -277,7 +268,6 @@ const Body: FunctionComponent<Props> = (props) => {
               }
               <TableCell
                 onClick={() => {
-                  console.log('click')
                   setActiveContentId(index);
                   editorStore.unsaved = true;
                   if(activeContentId !== index) setActiveContent(getActiveContentData(slide));
@@ -302,7 +292,36 @@ const Body: FunctionComponent<Props> = (props) => {
 
                   ) : getSlideData(slide)
                 }
-              </TableCell>    
+              </TableCell> 
+              <TableCell>
+                <Select
+                  variant="outlined"
+                  value={editorStore.slideStyles.find((style: Style) => (style.name === slide.data.style.name))?.name}
+                  onOpen={() => {
+                    editorStore.unsaved = true;
+                  }}
+                  onChange={(changeEvent: ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
+                    if (changeEvent.target.value !== slide.data.style.name) {
+                      let style : Style = {};
+                      editorStore.slideStyles.forEach(s => {
+                        if(s.name === changeEvent.target.value) style = s;
+                      });
+                      if(style.name) {
+                        editorStore.unsaved = false;
+                        editorStore.changedSlideIdentity = slide.title;
+                        editorStore.slides[index].data.style = style;
+                        editorStore.saveSlide(editorStore.slides[index]);
+                      }
+                    }
+                  }}
+                >
+                  {
+                    editorStore.slideStyles.map((style, index) => {
+                      return (<MenuItem key={index} value={style.name}>{style.name}</MenuItem>);
+                    })
+                  }
+                </Select>
+              </TableCell>   
               <TableCell
                 align="right"
               >

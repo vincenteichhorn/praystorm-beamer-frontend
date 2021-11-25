@@ -44,7 +44,6 @@ const MainWindow: FunctionComponent = (props) => {
     let count = 0;
     editorStore.parts.forEach((part: Part, index: number) => {
       if(editorStore.currentPart) {
-        console.log(editorStore.currentPart.title + editorStore.currentPart.author, part.title + part.author);
         if(editorStore.currentPart.title + editorStore.currentPart.author === part.title + part.author) {
           count++;
         }
@@ -64,8 +63,8 @@ const MainWindow: FunctionComponent = (props) => {
 
   useEventListener('keydown', (event: KeyboardEvent) => {
     if(['13', 'Enter'].includes(String(event.key))) {
-      if(editorStore.unsaved) savePartChanges();
-      if(window.document.activeElement) (window.document.activeElement as HTMLElement).blur();
+      if(editorStore.unsaved && tab === 0) savePartChanges();
+      if(window.document.activeElement && tab === 0) (window.document.activeElement as HTMLElement).blur();
     }
   });
 
@@ -77,7 +76,10 @@ const MainWindow: FunctionComponent = (props) => {
             value={tab}
             indicatorColor="primary"
             textColor="primary"
-            onChange={(event: ChangeEvent<{}>, number: any) => setTab(number)}
+            onChange={(event: ChangeEvent<{}>, number: any) => {
+              setTab(number)
+              if(number === 1) editorStore.updateSlides();
+            }}
             centered
           >
             <Tab label="Allgemein" value={0}/>

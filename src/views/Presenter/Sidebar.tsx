@@ -15,6 +15,7 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('md')]: {
       height: '75.6vh'
     },
+    overflow: 'auto',
   },
 }));
 
@@ -92,7 +93,7 @@ const Sidebar: FunctionComponent = () => {
         
         <Paper  className={classes.paper}>
           <Grid style={{maxHeight: '100%'}} container direction="column">
-            <Grid item style={{overflow: 'auto'}}>
+            <Grid item>
               <List>
                 {
                   (presenterStore.parts.length > 0) ? presenterStore.parts.map((part: Part, index: number) => (

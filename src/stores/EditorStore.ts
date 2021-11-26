@@ -17,6 +17,7 @@ export default class EditorStore {
   unsaved: boolean = false;
 
   newSlide: boolean = false;
+  newStyle: boolean = false;
 
   constructor() {
     // fetch all data from backend
@@ -226,6 +227,10 @@ export default class EditorStore {
     this.newSlide = true;
   }
 
+  openNewStyle() {
+    this.newStyle = true;
+  }
+
   async addSlide(newSlide: Slide) {
     if(this.currentPart) {
       const postParams = new FormData();
@@ -314,7 +319,6 @@ export default class EditorStore {
   async updateStyle(id: number, name: string) {
     if(name && id > -1) {
       let style = this.slideStyles[id]
-      console.log(style);
       const postParams = new FormData();
       postParams.append('styleName', name);
       postParams.append('styleData', JSON.stringify(style));
@@ -322,6 +326,32 @@ export default class EditorStore {
        method: 'POST',
        body: postParams,
       });
+      this.updateSlides();
+      this.unsaved = false;
+    }
+  }
+
+  async saveNewStyle(newStyle: Style) {
+    const postParams = new FormData();
+    postParams.append('styleData', JSON.stringify(newStyle));
+    await fetch(process.env.REACT_APP_API_HOST + '/addStyle', {
+      method: 'POST',
+      body: postParams,
+    });
+    this.fetchSlideStyles();
+    this.updateSlides();
+    this.newStyle = false;
+  }
+
+  async deleteStyle(name: string | undefined) {
+    if(name) {
+      const postParams = new FormData();
+      postParams.append('styleName', name);
+      await fetch(process.env.REACT_APP_API_HOST + '/deleteStyle', {
+        method: 'POST',
+        body: postParams,
+      })
+      this.fetchSlideStyles();
       this.updateSlides();
     }
   }
@@ -339,6 +369,7 @@ decorate(EditorStore, {
   searchedParts: observable,
   unsaved: observable,
   newSlide: observable,
+  newStyle: observable,
 
   updateEvents: action,
   updateParts: action,
@@ -347,8 +378,10 @@ decorate(EditorStore, {
   creatNewPart: action,
   searchAllParts: action,
   openNewSlide: action,
+  openNewStyle: action,
   addSlide: action,
   deleteCurrentEvent: action,
   deleteCurrentPart: action,
   updateEvent: action,
+  saveNewStyle: action,
 });

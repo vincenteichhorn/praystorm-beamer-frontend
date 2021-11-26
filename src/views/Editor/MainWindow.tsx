@@ -100,7 +100,15 @@ const MainWindow: FunctionComponent = (props) => {
                 >
                   <Icon>add</Icon>
                 </IconButton>
-              ) : null  
+              ) : (tab === 2) ? (
+                <IconButton
+                  onClick={() => {
+                    editorStore.openNewStyle();
+                  }}
+                >
+                  <Icon>add</Icon>
+                </IconButton>
+              )  : null 
             }
             <IconButton
               onClick={(event) => openPopover(event)}
